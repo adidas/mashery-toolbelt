@@ -1,0 +1,31 @@
+{
+  "name": "mashtool",
+  "version": "1.0.0",
+  "description": "CLI tool for Mashery API Management provisioning",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adidas-group/mashery-provision.git"
+  },
+  "bin": {
+    "mashtool": "bin/mashtool.js"
+  },  
+  "keywords": [
+    "Mashery",
+    "API",
+    "HTTP",
+    "Swagger"
+  ],
+  "author": "Zdenek Nemec",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adidas-group/mashery-provision/issues"
+  },
+  "homepage": "https://github.com/adidas-group/mashery-provision#readme",
+  "dependencies": {
+    "vorpal": "^1.12.0"
+  }
+}
