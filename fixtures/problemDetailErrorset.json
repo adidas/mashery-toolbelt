@@ -1,0 +1,169 @@
+{
+  "name": "Problem Detail",
+  "type": "application/problem+json",
+  "jsonpType": "",
+  "jsonp": false,
+  "errorMessages": [
+    {
+      "id": "ERR_400_BAD_REQUEST",
+      "status": "Bad Request",
+      "code": 400,
+      "detailHeader": "",
+      "responseBody": "A"
+    },
+    {
+      "id": "ERR_403_NOT_AUTHORIZED",
+      "status": "Forbidden",
+      "code": 403,
+      "detailHeader": "Not Authorized",
+      "responseBody": "{\n  \"title\": \"Forbidden\",\n  \"detail\": \"The request is not authorized\"\n}\n"
+    },
+    {
+      "id": "ERR_403_DEVELOPER_INACTIVE",
+      "status": "Forbidden",
+      "code": 403,
+      "detailHeader": "Account Inactive",
+      "responseBody": "{\n  \"title\": \"Forbidden\",\n  \"detail\": \"Missing or invalid adidas api key (Adidas-API-Key)\"\n}\n"
+    },
+    {
+      "id": "ERR_403_DEVELOPER_OVER_QPS",
+      "status": "Forbidden",
+      "code": 403,
+      "detailHeader": "Account Over Queries Per Second Limit",
+      "responseBody": "{\n  \"title\": \"Forbidden\",\n  \"detail\": \"Account over queries per second limit\"\n}\n"
+    },
+    {
+      "id": "ERR_403_DEVELOPER_OVER_RATE",
+      "status": "Forbidden",
+      "code": 403,
+      "detailHeader": "Account Over Rate Limit",
+      "responseBody": "{\n  \"title\": \"Forbidden\",\n  \"detail\": \"Account over rate limit\"\n}\n"
+    },
+    {
+      "id": "ERR_403_DEVELOPER_UNKNOWN_REFERER",
+      "status": "Forbidden",
+      "code": 403,
+      "detailHeader": "Invalid Referer",
+      "responseBody": "{\n  \"title\": \"Authentication required\",\n  \"detail\": \"Invalid referer\"\n}\n\n"
+    },
+    {
+      "id": "ERR_403_SERVICE_OVER_QPS",
+      "status": "Forbidden",
+      "code": 403,
+      "detailHeader": "Rate Limit Exceeded",
+      "responseBody": "{\n  \"title\": \"Forbidden\",\n  \"detail\": \"Rate limit exceeded\"\n}\n"
+    },
+    {
+      "id": "ERR_403_SERVICE_REQUIRES_SSL",
+      "status": "Forbidden",
+      "code": 403,
+      "detailHeader": "Service Requires SSL",
+      "responseBody": "{\n  \"title\": \"Forbidden\",\n  \"detail\": \"Service requires SSL\"\n}\n"
+    },
+    {
+      "id": "ERR_414_REQUEST_URI_TOO_LONG",
+      "status": "Request-URI Too Long",
+      "code": 414,
+      "detailHeader": "",
+      "responseBody": "{\n  \"title\": \"URI Too Long\",\n  \"detail\": \"Request-target URI is longer than the server is willing to interpret\"\n}\n"
+    },
+    {
+      "id": "ERR_502_BAD_GATEWAY",
+      "status": "Bad Gateway",
+      "code": 502,
+      "detailHeader": "",
+      "responseBody": "{\n  \"title\": \"Bad Gateway\",\n  \"detail\": \"Invalid response from an inbound server\"\n}\n"
+    },
+    {
+      "id": "ERR_503_SERVICE_UNAVAILABLE",
+      "status": "Service Unavailable",
+      "code": 503,
+      "detailHeader": "Scheduled Maintenance",
+      "responseBody": "{\n  \"title\": \"Service Unavailable\",\n  \"detail\": \"Unable to handle the request due to a temporary overload or scheduled maintenance\"\n}\n"
+    },
+    {
+      "id": "ERR_504_GATEWAY_TIMEOUT",
+      "status": "Gateway Timeout",
+      "code": 504,
+      "detailHeader": "",
+      "responseBody": "{\n  \"title\": \"Gateway Timeout\",\n  \"detail\": \"Server did not receive a timely response from an upstream server it needed to access in order to complete the request\"\n}\n"
+    },
+    {
+      "id": "ERR_400_UNSUPPORTED_PARAMETER",
+      "status": "Bad Request",
+      "code": 400,
+      "detailHeader": "Unsupported Parameter",
+      "responseBody": "{\n  \"title\": \"Bad Request: Unsupported Parameter\",\n  \"detail\": \"The server cannot process the request because of the unsupported parameter\"\n}\n"
+    },
+    {
+      "id": "ERR_400_UNSUPPORTED_SIGNATURE_METHOD",
+      "status": "Bad Request",
+      "code": 400,
+      "detailHeader": "Unsupported Signature Method",
+      "responseBody": "{\n  \"title\": \"Bad Request: Unsupported Signature Method\",\n  \"detail\": \"The server cannot process the request because of the unsupported signature method\"\n}\n"
+    },
+    {
+      "id": "ERR_400_MISSING_REQUIRED_CONSUMER_KEY",
+      "status": "Bad Request",
+      "code": 400,
+      "detailHeader": "Missing Required Consumer Key",
+      "responseBody": "{\n  \"title\": \"Bad Request: Missing Required Consumer Key\",\n  \"detail\": \"The server cannot process the request because of the missing consumer key\"\n}\n"
+    },
+    {
+      "id": "ERR_400_MISSING_REQUIRED_REQUEST_TOKEN",
+      "status": "Bad Request",
+      "code": 400,
+      "detailHeader": "Missing Required Request Token",
+      "responseBody": "{\n  \"title\": \"Bad Request: Missing Required Request Token\",\n  \"detail\": \"The server cannot process the request because of the missing request token\"\n}\n"
+    },
+    {
+      "id": "ERR_400_MISSING_REQUIRED_ACCESS_TOKEN",
+      "status": "Bad Request",
+      "code": 400,
+      "detailHeader": "Missing Required Access Token",
+      "responseBody": ""
+    },
+    {
+      "id": "ERR_400_DUPLICATED_OAUTH_PROTOCOL_PARAMETER",
+      "status": "Bad Request",
+      "code": 504,
+      "detailHeader": "Duplicated OAuth Protocol Parameter",
+      "responseBody": "{\n  \"title\": \"Bad Request: Duplicated OAuth Protocol Parameter\",\n  \"detail\": \"The server cannot process the request because the received syntax is invalid, nonsensical, or exceeds limitations\"\n}\n"
+    },
+    {
+      "id": "ERR_401_TIMESTAMP_IS_INVALID",
+      "status": "Unauthorized",
+      "code": 401,
+      "detailHeader": "Timestamp Is Invalid",
+      "responseBody": "{\n  \"title\": \"Unauthorized\",\n  \"detail\": \"Timestamp is invalid\"\n}\n"
+    },
+    {
+      "id": "ERR_401_INVALID_SIGNATURE",
+      "status": "Unauthorized",
+      "code": 401,
+      "detailHeader": "Invalid Signature",
+      "responseBody": "{\n  \"title\": \"Unauthorized\",\n  \"detail\": \"Invalid signature\"\n}\n"
+    },
+    {
+      "id": "ERR_401_INVALID_OR_EXPIRED_TOKEN",
+      "status": "Unauthorized",
+      "code": 401,
+      "detailHeader": "Invalid Or Expired Token",
+      "responseBody": "{\n  \"title\": \"Unauthorized\",\n  \"detail\": \"Invalid or expired token\"\n}\n"
+    },
+    {
+      "id": "ERR_401_INVALID_CONSUMER_KEY",
+      "status": "Unauthorized",
+      "code": 401,
+      "detailHeader": "Invalid Consumer Key",
+      "responseBody": "{\n  \"title\": \"Unauthorized\",\n  \"detail\": \"Invalid consumer key\"\n}\n"
+    },
+    {
+      "id": "ERR_401_INVALID_NONCE",
+      "status": "Unauthorized",
+      "code": 401,
+      "detailHeader": "Invalid NONCE",
+      "responseBody": "{\n  \"title\": \"Unauthorized\",\n  \"detail\": \"Invalid NONCE\"\n}\n"
+    }
+  ]
+}

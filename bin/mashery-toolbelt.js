@@ -65,12 +65,21 @@ function handleError(ctx, s, cb) {
 vorpal
   .command('create-errorset', 'Create probem+json Mashery errorset for an API based on adidas API Guidelines')
   .action(function (args, callback) {
-    this.log(chalk.yellow('TODO'));
-    callback();
+    // this.log(chalk.yellow('TODO'));
+
+    return this.prompt([{
+      type: 'input',
+      message: chalk.cyan('Enter API service id to set error set for: '),
+      name: 'serviceId'
+    }])
+    .then(input => {
+      this.log(`Creating problem+json error set for service id ${input.serviceId}...`);
+      callback();
+    });
   });
 
 vorpal
-  .command('ls', 'List existing APIs')
+  .command('ls', 'List existing API services and their ids')
   .action(function (args, callback) {
     const s = spinner();
     s.start();
