@@ -38,6 +38,15 @@ function handleHTTPError(response) {
   return response;
 }
 
+// Retrieve JSON body
+function retrieveJSON(response) {
+  const contentType = response.headers.get("content-type");
+  if (contentType && contentType.includes("application/json")) {
+    return response.json();
+  }
+  throw new TypeError("Oops, we haven't got JSON!");
+}
+
 // Vorpal Error Handler
 function handleError(ctx, s, cb) {
   return (e) => {
@@ -79,19 +88,13 @@ vorpal
 
       fetch(url.toString(), { headers: requestHeaders })
         .then(handleHTTPError)
-        .then(response => {
-          s.stop();
-
-          var contentType = response.headers.get("content-type");
-          if (contentType && contentType.includes("application/json")) {
-            return response.json();
-          }
-          throw new TypeError("Oops, we haven't got JSON!");
-        })
+        .then(retrieveJSON)
         .then(json => {
+          // Print the list of existing services
+          s.stop();
           this.log(`\n\nList of services (${json.length}):\n----------------\n`);
           json.forEach(service => {
-            this.log(`"${service.name}"`);
+            this.log(`'${service.name}'\n id: ${service.id}\n\n`);
           });
         })
         .catch(handleError(this, s, callback));
@@ -100,6 +103,7 @@ vorpal
       handleError(this, s, callback)(error);
     }
 
+    callback();
   });
 
 vorpal
