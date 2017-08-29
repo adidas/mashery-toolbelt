@@ -1,10 +1,12 @@
 # Mashery Toolbelt
-CLI tool for Mashery API Management provisioning
+CLI tool for Mashery API Management provisioning.
 
-# Using
+# Use
 ## Setup
 Before you can start using the adidas Mashery toolbelt you need to generate your
-Mashery token and set it as an environment variable. 
+Mashery token and set it as an environment variable. Refer to [Mashery Authentication Documentation](https://support.mashery.com/docs/read/mashery_api/30/Authentication) for 
+details on how to obtain your token.
+
 
 ```bash
 $ curl -k -v -i -u <API Key for Mashery V3>:<API Secret for Mashery V3> 'https://api.mashery.com/v3/token' -d 'grant_type=password&username=<Mashery User Id>&password=<Mashery Password>&scope=<Mashery Area UUID>'
