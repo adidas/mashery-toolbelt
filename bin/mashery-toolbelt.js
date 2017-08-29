@@ -13,11 +13,11 @@ const chalk = vorpal.chalk;
 // Verify that required config variables are set up
 function verifyConfig() {
   if (!process.env.MASHERY_HOST) {
-    throw Error('missing MASHERY_HOST');
+    throw Error('No Mashery host (MASHERY_HOST)');
   }
 
   if (!process.env.MASHERY_KEY) {
-    throw Error('missing MASHERY_KEY');
+    throw Error('No Mashery key (MASHERY_KEY)');
   }
 }
 
@@ -30,7 +30,8 @@ function handleHTTPError(response) {
     for (var key in headers) {
       message += `${key}: ${headers[key]}\n`;
     }
-    //response.text().then(data => console.log(data));
+
+    response.text().then(data => console.log(data));
 
     throw Error(message);
   }
@@ -68,12 +69,31 @@ vorpal
     try {
       verifyConfig();
 
-      const url = new URL('/rest/services/', process.env.MASHERY_HOST);
+      const url = new URL('/v3/rest/services', process.env.MASHERY_HOST);
       this.log(`Querying ${url.toString()}`);
 
-      fetch(url.toString())
+      const requestHeaders = new fetch.Headers({
+        "Accept": "application/json",
+        "Authorization": `Bearer ${process.env.MASHERY_KEY}`,
+      });
+
+      fetch(url.toString(), { headers: requestHeaders })
         .then(handleHTTPError)
-        .then(response => ctx.log(response))
+        .then(response => {
+          s.stop();
+
+          var contentType = response.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
+            return response.json();
+          }
+          throw new TypeError("Oops, we haven't got JSON!");
+        })
+        .then(json => {
+          this.log(`\n\nList of services (${json.length}):\n----------------\n`);
+          json.forEach(service => {
+            this.log(`"${service.name}"`);
+          });
+        })
         .catch(handleError(this, s, callback));
     }
     catch (error) {
@@ -83,10 +103,10 @@ vorpal
   });
 
 vorpal
-  .command('dbg-info', 'Prints debug information')
+  .command('config', 'Prints config information')
   .action(function (args, callback) {
     this.log(`Mashery host: ${process.env.MASHERY_HOST}`);
-    this.log(`Mashery token: ${process.env.MASHERY_KEY}`);
+    this.log(`Mashery key: ${process.env.MASHERY_KEY}`);
     callback();
   });
 
