@@ -31,7 +31,7 @@ function handleHTTPError(response) {
       message += `${key}: ${headers[key]}\n`;
     }
 
-    response.text().then(data => console.log(data));
+    // response.text().then(data => console.log(data));
 
     throw Error(message);
   }
@@ -65,17 +65,41 @@ function handleError(ctx, s, cb) {
 vorpal
   .command('create-errorset', 'Create probem+json Mashery errorset for an API based on adidas API Guidelines')
   .action(function (args, callback) {
-    // this.log(chalk.yellow('TODO'));
+    try {
+      verifyConfig();
 
-    return this.prompt([{
-      type: 'input',
-      message: chalk.cyan('Enter API service id to set error set for: '),
-      name: 'serviceId'
-    }])
-    .then(input => {
-      this.log(`Creating problem+json error set for service id ${input.serviceId}...`);
-      callback();
-    });
+      return this.prompt([{
+        type: 'input',
+        message: chalk.cyan('Enter API service id to set error set for: '),
+        name: 'serviceId'
+      }])
+      .then(input => {
+        const s = spinner();
+        s.start();
+  
+        const url = new URL(`/v3/rest/services/${input.serviceId}`, process.env.MASHERY_HOST);
+        const requestHeaders = new fetch.Headers({
+          "Accept": "application/json",
+          "Authorization": `Bearer ${process.env.MASHERY_KEY}`,
+        });
+  
+        fetch(url.toString(), { headers: requestHeaders })
+        .then(handleHTTPError)
+        .then(retrieveJSON)
+        .then(json => {
+          s.stop();
+          this.log(`Creating problem+json error set for '${json.name}'...`);
+          // s.start();
+          // fetch(url.toString(), { headers: requestHeaders });
+        })
+        .catch(handleError(this, s, callback));        
+      });        
+    }
+    catch (error) {
+      handleError(this, s, callback)(error);
+    }
+
+    callback();
   });
 
 vorpal
@@ -88,7 +112,7 @@ vorpal
       verifyConfig();
 
       const url = new URL('/v3/rest/services', process.env.MASHERY_HOST);
-      this.log(`Querying ${url.toString()}`);
+      // this.log(`Querying ${url.toString()}`);
 
       const requestHeaders = new fetch.Headers({
         "Accept": "application/json",

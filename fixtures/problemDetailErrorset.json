@@ -5,13 +5,6 @@
   "jsonp": false,
   "errorMessages": [
     {
-      "id": "ERR_400_BAD_REQUEST",
-      "status": "Bad Request",
-      "code": 400,
-      "detailHeader": "",
-      "responseBody": "A"
-    },
-    {
       "id": "ERR_403_NOT_AUTHORIZED",
       "status": "Forbidden",
       "code": 403,
