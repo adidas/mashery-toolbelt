@@ -4,12 +4,21 @@
 require('dotenv').config();
 
 const vorpal = require('vorpal')();
-const spinner = require('../src/spinner');
+const { URL } = require('url');
 const fetch = require('node-fetch');
+const spinner = require('../src/spinner');
 
 const chalk = vorpal.chalk;
 
+// Verify that required config variables are set up
 function verifyConfig() {
+  if (!process.env.MASHERY_HOST) {
+    throw Error('missing MASHERY_HOST');
+  }
+
+  if (!process.env.MASHERY_KEY) {
+    throw Error('missing MASHERY_KEY');
+  }
 }
 
 // Fetch Error Handler
@@ -22,8 +31,8 @@ function handleHTTPError(response) {
       message += `${key}: ${headers[key]}\n`;
     }
     //response.text().then(data => console.log(data));
-    
-    throw Error(message);    
+
+    throw Error(message);
   }
   return response;
 }
@@ -56,13 +65,21 @@ vorpal
     const s = spinner();
     s.start();
 
-    const url = `${process.env.MASHERY_HOST}/rest/services/`
-    this.log(`Querying ${url}`);
+    try {
+      verifyConfig();
 
-    fetch(url)
-      .then(handleHTTPError)
-      .then(response => ctx.log(response))
-      .catch(handleError(this, s, callback));
+      const url = new URL('/rest/services/', process.env.MASHERY_HOST);
+      this.log(`Querying ${url.toString()}`);
+
+      fetch(url.toString())
+        .then(handleHTTPError)
+        .then(response => ctx.log(response))
+        .catch(handleError(this, s, callback));
+    }
+    catch (error) {
+      handleError(this, s, callback)(error);
+    }
+
   });
 
 vorpal
