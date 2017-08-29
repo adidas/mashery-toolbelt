@@ -12,7 +12,24 @@ const chalk = vorpal.chalk;
 function verifyConfig() {
 }
 
-function errorHandler(ctx, s, cb) {
+// Fetch Error Handler
+function handleHTTPError(response) {
+  if (!response.ok) {
+    var message = `(${response.status}) ${response.statusText}\n\n`;
+    const headers = response.headers['_headers'];
+
+    for (var key in headers) {
+      message += `${key}: ${headers[key]}\n`;
+    }
+    //response.text().then(data => console.log(data));
+    
+    throw Error(message);    
+  }
+  return response;
+}
+
+// Vorpal Error Handler
+function handleError(ctx, s, cb) {
   return (e) => {
     if (s) {
       s.stop(true);
@@ -43,15 +60,9 @@ vorpal
     this.log(`Querying ${url}`);
 
     fetch(url)
-      .then((response) => {
-        s.stop(true);
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-
-        callback();
-      }).catch(errorHandler(this, s, callback));
-
+      .then(handleHTTPError)
+      .then(response => ctx.log(response))
+      .catch(handleError(this, s, callback));
   });
 
 vorpal
