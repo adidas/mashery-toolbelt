@@ -8,6 +8,8 @@ const { URL } = require('url');
 const fetch = require('node-fetch');
 const spinner = require('../src/spinner');
 
+const ProblemDetailErrorSet = require('../fixtures/problemDetailErrorSet.json');
+
 const chalk = vorpal.chalk;
 
 // Verify that required config variables are set up
@@ -39,7 +41,7 @@ function handleHTTPError(response) {
 }
 
 // Retrieve JSON body
-function retrieveJSON(response) {
+function retrieveJSONResponse(response) {
   const contentType = response.headers.get("content-type");
   if (contentType && contentType.includes("application/json")) {
     return response.json();
@@ -63,7 +65,7 @@ function handleError(ctx, s, cb) {
 }
 
 vorpal
-  .command('create-errorset', 'Create probem+json Mashery errorset for an API based on adidas API Guidelines')
+  .command('create-errorset', 'Create probem+json Mashery errorset for an API based on adidas API Guidelines.')
   .action(function (args, callback) {
     try {
       verifyConfig();
@@ -73,27 +75,45 @@ vorpal
         message: chalk.cyan('Enter API service id to set error set for: '),
         name: 'serviceId'
       }])
-      .then(input => {
-        const s = spinner();
-        s.start();
-  
-        const url = new URL(`/v3/rest/services/${input.serviceId}`, process.env.MASHERY_HOST);
-        const requestHeaders = new fetch.Headers({
-          "Accept": "application/json",
-          "Authorization": `Bearer ${process.env.MASHERY_KEY}`,
+        .then(input => {
+          const s = spinner();
+          s.start();
+
+          const url = new URL(`/v3/rest/services/${input.serviceId}`, process.env.MASHERY_HOST);
+          const requestHeaders = new fetch.Headers({
+            "Accept": "application/json",
+            "Authorization": `Bearer ${process.env.MASHERY_KEY}`,
+          });
+
+          fetch(url.toString(), { headers: requestHeaders })
+            .then(handleHTTPError)
+            .then(retrieveJSONResponse)
+            .then(json => {
+              this.log(`Creating problem+json error set for '${json.name}'...`);
+
+              // Create the error set
+              const errorsetURL = new URL(`/v3/rest/services/${input.serviceId}/errorSets`, process.env.MASHERY_HOST);
+              const errorsetRequestHeaders = new fetch.Headers({
+                "Accept": "application/json",
+                "Authorization": `Bearer ${process.env.MASHERY_KEY}`,
+                "Content-Type": "application/json",                
+              });
+
+              fetch(errorsetURL.toString(), {
+                method: "POST",
+                headers: errorsetRequestHeaders,
+                body: JSON.stringify(ProblemDetailErrorSet)
+              })
+              .then(handleHTTPError)
+              .then(retrieveJSONResponse)
+              .then(json => {
+                s.stop();
+                this.log(chalk.green(`Error set 'Problem Detail' created successfully!`));
+                this.log(chalk.yellow(`Remember to set the Endpoint Errors to use this error set in the UI.`));
+              });
+            })
+            .catch(handleError(this, s, callback));
         });
-  
-        fetch(url.toString(), { headers: requestHeaders })
-        .then(handleHTTPError)
-        .then(retrieveJSON)
-        .then(json => {
-          s.stop();
-          this.log(`Creating problem+json error set for '${json.name}'...`);
-          // s.start();
-          // fetch(url.toString(), { headers: requestHeaders });
-        })
-        .catch(handleError(this, s, callback));        
-      });        
     }
     catch (error) {
       handleError(this, s, callback)(error);
@@ -103,7 +123,7 @@ vorpal
   });
 
 vorpal
-  .command('ls', 'List existing API services and their ids')
+  .command('ls', 'List existing API services and their ids.')
   .action(function (args, callback) {
     const s = spinner();
     s.start();
@@ -112,7 +132,6 @@ vorpal
       verifyConfig();
 
       const url = new URL('/v3/rest/services', process.env.MASHERY_HOST);
-      // this.log(`Querying ${url.toString()}`);
 
       const requestHeaders = new fetch.Headers({
         "Accept": "application/json",
@@ -121,7 +140,7 @@ vorpal
 
       fetch(url.toString(), { headers: requestHeaders })
         .then(handleHTTPError)
-        .then(retrieveJSON)
+        .then(retrieveJSONResponse)
         .then(json => {
           // Print the list of existing services
           s.stop();
@@ -140,10 +159,11 @@ vorpal
   });
 
 vorpal
-  .command('config', 'Prints config information')
+  .command('config', 'Prints config information.')
   .action(function (args, callback) {
     this.log(`Mashery host: ${process.env.MASHERY_HOST}`);
     this.log(`Mashery key: ${process.env.MASHERY_KEY}`);
+    // this.log(`error set: ${JSON.stringify(errorSet, "", 2)}`);
     callback();
   });
 

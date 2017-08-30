@@ -1,6 +1,14 @@
 # Mashery Toolbelt
 CLI tool for Mashery API Management provisioning.
 
+## Functionality
+
+```
+    create-errorset    Create probem+json Mashery errorset for an API based on adidas API Guidelines.
+    ls                 List existing API services and their ids.
+    config             Prints config information.
+```
+
 # Use
 ## Setup
 Before you can start using the adidas Mashery toolbelt you need to generate your
