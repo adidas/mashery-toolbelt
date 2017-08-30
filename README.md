@@ -9,7 +9,27 @@ CLI tool for Mashery API Management provisioning.
     config             Prints config information.
 ```
 
+## Installation
+With Node.js v7.5.0 or higher installed, run
+
+```bash
+$ npm install -g mashery-toolbelt
+```
+
+
 # Use
+To run the toolbelt simply execute:
+
+```bash
+$ mashery-toolbelt
+```
+
+or, if you don't have the `MASHERY_HOST` and `MASHERY_KEY` set (see the setup instructions):
+
+```bash
+$ MASHERY_HOST=https://api.mashery.com MASHERY_KEY=<API Key for Mashery V3 API> mashery-toolbelt
+```
+
 ## Setup
 Before you can start using the adidas Mashery toolbelt you need to generate your
 Mashery token and set it as an environment variable. Refer to [Mashery Authentication Documentation](https://support.mashery.com/docs/read/mashery_api/30/Authentication) for 
@@ -46,7 +66,17 @@ $ npm install
 While developing `mashery-toolbelt` you can use `.env` file to store your 
 environment variables.
 
-## Debug with netcat
+## Debug 
+
+### With Request Bin
+Create a new bin at `https://requestb.in/` and set its URL as the `MASHERY_HOST`:
+
+```bash
+export MASHERY_HOST=https://requestb.in/1fym61s1
+```
+
+### With netcat
+Run netcat `nc` locally and use it as `MASHERY_HOST`:
 
 ```bash
 $ nc -l 8081
