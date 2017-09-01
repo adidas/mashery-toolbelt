@@ -52,7 +52,6 @@ function fetchMashery(request) {
 // Fetch all Services
 function fetchAllServices() {
   const url = new URL('/v3/rest/services', MASHERY_HOST);
-
   const request = new fetch.Request(url.toString(), {
     headers: RequestHeaders
   });
@@ -63,7 +62,16 @@ function fetchAllServices() {
 // Fetch one Service
 function fetchService(serviceId) {
   const url = new URL(`/v3/rest/services/${serviceId}`, MASHERY_HOST);
+  const request = new fetch.Request(url.toString(), {
+    headers: RequestHeaders
+  });
 
+  return fetchMashery(request);
+}
+
+// Fetch All Error Sets for a Service
+function fetchAllServiceErrorSets(serviceId) {
+  const url = new URL(`/v3/rest/services/${serviceId}/errorSets`, MASHERY_HOST);
   const request = new fetch.Request(url.toString(), {
     headers: RequestHeaders
   });
@@ -87,8 +95,37 @@ function createErrorSet(serviceId, errorSet) {
   return fetchMashery(request);
 }
 
+// Fetch service endpoints
+function fetchAllServiceEndpoints(serviceId) {
+  const url = new URL(`/v3/rest/services/${serviceId}/endpoints`, MASHERY_HOST);
+  const request = new fetch.Request(url.toString(), {
+    headers: RequestHeaders
+  });
+
+  return fetchMashery(request);
+}
+
+// Update Endpoint 
+function updateServiceEndpoint(serviceId, endpointId, endpointPayload) {
+  const url = new URL(`/v3/rest/services/${serviceId}/endpoints/${endpointId}`, MASHERY_HOST);
+
+  let headers = new fetch.Headers(RequestHeaders);
+  headers.append('Content-Type', 'application/json');
+
+  const request = new fetch.Request(url.toString(), {
+    method: 'PUT',
+    headers: RequestHeaders,
+    body: JSON.stringify(endpointPayload)
+  });
+
+  return fetchMashery(request);
+}
+
 module.exports = {
   fetchAllServices,
   fetchService,
+  fetchAllServiceEndpoints,
+  updateServiceEndpoint,
+  fetchAllServiceErrorSets,
   createErrorSet
 };
