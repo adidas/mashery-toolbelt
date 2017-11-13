@@ -121,11 +121,22 @@ function updateServiceEndpoint(serviceId, endpointId, endpointPayload) {
   return fetchMashery(request);
 }
 
+// Fetch single endpoints
+function fetchEndpoint(serviceId,endpointId) {
+  const url = new URL(`/v3/rest/services/${serviceId}/endpoints/${endpointId}?fields=id%2CallowMissingApiKey%2CapiKeyValueLocationKey%2CapiKeyValueLocations%2CapiMethodDetectionKey%2CapiMethodDetectionLocations%2Ccache%2CconnectionTimeoutForSystemDomainRequest%2CconnectionTimeoutForSystemDomainResponse%2CcookiesDuringHttpRedirectsEnabled%2Ccors%2Ccreated%2CcustomRequestAuthenticationAdapter%2CdropApiKeyFromIncomingCall%2CforceGzipOfBackendCall%2CgzipPassthroughSupportEnabled%2CheadersToExcludeFromIncomingCall%2ChighSecurity%2ChostPassthroughIncludedInBackendCallHeader%2CinboundSslRequired%2CjsonpCallbackParameter%2CjsonpCallbackParameterValue%2CscheduledMaintenanceEvent%2CforwardedHeaders%2CreturnedHeaders%2Cmethods%2Cname%2CnumberOfHttpRedirectsToFollow%2CoutboundRequestTargetPath%2CoutboundRequestTargetQueryParameters%2CoutboundTransportProtocol%2Cprocessor%2CpublicDomains%2CrequestAuthenticationType%2CrequestPathAlias%2CrequestProtocol%2CoauthGrantTypes%2CstringsToTrimFromApiKey%2CsupportedHttpMethods%2CsystemDomainAuthentication%2CsystemDomains%2CtrafficManagerDomain%2Cupdated%2CuseSystemDomainCredentials%2CsystemDomainCredentialKey%2CsystemDomainCredentialSecret&indent=0`, MASHERY_HOST);
+  const request = new fetch.Request(url.toString(), {
+    headers: RequestHeaders
+  });
+  return fetchMashery(request);
+}
+
+
 module.exports = {
   fetchAllServices,
   fetchService,
   fetchAllServiceEndpoints,
   updateServiceEndpoint,
   fetchAllServiceErrorSets,
-  createErrorSet
+  createErrorSet,
+  fetchEndpoint
 };
