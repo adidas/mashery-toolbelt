@@ -1,13 +1,28 @@
 # Mashery Toolbelt
 CLI tool for Mashery API Management provisioning.
 
-## Functionality
+
+## Functionality
+
+- Provide various commands to run complex scenarios in Mashery
+- App data are stored in `HOMEDIR/.mashery-toolbelt/*`
+
+
+## Commands
+
+run `mashery-toolbelt` or `mashery-toolbelt -h` to get actual list of commands
+
+### #auth
 
 ```
-create-errorset    Create probem+json Mashery errorset for an API based on adidas API Guidelines.
-ls                 List existing API services and their ids.
-config             Prints config information.
+mashery-toolbelt auth
 ```
+
+- runs interactive wizard to enter credentials
+- credentials except password are stored in `credentials.json`
+- Need to run just for first time. Then it can handle refresh tokens itself
+  - Rerun only on serious issues
+
 
 ## Installation
 With Node.js v7.5.0 or higher installed, run
@@ -16,69 +31,9 @@ With Node.js v7.5.0 or higher installed, run
 $ npm install -g mashery-toolbelt
 ```
 
-# Use
-To run the toolbelt simply execute:
-
-```
-$ mashery-toolbelt
-```
-
-or, if you don't have the `MASHERY_HOST` and `MASHERY_KEY` set (see the setup instructions):
-
-```
-$ MASHERY_HOST=https://api.mashery.com MASHERY_KEY=<API Key for Mashery V3 API> mashery-toolbelt
-```
-
-## Setup
-Before you can start using the adidas Mashery toolbelt you need to generate your
-Mashery token and set it as an environment variable. Refer to [Mashery Authentication Documentation](https://support.mashery.com/docs/read/mashery_api/30/Authentication) for 
-details on how to obtain your token.
-
-
-```
-$ curl -k -v -i -u <API Key for Mashery V3>:<API Secret for Mashery V3> 'https://api.mashery.com/v3/token' -d 'grant_type=password&username=<Mashery User Id>&password=<Mashery Password>&scope=<Mashery Area UUID>'
-```
-
-```json
-{
-  "token_type": "bearer",
-  "mapi": "<API Key for Mashery V3 API>",
-  "access_token": "66mrpvtv4mvs6bz728nbaqmc",
-  "expires_in": 3600,
-  "refresh_token": "99cg9yrxqazk8nu58xsrqn2pm",
-  "scope": "<Mashery Area UUID>"
-}
-```
-
-```
-export MASHERY_KEY=<API Key for Mashery V3 API>
-```
-
-# Development
+## Development
 ```
 $ git clone https://github.com/adidas-group/mashery-toolbelt.git
 $ cd mashery-toolbelt
 $ npm install
-```
-
-While developing `mashery-toolbelt` you can use `.env` file to store your 
-environment variables.
-
-## Debug
-### With RequestBin
-Create a new bin at [RequestBin](https://requestb.in/) and set its URL as the `MASHERY_HOST`:
-
-```
-export MASHERY_HOST=https://requestb.in/1fym61s1
-```
-
-### With netcat
-Run netcat `nc` locally and use it as `MASHERY_HOST`:
-
-```
-$ nc -l 8081
-```
-
-```
-export MASHERY_HOST=http://localhost:8081/
 ```
