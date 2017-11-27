@@ -29,6 +29,7 @@
     "cli-spinner": "^0.2.6",
     "dotenv": "^4.0.0",
     "node-fetch": "^1.7.2",
+    "url-pattern": "1.0.3",
     "vorpal": "^1.12.0"
   }
 }
