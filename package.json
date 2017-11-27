@@ -11,7 +11,7 @@
     "url": "git+https://github.com/adidas-group/mashery-provision.git"
   },
   "bin": {
-    "mashery-toolbelt": "bin/mashery-toolbelt.js"
+    "mashery-toolbelt": "bin/mashery-toolbelt"
   },
   "keywords": [
     "Mashery",
@@ -27,9 +27,10 @@
   "homepage": "https://github.com/adidas-group/mashery-provision#readme",
   "dependencies": {
     "cli-spinner": "^0.2.6",
+    "commander": "2.12.1",
     "dotenv": "^4.0.0",
+    "inquirer": "4.0.0",
     "node-fetch": "^1.7.2",
-    "url-pattern": "1.0.3",
-    "vorpal": "^1.12.0"
+    "url-pattern": "1.0.3"
   }
 }
