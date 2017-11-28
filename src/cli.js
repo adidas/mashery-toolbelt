@@ -1,15 +1,22 @@
 const program = require('commander')
-const Auth = require('./auth')
+const runAuth = require('./auth')
+const runLs = require('./ls')
 
 program
   .version('0.0.1')
-  .description('Mashery remote command tool');
+  .description('Mashery remote command tool')
+  .arguments('<cmd>')
+  .action((cmd) => console.error(`\n  error: unknown command \`${cmd}\`\n`))
 
 program
   .command('auth', /* <username> <password> <key> <secret> <areauuid> */)
-	// .option('-arg, --argument', 'Some argument')
   .description('Authenticate to mashery API with simple wizard')
-  .action(() => Auth())
+  .action(() => runAuth())
+
+program
+  .command('ls [name]')
+  .description('List all services. Optionally filtered by name')
+  .action((name) => runLs(name))
 
 program.parse(process.argv)
 
