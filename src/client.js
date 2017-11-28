@@ -1,4 +1,8 @@
-// Instance of MasheryClient with saving and restoring credentials
+/*
+  Instance of MasheryClient with saving and restoring credentials in
+  HOMEDIR/.mashery-toolbelt/credentials.json
+*/
+
 const MasheryClient = require('./lib/client')
 const { readFileSync, writeFileSync } = require('./utils/storage')
 
