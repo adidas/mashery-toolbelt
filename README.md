@@ -24,6 +24,16 @@ mashery-toolbelt auth
   - Rerun only on serious issues
 
 
+### #ls
+
+```
+mashery-toolbelt ls [-f name]
+```
+
+- list all services
+- optional argument `-f name` (`--filter=name`) to filter services by name
+
+
 ## Installation
 With Node.js v7.5.0 or higher installed, run
 
@@ -32,6 +42,7 @@ $ npm install -g mashery-toolbelt
 ```
 
 ## Development
+
 ```
 $ git clone https://github.com/adidas-group/mashery-toolbelt.git
 $ cd mashery-toolbelt

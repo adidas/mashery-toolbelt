@@ -54,7 +54,7 @@ function auth() {
 
         spinner.start()
         const authRequest = client.authenticate(answers)
-        authRequest.then(() => spinner.stop())
+        authRequest.then(spinner.stop, spinner.stop)
 
         return authRequest
       })
