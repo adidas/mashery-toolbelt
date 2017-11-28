@@ -27,7 +27,8 @@ module.exports = new MasheryClient({
     writeFileSync(CREDENTIALS_FILE, JSON.stringify(credentials, null , 2))
   },
   onAuthError: (error) => {
-    // console.log("Auth error from onAuthError", error)
-    // TODO: auth error, write some message about calling `mashery-toolbelt auth` again?
+    console.error(`Auth error: ${error.name}, ${error.message}`)
+    console.log('Try running `heroku-toolbelt auth` again')
+    process.exit(1)
   }
 })
