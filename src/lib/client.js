@@ -1,3 +1,14 @@
+/*
+  Mashery API client inspired with https://github.com/Cox-Automotive/mashery-node
+  Supports same methods as in client mentioned above with same api `updateService(id, data)`
+  Is only Promise driven
+
+  Usage:
+    const MasheryClient = require('./lib/client')
+    const api = new MasheryClient({ credentials: { username, password, key, secret, scope } })
+    api.fetchAllServices().then(console.log).catch(console.error)
+*/
+
 const { URL, URLSearchParams } = require('url')
 const fetch = require('node-fetch');
 const UrlPattern = require('url-pattern')

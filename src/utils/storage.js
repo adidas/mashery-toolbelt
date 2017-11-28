@@ -1,3 +1,12 @@
+/*
+  Basic file functions scoped under HOMEDIR/.mashery-toolbelt directory
+  Exports: readFileSync, writeFileSync, unlinkSync functions
+
+  Example:
+    writeFileSync('/data/services/1.json', someData)
+    will create file HOMEDIR/.mashery-toolbelt/data/services/1.json
+*/
+
 const os = require('os')
 const path = require('path')
 const fs = require('fs')

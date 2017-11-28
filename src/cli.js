@@ -1,3 +1,8 @@
+/*
+  Command Line Interface
+  Supports: auth, ls
+*/
+
 const program = require('commander')
 const runAuth = require('./auth')
 const runLs = require('./ls')
