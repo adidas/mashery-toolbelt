@@ -5,7 +5,10 @@ CLI tool for Mashery API Management provisioning.
 ## Functionality
 
 - Provide various commands to run complex scenarios in Mashery
-- App data are stored in `HOMEDIR/.mashery-toolbelt/*`
+- App data are stored in `HOMEDIR/.mashery-toolbelt/` directory
+  - osx: `/Users/[HOME]/.mashery-toolbelt/`
+  - linux: `/home/[HOME]/.mashery-toolbelt/`
+  - windows: `C:\Users\[USERNAME]\.mashery-toolbelt\`
 
 
 ## Commands
@@ -27,11 +30,11 @@ mashery-toolbelt auth
 ### #ls
 
 ```
-mashery-toolbelt ls [-f name]
+mashery-toolbelt ls [name]
 ```
 
 - list all services
-- optional argument `-f name` (`--filter=name`) to filter services by name
+- optional argument `name` to filter services by name
 
 
 ## Installation
