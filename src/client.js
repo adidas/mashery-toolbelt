@@ -21,9 +21,7 @@ try {
 
 module.exports = new MasheryClient({
   credentials,
-  // Dont save password
-  onAuthSuccess: ({ password, ...credentials}) => {
-    // console.log("Auth success from onAuthSuccess")
+  onAuthSuccess: (credentials) => {
     writeFileSync(CREDENTIALS_FILE, JSON.stringify(credentials, null , 2))
   },
   onAuthError: (error) => {
