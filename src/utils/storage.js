@@ -5,6 +5,7 @@
   Example:
     writeFileSync('/data/services/1.json', someData)
     will create file HOMEDIR/.mashery-toolbelt/data/services/1.json
+    (for windows: C:\Users\USERNAME\.mashery-toolbelt\data\services\1.json)
 */
 
 const os = require('os')
