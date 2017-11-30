@@ -1,4 +1,5 @@
 # Mashery Toolbelt
+
 CLI tool for Mashery API Management provisioning.
 
 
@@ -14,6 +15,7 @@ CLI tool for Mashery API Management provisioning.
 ## Commands
 
 run `mashery-toolbelt` or `mashery-toolbelt -h` to get actual list of commands
+
 
 ### #auth
 
@@ -38,11 +40,13 @@ mashery-toolbelt ls [name]
 
 
 ## Installation
+
 With Node.js v7.5.0 or higher installed, run
 
 ```
 $ npm install -g mashery-toolbelt
 ```
+
 
 ## Development
 
