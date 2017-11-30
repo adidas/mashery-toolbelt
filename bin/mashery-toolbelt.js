@@ -8,8 +8,9 @@ const spinner = require('../src/spinner');
 const masheryClient = require('../src/masheryClient');
 
 const ProblemDetailErrorSet = require('../fixtures/problemDetailErrorSet.json');
-
 const chalk = vorpal.chalk;
+var fs = require('fs');
+
 
 // Verify that required config variables are set up
 function verifyConfig() {
@@ -131,7 +132,96 @@ vorpal
     catch (error) {
       handleError(this, s, callback)(error);
     }
+    callback();
+  });
 
+// Vorpal get endpoint configuration IDs in a service
+vorpal
+  .command('getAPIendpointsinService', 'get an existing API endpoint for a service.')
+  .action(function (args, callback) {
+    try {
+      verifyConfig();
+      return this.prompt([{
+        type: 'input',
+        message: chalk.cyan('Enter API service id to get the configured endpoints: '),
+        name: 'serviceId',
+      }])
+        .then(input => {
+          const s = spinner();
+          s.start();
+          masheryClient.fetchAllServiceEndpoints(input.serviceId)
+            .then(json => {
+              // Print the list of existing services endpoints
+              s.stop();
+              this.log(`\n\nList of endpoints (${json.length}):\n-----------------------\n`);
+              json.forEach(endpoints => {
+                this.log(chalk.magenta(`${endpoints.name}`));
+                this.log(`id: ${endpoints.id}\n`);
+              });
+            })
+            .catch(handleError(this, s, callback));
+        });
+    }
+    catch (error) {
+      handleError(this, s, callback)(error);
+    }
+
+    callback();
+  });
+
+
+// Vorpal get endpoint configuration data in a file
+vorpal
+  .command('geteachAPIendpointdetail', 'get an existing API endpoint for a service.')
+  .action(function (args, callback) {
+    try {
+      verifyConfig();
+      return this.prompt([{
+        type: 'input',
+        message: chalk.cyan('Enter API service id to get the configured endpoints: '),
+        name: 'serviceId'
+      }])
+        .then(input => {
+          const s = spinner();
+          s.start();
+          let errorSetId = null;
+
+          masheryClient.fetchAllServiceEndpoints(input.serviceId)
+            .then(json => {
+              // Print the list of existing services endpoints
+              s.stop();
+              this.log(`\n\nList of endpoints (${json.length}):\n-----------------------\n`);
+              json.forEach(endpoints => {
+                //this.log(chalk.magenta(`${endpoints.name}`));
+                //this.log(`id: ${endpoints.id}\n`);
+                masheryClient.fetchEndpoint(input.serviceId, endpoints.id)
+                  .then(endpoint => {
+                    // Print the list of existing services endpoints
+                    s.stop();
+                    //this.log(`\n\nList of endpoints (${json.length}):\n-----------------------\n`);
+                    //this.log(chalk.magenta(`${endpoint.name}`));
+                    //this.log(`id: ${endpoint.id}\n`);
+                    //this.log(`requestAuthenticationType: ${endpoint.requestAuthenticationType}\n`);
+                    //this.log(`publicDomains_address: ${endpoint.publicDomains.address}\n`);
+                    //this.log(`requestPathAlias: ${endpoint.requestPathAlias}\n`);
+                    //this.log(`systemDomains_address: ${endpoint.systemDomains.address}\n`);
+                    //this.log(`trafficManagerDomain: ${endpoint.trafficManagerDomain}\n`);
+                    //this.log(`outboundRequestTargetPath: ${endpoint.outboundRequestTargetPath}\n`);
+                    fs.appendFile("../listofEndpoint.json", JSON.stringify(endpoint) + '\r\n------------------------\r\n\n', function (err) {
+                      if (err) {
+                        return console.log(err);
+                      }
+                      console.log("The file was saved! @../listofEndpoint.json");
+                    });
+                  })
+              });
+            })
+            .catch(handleError(this, s, callback));
+        });
+    }
+    catch (error) {
+      handleError(this, s, callback)(error);
+    }
     callback();
   });
 
