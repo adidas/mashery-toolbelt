@@ -21,11 +21,11 @@ try {
 
 module.exports = new MasheryClient({
   credentials,
-  onAuthSuccess: (credentials) => {
+  onAuthenticationSuccess: (credentials) => {
     writeFileSync(CREDENTIALS_FILE, JSON.stringify(credentials, null , 2))
   },
-  onAuthError: (error) => {
-    console.error(`Auth error: ${error.name}, ${error.message}`)
+  onAuthenticationError: (error) => {
+    console.error(`${error.name}: ${error.message}`)
     console.log('Try running `heroku-toolbelt auth` again')
     process.exit(1)
   }

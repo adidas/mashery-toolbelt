@@ -20,6 +20,28 @@ const defaultOptions = {
   resourceEndpoint: '/v3/rest'
 }
 
+class MasheryClientError extends Error {
+  constructor(code, message) {
+    super(message)
+    this.code = code
+    this.name = this.constructor.name
+  }
+}
+
+class AuthenticationError extends MasheryClientError { }
+class RequestError extends MasheryClientError { }
+
+const ERROR_MESSAGE = {
+  authentication_failed: 'Authentication failed with unknown reason',
+  developer_inactive: 'Application key, application secret or accessToken is wrong',
+  invalid_client: 'Invalid username or password',
+  invalid_scope: 'Scope (Area UUID) does not exists',
+  invalid_url_part: ({ argName, pattern, val, valType }) => `'${argName}' for path '${pattern}' cant be '${val}'(${valType})`,
+  missing_credentials: (missing) => 'The following credentials are missing or have invalid value: ' + missing.join(', '),
+  not_authenticated: 'Not authenticated',
+  unsupported_grant_type: 'Access or refresh token is wrong',
+}
+
 //////////////////////
 // Auth
 //////////////////////
@@ -35,7 +57,7 @@ function validateCredentials(credentials, required) {
   })
 
   if(missing.length > 1) {
-    throw new Error('The following credentials are missing or have invalid value: ' + missing.join(', '));
+    throw new AuthenticationError('missing_credentials', ERROR_MESSAGE.missing_credentials(missing));
   }
 
   return true
@@ -44,45 +66,49 @@ function validateCredentials(credentials, required) {
 function makeAuthRequest(options, { key, secret }, params) {
   const url = new URL(options.tokenEndpoint, options.host).toString()
   const basicAuth = new Buffer(`${key}:${secret}`).toString('base64');
+  const requestOptions = {
+    method: 'POST',
+    body: params,
+    headers: {
+      'Accept':        'application/json',
+      'Authorization': `Basic ${basicAuth}`,
+      'Content-Type':  'application/x-www-form-urlencoded',
+    }
+  }
 
-  return (
-    fetch(url.toString(), {
-      method: 'POST',
-      body: params,
-      headers: {
-        'Accept':        'application/json',
-        'Authorization': `Basic ${basicAuth}`,
-        'Content-Type':  'application/x-www-form-urlencoded',
-      }
-    })
-  )
+  return fetch(url.toString(), requestOptions)
 }
 
 function authenticate(options, credentials) {
-  validateCredentials(credentials, [ 'username', 'password', 'key', 'secret', 'scope' ])
+  return new Promise((resolve, reject) => {
+    validateCredentials(credentials, [ 'username', 'password', 'key', 'secret', 'scope' ])
 
-  const params = new URLSearchParams()
-  params.set('grant_type', 'password')
-  params.set('username', credentials.username)
-  params.set('password', credentials.password)
-  params.set('scope', credentials.scope)
+    const params = new URLSearchParams()
+    params.set('grant_type', 'password')
+    params.set('username', credentials.username)
+    params.set('password', credentials.password)
+    params.set('scope', credentials.scope)
 
-  return makeAuthRequest(options, credentials, params)
+    makeAuthRequest(options, credentials, params).then(resolve, reject)
+  })
 }
 
 function refreshToken(options, credentials) {
-  validateCredentials(credentials, [ 'key', 'secret', 'refreshToken' ])
+  return new Promise((resolve, reject) => {
+    validateCredentials(credentials, [ 'key', 'secret', 'refreshToken' ])
 
-  const params = new URLSearchParams()
-  params.set('grant_type', 'refresh_token')
-  params.set('refresh_token', credentials.refreshToken)
+    const params = new URLSearchParams()
+    params.set('grant_type', 'ref resh_token')
+    params.set('refresh_token', credentials.refreshToken)
 
-  return makeAuthRequest(options, credentials, params)
+    makeAuthRequest(options, credentials, params).then(resolve, reject)
+  })
 }
 
 //////////////////////
 // Requests
 //////////////////////
+
 function makePath({ pattern, args }) {
   const pathArgs = {}
 
@@ -91,7 +117,8 @@ function makePath({ pattern, args }) {
     const valType = typeof(val)
 
     if(![ 'number', 'string' ].includes(valType)) {
-      throw new Error(`'${argName}' for path '${pattern}' cant be '${val}'(${valType})`)
+      const errorMessage = ERROR_MESSAGE.invalid_url_part({ argName, pattern, val, valType })
+      throw new RequestError('invalid_url_part', errorMessage)
     }
 
     pathArgs[argName] = val
@@ -100,8 +127,16 @@ function makePath({ pattern, args }) {
   return pattern.stringify(pathArgs)
 }
 
-function sleep(time) {
+function waitForQps(time) {
   return new Promise(resolve => setTimeout(resolve, time))
+}
+
+function makeRequestHeaders(credentials) {
+  return {
+    'Accept':        'application/json',
+    'Authorization': `Bearer ${credentials.accessToken}`,
+    'Content-Type':  'application/json',
+  }
 }
 
 function callClientRequestWithAuth(client, url, options) {
@@ -109,20 +144,20 @@ function callClientRequestWithAuth(client, url, options) {
   // a) authenticate and repeat
   if(!client.isAuthenticated()) {
     return client.authenticate().then(() => callClientRequestWithAuth(client, url, options))
-
-  // b) refresh token and repeat
-  } else if(client.isTokenExpired()) {
-    return client.refreshToken().then(() => callClientRequestWithAuth(client, url, options))
   }
 
-  // Add AccessToken
-  const headersWithAuth = Object.assign({}, options.headers,
-    { 'Authorization': `Bearer ${client.credentials.accessToken}` },
-  )
+  // b) refresh token and repeat
+  if(client.isTokenExpired()) {
+    return refreshToken(client.options, client.credentials)
+             .then(client.handleAuthenticationDone)
+             .catch(client.handleAuthenticationError)
+             .then(() => callClientRequestWithAuth(client, url, options))
+  }
 
-  const optionsWithAuth = Object.assign({}, options, { headers: headersWithAuth })
+  const headers = makeRequestHeaders(client.credentials)
+  const optionsWithHeaders = Object.assign({}, options, { headers })
 
-  return fetch(url, optionsWithAuth)
+  return fetch(url, optionsWithHeaders)
 }
 
 function callClientRequest(client, url, options) {
@@ -135,18 +170,23 @@ function callClientRequest(client, url, options) {
     // a) Catch throttling limit
     if(errorCode === 'ERR_403_DEVELOPER_OVER_QPS') {
       const retryIn = Number(headers.get('retry-after')) * 1000
-      return sleep(retryIn).then(() => callClientRequest(client, url, options))
-
-    // b) Catch other errors
-    } else if(errorCode) {
-      const errorDetail = headers.get('x-error-detail-header')
-      const error = new Error(`Request error. code: ${errorCode}, detail: ${errorDetail}`)
-      return Promise.reject(error)
+      return waitForQps(retryIn).then(() => callClientRequest(client, url, options))
     }
 
-    const contentType = headers.get('content-type')
+    // b) Catch unauthorized access (wrong key, secret or token)
+    if(errorCode === 'ERR_403_DEVELOPER_INACTIVE') {
+      // TODO: propagate to onAuthenticationError
+      const error = new AuthenticationError('developer_inactive', ERROR_MESSAGE.developer_inactive)
+      client.handleAuthenticationError(error)
+      throw error
+    }
 
-    if(contentType.includes('application/json')) {
+    // c) Catch other errors
+    if(errorCode) {
+      throw new RequestError(errorCode, headers.get('x-error-detail-header'))
+    }
+
+    if(headers.get('content-type').includes('application/json')) {
       return response.json()
     } else {
       return response.text()
@@ -163,12 +203,7 @@ function registerClientMethod(client, name, pathPattern, method) {
     const url  = new URL(`${client.options.resourceEndpoint}${path}`, client.options.host)
     const data = args.length > pattern.names.length ? args[pattern.names.length] : null
 
-    const options = {
-      headers: {
-        'Accept':        'application/json',
-        'Content-Type':  'application/json',
-      }
-    }
+    const options = {}
 
     if(method == 'GET') {
       // Set query params
@@ -185,20 +220,20 @@ function registerClientMethod(client, name, pathPattern, method) {
 }
 
 function registerClientMethods(client) {
-  apiMethods.forEach(([name, path, method]) => {
-    registerClientMethod(client, name, path, method)
+  apiMethods.forEach((methodDefinition) => {
+    registerClientMethod(client, ...methodDefinition)
   })
 }
 
 class MasheryClient {
-  constructor({ credentials, onAuthSuccess, onAuthError, ...options } = {}) {
+  constructor({ credentials, onAuthenticationSuccess, onAuthenticationError, ...options } = {}) {
     this.options = Object.assign(defaultOptions, options)
     this.credentials = credentials || {}
-    this.onAuthSuccess = onAuthSuccess
-    this.onAuthError = onAuthError
+    this.onAuthenticationSuccess = onAuthenticationSuccess
+    this.onAuthenticationError = onAuthenticationError
 
-    this.authenticationDone = this.authenticationDone.bind(this)
-    this.authenticationError = this.authenticationError.bind(this)
+    this.handleAuthenticationDone = this.handleAuthenticationDone.bind(this)
+    this.handleAuthenticationError = this.handleAuthenticationError.bind(this)
 
     registerClientMethods(this)
   }
@@ -208,48 +243,39 @@ class MasheryClient {
     return accessToken && refreshToken && tokenExpiresAt
   }
 
-  requireAuthenticication() {
+  requireAuthentication() {
     if(!this.isAuthenticated()) {
-      throw new Error('Not authorized')
+      throw new AuthenticationError('not_authenticated', ERROR_MESSAGE.not_authenticated)
     }
   }
 
   isTokenExpired() {
-    this.requireAuthenticication()
+    this.requireAuthentication()
     const now = +new Date()
     return now > this.credentials.tokenExpiresAt
   }
 
-  authenticate(credentials) {
-    this.credentials = Object.assign(this.credentials, credentials)
+  authenticate(credentials = null) {
+    if(credentials !== null) {
+      this.credentials = credentials
+    }
 
-    return (
-      authenticate(this.options, this.credentials)
-        .then(this.authenticationDone)
-        .catch(this.authenticationError)
-    )
+    return authenticate(this.options, this.credentials)
+             .then(this.handleAuthenticationDone)
+             .catch(this.handleAuthenticationError)
   }
 
-  refreshToken() {
-    return (
-      refreshToken(this.options, this.credentials)
-        .then(this.authenticationDone)
-        .catch(this.authenticationError)
-    )
-  }
-
-  authenticationDone(response) {
+  handleAuthenticationDone(response) {
     const jsonPromise = response.json()
 
     return jsonPromise.then(data => {
-      // Catch errors like
-      // { error: 'invalid_scope', error_description: 'Invalid scope.' }
+      // Catch auth response errors
       if(!data || data.error) {
-        return Promise.reject(
-          new Error(`Authentication error: ${data.error}; description: ${data.error_description}`)
-        )
+        const error = (data && data.error) || 'authentication_failed'
+        throw new AuthenticationError(error, ERROR_MESSAGE[error])
       }
 
+      // TODO: new Date() should be set before calling request and not after
       const tokenExpiresAt = new Date()
       tokenExpiresAt.setSeconds(tokenExpiresAt.getSeconds() + data.expires_in)
 
@@ -259,15 +285,17 @@ class MasheryClient {
         tokenExpiresAt: +tokenExpiresAt
       })
 
-      if(typeof(this.onAuthSuccess) === 'function') {
-        this.onAuthSuccess(this.credentials)
+      if(typeof(this.onAuthenticationSuccess) === 'function') {
+        this.onAuthenticationSuccess(this.credentials)
       }
+
+      return this.credentials
     })
   }
 
-  authenticationError(error) {
-    if(typeof(this.onAuthError) === 'function') {
-      this.onAuthError(error)
+  handleAuthenticationError(error) {
+    if(typeof(this.onAuthenticationError) === 'function') {
+      this.onAuthenticationError(error)
     }
 
     return Promise.reject(error)
@@ -275,3 +303,9 @@ class MasheryClient {
 }
 
 module.exports = MasheryClient
+
+Object.assign(module.exports, {
+  MasheryClientError,
+  AuthenticationError,
+  RequestError,
+})
