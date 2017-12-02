@@ -36,6 +36,7 @@ const ERROR_MESSAGE = {
   developer_inactive: 'Application key, application secret or accessToken is wrong',
   invalid_client: 'Invalid username or password',
   invalid_scope: 'Scope (Area UUID) does not exists',
+  invalid_request: 'Invalid resource owner password credentials',
   invalid_url_part: ({ argName, pattern, val, valType }) => `'${argName}' for path '${pattern}' cant be '${val}'(${valType})`,
   missing_credentials: (missing) => 'The following credentials are missing or have invalid value: ' + missing.join(', '),
   not_authenticated: 'Not authenticated',
@@ -56,7 +57,7 @@ function validateCredentials(credentials, required) {
     }
   })
 
-  if(missing.length > 1) {
+  if(missing.length > 0) {
     throw new AuthenticationError('missing_credentials', ERROR_MESSAGE.missing_credentials(missing));
   }
 
@@ -150,7 +151,12 @@ function callClientRequestWithAuth(client, url, options) {
   if(client.isTokenExpired()) {
     return refreshToken(client.options, client.credentials)
              .then(client.handleAuthenticationDone)
-             .catch(client.handleAuthenticationError)
+             .catch(error => {
+               // When refresh token is (probably) expired, try to authenticate again with current credentials
+               const shouldAuthenticate = error instanceof AuthenticationError && error.code == 'unsupported_grant_type'
+               const promise = shouldAuthenticate ? client.authenticate() : Promise.reject(error)
+               return promise.catch(client.handleAuthenticationError)
+             })
              .then(() => callClientRequestWithAuth(client, url, options))
   }
 
