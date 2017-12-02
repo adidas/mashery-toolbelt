@@ -1,6 +1,6 @@
 const inquirer = require('inquirer')
 const client   = require('./client')
-const makeSpinner = require('./utils/spinner');
+const spinner = require('./utils/spinner');
 
 const required = label => value => value === '' ? `${label} can't be empty` : true
 
@@ -19,6 +19,7 @@ const questions = [
     message: "Password:",
     allow_empty: false,
     validate: required('Password'),
+    default: client.credentials.password,
   },
   {
     name: 'key',
@@ -50,8 +51,6 @@ function auth() {
   return (
     inquirer.prompt(questions)
       .then(answers => {
-        const spinner = makeSpinner()
-
         spinner.start()
         const authRequest = client.authenticate(answers)
         authRequest.then(spinner.stop, spinner.stop)
