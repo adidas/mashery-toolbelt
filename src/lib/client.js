@@ -35,6 +35,7 @@ const ERROR_MESSAGE = {
   authentication_failed: 'Authentication failed with unknown reason',
   developer_inactive: 'Application key, application secret or accessToken is wrong',
   invalid_client: 'Invalid username or password',
+  invalid_field: (methodName, fields) => `Invalid fields '${fields.join(',')}' for '${methodName}' method call`,
   invalid_scope: 'Scope (Area UUID) does not exists',
   invalid_request: 'Invalid resource owner password credentials',
   invalid_url_part: ({ argName, pattern, val, valType }) => `'${argName}' for path '${pattern}' cant be '${val}'(${valType})`,
@@ -200,7 +201,32 @@ function callClientRequest(client, url, options) {
   })
 }
 
-function registerClientMethod(client, name, pathPattern, method) {
+function makeFieldsParam(methodName, allFields, fields) {
+  let resultFields
+
+  if(fields === true || fields === 'all') {
+    resultFields = allFields
+  } else if(Array.isArray(fields)) {
+    const invalidFields = []
+    fields.forEach(field => {
+      if(!allFields.include(field)) { invalidFields.push(field) }
+    })
+
+    if(invalidFields.length > 0) {
+      throw new RequestError('invalid_fields', ERROR_MESSAGE.invalid_field(methodName, fields))
+    }
+
+    resultFields = fields
+  } else if(fields && Array.isArray(fields.except)) {
+    resultFields = allFields.filter(field => !fields.except.include(field))
+  } else {
+    return null
+  }
+
+  return resultFields.join(",")
+}
+
+function registerClientMethod(client, name, pathPattern, method, fields) {
   const pattern = new UrlPattern(pathPattern)
   method = method.toUpperCase()
 
@@ -214,10 +240,17 @@ function registerClientMethod(client, name, pathPattern, method) {
     if(method == 'GET') {
       // Set query params
       if(data !== null) {
-        Object.keys(data).forEach(key => url.searchParams.set(key, data[key]))
+        Object.keys(data).forEach(key => {
+          const value = key === 'fields' ? makeFieldsParam(name, fields, data[key]) : data[key]
+
+          if(value !== null && value !== undefined) {
+            url.searchParams.set(key, value)
+          }
+        })
       }
     } else {
       options.method = method
+      // TODO: validate data againts fields
       options.body   = data && JSON.stringify(data)
     }
 
