@@ -1,14 +1,14 @@
 const { fetchAllServices } = require('./client')
-const makeSpinner = require('./utils/spinner')
+const spinner = require('./utils/spinner')
 
 function ls(filter) {
-  const spinner = makeSpinner()
   spinner.start()
   const servicesRequest = fetchAllServices()
-  servicesRequest.then(() => spinner.stop(true), () => spinner.stop(true))
+  servicesRequest.then(spinner.stop, spinner.stop)
 
   servicesRequest
     .then(services => {
+      // TODO: mashery api somehow supports filter query param. Try it
       if(filter !== undefined) {
         return services.filter(({ name }) => name.toLowerCase().includes(filter))
       }
