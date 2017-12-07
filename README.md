@@ -55,3 +55,8 @@ $ git clone https://github.com/adidas-group/mashery-toolbelt.git
 $ cd mashery-toolbelt
 $ npm install
 ```
+
+
+## TODO
+
+- [ ] Add stats for restoring of service like: `endpoints(created:2, updated:1, deleted:3)`

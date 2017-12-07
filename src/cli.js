@@ -6,6 +6,8 @@
 const program = require('commander')
 const runAuth = require('./auth')
 const runLs = require('./ls')
+const runBackup = require('./backup')
+const runRestore = require('./restore')
 
 program
   .version('0.0.1')
@@ -26,6 +28,16 @@ program
   .command('ls [name]')
   .description('List all services. Optionally filtered by name')
   .action((name) => runLs(name))
+
+program
+  .command('backup <serviceId>')
+  .description('Backup all data for given service')
+  .action(serviceId => runBackup(serviceId))
+
+program
+  .command('restore <serviceId> <backupName>')
+  .description('Restore given service from existing backup')
+  .action((serviceId, backupName) => runRestore(serviceId, backupName))
 
 program.parse(process.argv)
 
