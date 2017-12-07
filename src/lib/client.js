@@ -21,7 +21,7 @@ const defaultOptions = {
 }
 
 class MasheryClientError extends Error {
-  constructor(code, message) {
+  constructor(code, message = ERROR_MESSAGE[code]) {
     super(message)
     this.code = code
     this.name = this.constructor.name
@@ -41,6 +41,7 @@ const ERROR_MESSAGE = {
   invalid_url_part: ({ argName, pattern, val, valType }) => `'${argName}' for path '${pattern}' cant be '${val}'(${valType})`,
   missing_credentials: (missing) => 'The following credentials are missing or have invalid value: ' + missing.join(', '),
   not_authenticated: 'Not authenticated',
+  request_error: (status, statusText) => `Request error. Status: ${status} (${statusText})`,
   unsupported_grant_type: 'Access or refresh token is wrong',
 }
 
@@ -182,8 +183,7 @@ function callClientRequest(client, url, options) {
 
     // b) Catch unauthorized access (wrong key, secret or token)
     if(errorCode === 'ERR_403_DEVELOPER_INACTIVE') {
-      // TODO: propagate to onAuthenticationError
-      const error = new AuthenticationError('developer_inactive', ERROR_MESSAGE.developer_inactive)
+      const error = new AuthenticationError('developer_inactive')
       client.handleAuthenticationError(error)
       throw error
     }
@@ -193,12 +193,30 @@ function callClientRequest(client, url, options) {
       throw new RequestError(errorCode, headers.get('x-error-detail-header'))
     }
 
-    if(headers.get('content-type').includes('application/json')) {
+    if(response.status !== 200) {
+      throw new RequestError(`request_error`, ERROR_MESSAGE.request_error(response.status, response.statusText))
+    }
+
+    const contentType = headers.get('content-type')
+
+    if(contentType && contentType.includes('application/json')) {
       return response.json()
     } else {
       return response.text()
     }
   })
+}
+
+function validateFields(methodName, allFields, fields) {
+  const invalidFields = []
+
+  fields.forEach(field => {
+    if(!allFields.includes(field)) { invalidFields.push(field) }
+  })
+
+  if(invalidFields.length > 0) {
+    throw new RequestError('invalid_fields', ERROR_MESSAGE.invalid_field(methodName, fields))
+  }
 }
 
 function makeFieldsParam(methodName, allFields, fields) {
@@ -207,18 +225,11 @@ function makeFieldsParam(methodName, allFields, fields) {
   if(fields === true || fields === 'all') {
     resultFields = allFields
   } else if(Array.isArray(fields)) {
-    const invalidFields = []
-    fields.forEach(field => {
-      if(!allFields.include(field)) { invalidFields.push(field) }
-    })
-
-    if(invalidFields.length > 0) {
-      throw new RequestError('invalid_fields', ERROR_MESSAGE.invalid_field(methodName, fields))
-    }
-
+    validateFields(methodName, allFields, fields)
     resultFields = fields
   } else if(fields && Array.isArray(fields.except)) {
-    resultFields = allFields.filter(field => !fields.except.include(field))
+    validateFields(methodName, allFields, fields.except)
+    resultFields = allFields.filter(field => !fields.except.includes(field))
   } else {
     return null
   }
@@ -264,6 +275,7 @@ function registerClientMethods(client) {
   })
 }
 
+// TODO: add option to enable single pipe requests to prevent cross trigger qps
 class MasheryClient {
   constructor({ credentials, onAuthenticationSuccess, onAuthenticationError, ...options } = {}) {
     this.options = Object.assign(defaultOptions, options)
@@ -284,7 +296,7 @@ class MasheryClient {
 
   requireAuthentication() {
     if(!this.isAuthenticated()) {
-      throw new AuthenticationError('not_authenticated', ERROR_MESSAGE.not_authenticated)
+      throw new AuthenticationError('not_authenticated')
     }
   }
 
@@ -311,7 +323,7 @@ class MasheryClient {
       // Catch auth response errors
       if(!data || data.error) {
         const error = (data && data.error) || 'authentication_failed'
-        throw new AuthenticationError(error, ERROR_MESSAGE[error])
+        throw new AuthenticationError(error)
       }
 
       // TODO: new Date() should be set before calling request and not after
