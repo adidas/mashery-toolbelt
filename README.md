@@ -39,6 +39,25 @@ mashery-toolbelt ls [name]
 - optional argument `name` to filter services by name
 
 
+### #backup
+
+```
+mashery-toolbelt backup <serviceId> [backupName]
+```
+
+- download snapshot of service current state into `[MASHERY_DIR]/backup/[serviceId]/[backupName].json`
+- when no `backupName` is given, then current timestamp is used
+
+
+### #restore
+
+```
+mashery-toolbelt restore <serviceId> <backupName>
+```
+
+- Restore service to state from given snapshot in `[MASHERY_DIR]/backup/[serviceId]/[backupName].json`
+
+
 ## Installation
 
 With Node.js v7.5.0 or higher installed, run
@@ -59,4 +78,7 @@ $ npm install
 
 ## TODO
 
+- [ ] Listing of backups
+  - `mashery-toolbelt snapshots` to list all list all
+  - When restoring by `serviceId` without `backupName`, then give user UI to choose one
 - [ ] Add stats for restoring of service like: `endpoints(created:2, updated:1, deleted:3)`

@@ -30,9 +30,9 @@ program
   .action((name) => runLs(name))
 
 program
-  .command('backup <serviceId>')
+  .command('backup <serviceId> [backupName]')
   .description('Backup all data for given service')
-  .action(serviceId => runBackup(serviceId))
+  .action((serviceId, backupName) => runBackup(serviceId, backupName))
 
 program
   .command('restore <serviceId> <backupName>')
