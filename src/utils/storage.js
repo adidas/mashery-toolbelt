@@ -56,6 +56,7 @@ function unlinkSync(file) {
 
 module.exports = {
   readFileSync,
+  resolveFile,
   unlinkSync,
   writeFileSync,
 }
