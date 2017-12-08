@@ -33,6 +33,7 @@
     "inquirer": "4.0.0",
     "jsondiffpatch": "0.2.5",
     "node-fetch": "^1.7.2",
+    "swagger-parser": "4.0.1",
     "url-pattern": "1.0.3"
   },
   "devDependencies": {
