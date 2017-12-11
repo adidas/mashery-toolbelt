@@ -83,6 +83,17 @@ mashery-toolbelt promote 8t7a4qwh2dgk97tjmjxffthd QA qa.backend.domain.com
   - For other environments remove that prefix
 
 
+### #errorset <subcommand>
+
+### #add
+
+```
+mashery-toolbelt errorset add <serviceId> <errorSetPath>
+```
+
+- Add given errorSet to service
+
+
 ## Installation
 
 With Node.js v7.5.0 or higher installed, run
