@@ -41,7 +41,7 @@ const ERROR_MESSAGE = {
   invalid_url_part: ({ argName, pattern, val, valType }) => `'${argName}' for path '${pattern}' cant be '${val}'(${valType})`,
   missing_credentials: (missing) => 'The following credentials are missing or have invalid value: ' + missing.join(', '),
   not_authenticated: 'Not authenticated',
-  request_error: (status, statusText) => `Request error. Status: ${status} (${statusText})`,
+  request_error: (method, path, status, statusText) => `[${method.toUpperCase()}] ${path} failed:${status} (${statusText})`,
   unsupported_grant_type: 'Access or refresh token is wrong',
 }
 
@@ -193,17 +193,22 @@ function callClientRequest(client, url, options) {
       throw new RequestError(errorCode, headers.get('x-error-detail-header'))
     }
 
-    if(response.status !== 200) {
-      throw new RequestError(`request_error`, ERROR_MESSAGE.request_error(response.status, response.statusText))
-    }
-
     const contentType = headers.get('content-type')
+    const isJson = contentType && contentType.includes('application/json')
+    const payloadPromise = isJson ? response.json() : response.text()
 
-    if(contentType && contentType.includes('application/json')) {
-      return response.json()
-    } else {
-      return response.text()
-    }
+    return payloadPromise.then(payload => {
+      if(response.status >= 200 && response.status < 300) {
+        return payload
+      }
+
+      const errorPayload = isJson ? JSON.stringify(payload) : payload
+      const errorMessage = ERROR_MESSAGE.request_error(
+        options.method || 'GET', url, response.status, errorPayload
+      )
+
+      throw new RequestError(`request_error`, errorMessage)
+    })
   })
 }
 
@@ -215,7 +220,7 @@ function validateFields(methodName, allFields, fields) {
   })
 
   if(invalidFields.length > 0) {
-    throw new RequestError('invalid_fields', ERROR_MESSAGE.invalid_field(methodName, fields))
+    throw new RequestError('invalid_fields', ERROR_MESSAGE.invalid_field(methodName, invalidFields))
   }
 }
 
