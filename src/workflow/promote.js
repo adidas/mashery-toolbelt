@@ -1,7 +1,7 @@
-const dumpApi = require('./mashery/dumpApi')
-const createApi = require('./mashery/createApi')
-const promoteApi = require('./adidas/promoteApi')
-const spinner = require('./utils/spinner')
+const dumpApi = require('../mashery/dumpApi')
+const createApi = require('../mashery/createApi')
+const promoteApi = require('../adidas/promoteApi')
+const spinner = require('../utils/spinner')
 
 const DUMP_FIELDS = {
   serviceFields: {

@@ -1,5 +1,5 @@
-const { fetchAllServices } = require('./client')
-const spinner = require('./utils/spinner')
+const { fetchAllServices } = require('../client')
+const spinner = require('../utils/spinner')
 
 function ls(filter) {
   spinner.start()
