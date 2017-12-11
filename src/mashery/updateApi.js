@@ -1,21 +1,19 @@
 const dumpApi = require('./dumpApi')
-const client = require('../client')
+const applyChanges = require('./utils/applyChanges')
 
-function extractData({ id, created, updated, ...data }) {
-  return data
+const CURRENT_IDS_FIELDS = {
+  serviceFields: false,
+  endpointFields: ['id'],
+  errorSetFields: ['id']
 }
 
 function getCurrentIds(serviceId) {
-  const fields = {
-    serviceFields: false,
-    endpointFields: ['id'],
-    errorSetFields: ['id']
-  }
-
-  return dumpApi(serviceId, fields).then(({ endpoints, errorSets }) => ({
-    endpoints: endpoints.map(({ id }) => id),
-    errorSets: errorSets.map(({ id }) => id)
-  }))
+  return dumpApi(serviceId, CURRENT_IDS_FIELDS).then(
+    ({ endpoints, errorSets }) => ({
+      endpoints: endpoints.map(({ id }) => id),
+      errorSets: errorSets.map(({ id }) => id)
+    })
+  )
 }
 
 function prepareChanges(newData, currentIds) {
@@ -41,41 +39,36 @@ function prepareChanges(newData, currentIds) {
   return { toCreate, toUpdate, toDelete }
 }
 
-function callChanges(
-  { toCreate, toUpdate, toDelete },
-  pathBaseName,
-  ...pathArguments
-) {
-  return Promise.all([
-    ...toCreate.map(data =>
-      client[`create${pathBaseName}`](...pathArguments, extractData(data))
-    ),
-    ...toUpdate.map(data =>
-      client[`update${pathBaseName}`](
-        ...pathArguments,
-        data.id,
-        extractData(data)
-      )
-    ),
-    ...toDelete.map(({ id }) =>
-      client[`delete${pathBaseName}`](...pathArguments, id)
-    )
-  ])
-}
-
-function updateApi(serviceId, api) {
+// TODO:
+// Promise should return stats about changes
+// On error can we perform rollback?
+function updateApi(serviceId, api, { verbose = false } = {}) {
+  verbose && console.log(`Updating service ${serviceId}`)
   const { service, endpoints, errorSets } = api
 
-  return getCurrentIds(serviceId).then(currentIds => {
-    const endpointsChanges = prepareChanges(endpoints, currentIds.endpoints)
-    const errorSetsChanges = prepareChanges(errorSets, currentIds.errorSets)
+  return getCurrentIds(serviceId)
+    .then(currentIds => {
+      const endpointsChanges = prepareChanges(endpoints, currentIds.endpoints)
+      const errorSetsChanges = prepareChanges(errorSets, currentIds.errorSets)
 
-    return Promise.all([
-      client.updateService(serviceId, extractData(service)),
-      callChanges(endpointsChanges, 'ServiceEndpoint', serviceId),
-      callChanges(errorSetsChanges, 'ServiceErrorSet', serviceId)
-    ])
-  })
+      return Promise.all([
+        applyChanges({ toUpdate: [service] }, 'Service'),
+        applyChanges(endpointsChanges, 'ServiceEndpoint', serviceId),
+        applyChanges(errorSetsChanges, 'ServiceErrorSet', serviceId)
+      ])
+    })
+    .then(data => {
+      verbose && console.log(`Updating done`)
+      return data
+    })
+    .catch(err => {
+      if (verbose) {
+        console.error('Updating failed:')
+        console.error(err)
+      }
+
+      return Promise.reject(err)
+    })
 }
 
 module.exports = updateApi
