@@ -1,6 +1,6 @@
-const dumpApi = require('./mashery/dumpApi')
-const { writeFileSync, resolveFile } = require('./utils/storage')
-const spinner = require('./utils/spinner');
+const dumpApi = require('../mashery/dumpApi')
+const { writeFileSync, resolveFile } = require('../utils/storage')
+const spinner = require('../utils/spinner');
 
 function backup(serviceId, backupName) {
   console.log(`Running backup for service '${serviceId}'`)

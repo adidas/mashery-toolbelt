@@ -1,6 +1,6 @@
-const updateApi = require('./mashery/updateApi')
-const { readFileSync, resolveFile } = require('./utils/storage')
-const spinner = require('./utils/spinner');
+const updateApi = require('../mashery/updateApi')
+const { readFileSync, resolveFile } = require('../utils/storage')
+const spinner = require('../utils/spinner');
 
 function restore(serviceId, backupName) {
   const path = `backup/${serviceId}/${backupName}.json`

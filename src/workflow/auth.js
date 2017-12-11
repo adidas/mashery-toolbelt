@@ -1,6 +1,6 @@
 const inquirer = require('inquirer')
-const client   = require('./client')
-const spinner = require('./utils/spinner');
+const client   = require('../client')
+const spinner = require('../utils/spinner');
 
 const required = label => value => value === '' ? `${label} can't be empty` : true
 

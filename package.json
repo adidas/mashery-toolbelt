@@ -28,7 +28,7 @@
   "homepage": "https://github.com/adidas-group/mashery-provision#readme",
   "dependencies": {
     "cli-spinner": "^0.2.6",
-    "commander": "2.12.1",
+    "commander": "2.12.2",
     "dotenv": "^4.0.0",
     "inquirer": "4.0.0",
     "node-fetch": "^1.7.2",
