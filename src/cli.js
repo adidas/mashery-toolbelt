@@ -39,4 +39,8 @@ defineProgram({
     .action((serviceId, environemnt, systemDomain) => {
       runPromote(serviceId, environemnt, systemDomain)
     })
+
+  // Standalone programs
+  program
+    .command('errorset', 'Interface for error sets')
 })
