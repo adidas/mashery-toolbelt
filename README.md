@@ -58,6 +58,31 @@ mashery-toolbelt restore <serviceId> <backupName>
 - Restore service to state from given snapshot in `[MASHERY_DIR]/backup/[serviceId]/[backupName].json`
 
 
+### #promote
+
+**Adidas specific feature**
+
+
+```
+mashery-toolbelt promote <serviceId> <environment> <backendDomain>
+```
+
+- Clone given service to new environment following specific rules
+- Available environments are DEV, QA, SIT, PRD
+
+Example with promoting existing DEV service:
+
+```
+mashery-toolbelt promote 8t7a4qwh2dgk97tjmjxffthd QA qa.backend.domain.com
+```
+
+1. It replaces `DEV some name` before name of service and endpoint with `QA some name`
+2. It replaces beginning of public domain `dev.` with `qa.`
+3. It sets backend domain (systemDomain) with given argument value
+4. When environment is SIT, then ensure that backend path (outboundRequestTargetPath) starts with `sit/`
+  - For other environments remove that prefix
+
+
 ## Installation
 
 With Node.js v7.5.0 or higher installed, run

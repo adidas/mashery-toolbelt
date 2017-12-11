@@ -8,6 +8,7 @@ const runAuth = require('./auth')
 const runLs = require('./ls')
 const runBackup = require('./backup')
 const runRestore = require('./restore')
+const runPromote = require('./promote')
 
 program
   .version('0.0.1')
@@ -38,6 +39,14 @@ program
   .command('restore <serviceId> <backupName>')
   .description('Restore given service from existing backup')
   .action((serviceId, backupName) => runRestore(serviceId, backupName))
+
+program
+  .command('promote <serviceId> <environment> <systemDomain>')
+  .description('Promote service to new API to different environemnt and system domain')
+  .action((serviceId, environemnt, systemDomain) => {
+    runPromote(serviceId, environemnt, systemDomain)
+  })
+
 
 program.parse(process.argv)
 

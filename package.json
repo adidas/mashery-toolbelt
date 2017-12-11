@@ -4,7 +4,8 @@
   "description": "CLI tool for Mashery API Management provisioning",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "tdd": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -32,5 +33,8 @@
     "inquirer": "4.0.0",
     "node-fetch": "^1.7.2",
     "url-pattern": "1.0.3"
+  },
+  "devDependencies": {
+    "jest": "21.2.1"
   }
 }
