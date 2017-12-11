@@ -1,13 +1,15 @@
 const client = require('../client')
 
-function dumpApi(serviceId, fields = {}) {
+function dumpApi(serviceId, fields = {}, { verbose = false } = {}) {
+  verbose && console.log(`Dumping service ${serviceId}`)
+
   const {
     serviceFields = { except: ['endpoints', 'errorSets'] },
     endpointFields = { except: ['methods'] },
     errorSetFields = true
   } = fields
 
-  let data = {}
+  const data = {}
 
   return (
     client
@@ -28,15 +30,18 @@ function dumpApi(serviceId, fields = {}) {
           .fetchAllServiceErrorSets(serviceId, { fields: errorSetFields })
           .then(errorSets => (data.errorSets = errorSets))
       )
-      // NOTE: we dont need it call separately, because messages are already with errorSets
-      // .then(() => {
-      //   const messagesRequests = data.errorSets.map(({ id }) => client.fetchAllErrorMessages(serviceId, id, { fields: true }))
-      //   return Promise.all(messagesRequests).then(data => console.log("x", data))
-      // })
       // TODO: Download rest of service data
-      .then(() => data)
+      .then(() => {
+        verbose && console.log('Dump done')
+        return data
+      })
       .catch(error => {
-        console.error('Dump failed', error.name, error.message)
+        if (verbose) {
+          console.error('Dump failed:')
+          console.log(error)
+        }
+
+        return Promise.reject(error)
       })
   )
 }
