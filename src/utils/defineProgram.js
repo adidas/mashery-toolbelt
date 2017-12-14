@@ -13,26 +13,25 @@ function defineProgram({ description}, callProgram) {
 
   callProgram(program)
 
-  // program.on('*', function (command) {
-  //   console.log("XXXX")
-  //   this.commands.some(function (command) {
-  //     return command._name === argv[0];
-  //   }) || this.help();
-  // })
+  program
+    .command('*')
+    .action(function(unknownCommand){
+      if(program._execs[unknownCommand]) {
+        // if(program.rawArgs.length === 3) {
+        //   program.help()
+        //   process.exit(1)
+        // }
+      } else if(unknownCommand === '[object Object]') {
+        program.help()
+        process.exit(1)
+      } else {
+        console.error(`\n  error: unknown command \`${unknownCommand}\`\n`)
+        console.log(`  show help with: ${program._name} --help\n`)
+        process.exit(1)
+      }
+    });
 
   program.parse(process.argv)
-
-  if (program.args.length === 0) {
-    program.help()
-  } else {
-    const cmd = program.args[0]
-
-    if (!program._execs[cmd]) {
-      console.error(`\n  error: unknown command \`${cmd}\`\n`)
-      console.log('  show help with: mashery-toolbelt --help\n')
-      process.exit(1)
-    }
-  }
 }
 
 module.exports = defineProgram
