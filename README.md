@@ -64,23 +64,40 @@ mashery-toolbelt restore <serviceId> <backupName>
 
 
 ```
-mashery-toolbelt promote <serviceId> <environment> <backendDomain>
+mashery-toolbelt promote <serviceId> <environment> --name='replaceValue' --trafficDomain='replaceValue' \
+                                                   --publicDomain='replaceValue' [--publicPath='replaceValue'] \
+                                                   --endpointDomain='replaceValue' [--endpointPath='replaceValue'] \
+                                                   [--ignoreOtherEnv]
 ```
 
-- Clone given service to new environment following specific rules
-- Available environments are DEV, QA, SIT, PRD
+- Clone given service to new environment
+- Available environments are DEV => QA, QA => PRD
+- Option `--ignoreOtherEnv` will suppress error when current service contain endpoint from different environment than source one
+- Changing values is via options `name`, `trafficDomain`, `publicDomain`, `publicPath`, `endpointDomain`, `endpointPath`
+  - `publicPath` and `endpointPath` are optional
+  - each options accept `replaceValue` which can be one of following types
+  - **simple** - `--publicDomain='new.domain.com'`
+    - Replace all public domains with new one
+  - **multi** - `--endpointDomain='old.domain.com:new.domain.com'` (colon pattern)
+    - Get value on left side of colon and replace all matching endpoint domains with new one
+    - Allow multiple patterns `--endpointDomain='old.com:new.com' --endpointDomain='older.com:newer.com'`
+  - **pattern** - `--endpointPath='wip/*/dev/*:*/qa/*'`
+    - Expand `*` into simple matcher.
+    - `wip/*/dev/*` will match `/wip/root/users/dev/id/{id}` and change it to `root/users/qa/id/{id}`
+- Before creating new API, app will print changes in schema and you have to confirm it.
 
-Example with promoting existing DEV service:
+
+Example:
 
 ```
-mashery-toolbelt promote 8t7a4qwh2dgk97tjmjxffthd QA qa.backend.domain.com
+mashery-toolbelt promote h9tygfmjttuf9sb6ah8kjftd QA \
+  --name='DEV*:QA*' --name='*:QA *' \
+  --trafficDomain=qa.apiinternal.adidas.com \
+  --publicDomain='qa.apiinternal.adidas.com' \
+  --endpointDomain='staging.coredam-s3-facade-service.staging.he.k8s.emea.adsint.biz
 ```
 
-1. It replaces `DEV some name` before name of service and endpoint with `QA some name`
-2. It replaces beginning of public domain `dev.` with `qa.`
-3. It sets backend domain (systemDomain) with given argument value
-4. When environment is SIT, then ensure that backend path (outboundRequestTargetPath) starts with `sit/`
-  - For other environments remove that prefix
+- More examples in [file with tests](test/workflow/adidas/promoteApi.test.js)
 
 
 ### #errorset <subcommand>
