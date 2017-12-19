@@ -3,7 +3,7 @@
 CLI tool for Mashery API Management provisioning.
 
 
-## Functionality
+## Functionality
 
 - Provide various commands to run complex scenarios in Mashery
 - App data are stored in `HOMEDIR/.mashery-toolbelt/` directory
