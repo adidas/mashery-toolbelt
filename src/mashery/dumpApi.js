@@ -1,36 +1,59 @@
 const client = require('../client')
 
+function dumpService(data, serviceId, fields) {
+  return client
+    .fetchService(serviceId, { fields })
+    .then(service => (data.service = service))
+}
+
+function dumpEndpoints(service, fields) {
+  if(fields === false) {
+    return
+  }
+
+  return client
+    .fetchAllServiceEndpoints(service.id, { fields })
+    .then(endpoints => (service.endpoints = endpoints))
+}
+
+function dumpMethods(service, fields) {
+  if(fields)
+  return Promise.all(
+    service.endpoints.map(endpoint =>
+      client
+        .fetchAllEndpointMethods(service.id, endpoint.id, { fields })
+        .then(methods => (endpoint.methods = methods))
+    )
+  )
+}
+
+function dumpErrorSets(service, fields) {
+  if(fields === false) {
+    return
+  }
+
+  return client
+    .fetchAllServiceErrorSets(service.id, { fields })
+    .then(errorSets => (service.errorSets = errorSets))
+}
+
 function dumpApi(serviceId, fields = {}, { verbose = false } = {}) {
   verbose && console.log(`Dumping service ${serviceId}`)
 
   const {
     serviceFields = { except: ['endpoints', 'errorSets'] },
     endpointFields = { except: ['methods'] },
+    methodFields = true,
     errorSetFields = true
   } = fields
 
   const data = {}
 
   return (
-    client
-      .fetchService(serviceId, { fields: serviceFields })
-      .then(service => (data.service = service))
-      .then(() =>
-        client
-          .fetchAllServiceEndpoints(serviceId, { fields: endpointFields })
-          .then(endpoints => (data.endpoints = endpoints))
-      )
-      // NOTE: We dont use it anywhere yet?
-      // .then(() => {
-      //   const methodsRequests = data.endpoints.map(({ id }) => client.fetchAllEndpointMethods(serviceId, id, { fields: true }))
-      //   return Promise.all(methodsRequests).then(data => console.log("x", data))
-      // })
-      .then(() =>
-        client
-          .fetchAllServiceErrorSets(serviceId, { fields: errorSetFields })
-          .then(errorSets => (data.errorSets = errorSets))
-      )
-      // TODO: Download rest of service data
+    dumpService(data, serviceId, serviceFields)
+      .then(() => dumpEndpoints(data.service, endpointFields, methodFields))
+      .then(() => dumpMethods(data.service, methodFields))
+      .then(() => dumpErrorSets(data.service, errorSetFields))
       .then(() => {
         verbose && console.log('Dump done')
         return data

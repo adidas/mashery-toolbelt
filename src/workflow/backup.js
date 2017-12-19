@@ -13,9 +13,10 @@ function backup(serviceId, backupName) {
     console.log(`Service backup done in '${resolveFile(path)}'`)
     console.log(`Backup name: '${backupName}'`)
   })
-  .catch(() => {
+  .catch(error => {
     spinner.stop()
-    console.error('Backup failed')
+    console.error('Backup failed:')
+    console.error(error)
   })
 }
 

@@ -1,9 +1,10 @@
 const dumpApi = require('./dumpApi')
-const applyChanges = require('./utils/applyChanges')
+const client = require('../client')
 
 const DUMP_FIELDS = {
   serviceFields: ['id'],
   endpointFields: ['id'],
+  methodFields: false,
   errorSetFields: ['id']
 }
 
@@ -11,10 +12,14 @@ function clearApi(serviceId, { verbose = false } = {}) {
   verbose && console.log(`Clearing service ${serviceId}`)
 
   return dumpApi(serviceId, DUMP_FIELDS)
-    .then(({ service, endpoints, errorSets }) => {
+    .then(({ service, service: { endpoints, errorSets } }) => {
       return Promise.all([
-        applyChanges({ toDelete: endpoints }, 'ServiceEndpoint', service.id),
-        applyChanges({ toDelete: errorSets }, 'ServiceErrorSet', service.id)
+        ...endpoints.map(endpoint =>
+          client.deleteServiceEndpoint(serviceId, endpoint.id)
+        ),
+        ...errorSets.map(errorSet =>
+          client.deleteServiceErrorSet(serviceId, errorSet.id)
+        )
       ])
     })
     .then(data => {
@@ -22,7 +27,7 @@ function clearApi(serviceId, { verbose = false } = {}) {
       return data
     })
     .catch(err => {
-      if(verbose) {
+      if (verbose) {
         console.error(`Clearing failed:`)
         console.error(err)
       }
