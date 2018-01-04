@@ -10,7 +10,7 @@ function ls(filter) {
     .then(services => {
       // TODO: mashery api somehow supports filter query param. Try it
       if(filter !== undefined) {
-        return services.filter(({ name }) => name.toLowerCase().includes(filter))
+        return services.filter(({ name }) => name.toLowerCase().includes(filter.toLowerCase()))
       }
 
       return services
