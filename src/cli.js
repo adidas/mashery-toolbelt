@@ -19,9 +19,9 @@ defineProgram({
     .action(() => runAuth())
 
   program
-    .command('ls [name]')
-    .description('List all services. Optionally filtered by name')
-    .action((name) => runLs(name))
+    .command('ls [search]')
+    .description('List all services. Optionally you can search for specific part of name')
+    .action((search) => runLs(search))
 
   program
     .command('backup <serviceId> [backupName]')
