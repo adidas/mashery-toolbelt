@@ -3,6 +3,7 @@ const client   = require('../client')
 const spinner = require('../utils/spinner');
 
 const required = label => value => value === '' ? `${label} can't be empty` : true
+const HIDDEN_PASSWORD = '******'
 
 const questions = [
   {
@@ -19,7 +20,7 @@ const questions = [
     message: "Password:",
     allow_empty: false,
     validate: required('Password'),
-    default: client.credentials.password,
+    default: client.credentials.password ? HIDDEN_PASSWORD : null,
   },
   {
     name: 'key',
@@ -51,6 +52,10 @@ function auth() {
   return (
     inquirer.prompt(questions)
       .then(answers => {
+        if(answers.password === HIDDEN_PASSWORD && client.credentials.password) {
+          answers.password = client.credentials.password
+        }
+
         spinner.start()
         const authRequest = client.authenticate(answers)
         authRequest.then(spinner.stop, spinner.stop)
