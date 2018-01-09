@@ -33,14 +33,14 @@ const DUMP_FIELDS = {
   endpointFields: { except: ['created', 'updated', 'methods'] }
 }
 
-function promote(serviceId, environemnt, options) {
-  console.log(`Promoting service '${serviceId}' to '${environemnt}'`)
+function promote(serviceId, options) {
+  console.log(`Promoting service '${serviceId}'`)
 
   spinner.start()
 
   dumpApi(serviceId, DUMP_FIELDS)
     .then(api => {
-      const promote = promoteApi(api, environemnt, options)
+      const promote = promoteApi(api, options)
       const delta = differ.diff(promote.source, promote.target)
       spinner.stop()
 
