@@ -64,14 +64,13 @@ mashery-toolbelt restore <serviceId> <backupName>
 
 
 ```
-mashery-toolbelt promote <serviceId> <environment> --name='replaceValue' --trafficDomain='replaceValue' \
-                                                   --publicDomain='replaceValue' [--publicPath='replaceValue'] \
-                                                   --endpointDomain='replaceValue' [--endpointPath='replaceValue'] \
-                                                   [--ignoreOtherEnv]
+mashery-toolbelt promote <serviceId> --name='replaceValue' --trafficDomain='replaceValue' \
+                                     --publicDomain='replaceValue' [--publicPath='replaceValue'] \
+                                     --endpointDomain='replaceValue' [--endpointPath='replaceValue'] \
+                                     [--ignoreOtherEnv]
 ```
 
-- Clone given service to new environment
-- Available environments are DEV => QA, QA => PRD
+- Clone given service with changes defined by other arguments
 - Option `--ignoreOtherEnv` will suppress error when current service contain endpoint from different environment than source one
 - Changing values is via options `name`, `trafficDomain`, `publicDomain`, `publicPath`, `endpointDomain`, `endpointPath`
   - `publicPath` and `endpointPath` are optional
