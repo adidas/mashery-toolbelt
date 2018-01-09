@@ -112,7 +112,7 @@ function promoteApi(api, environment, options = {}) {
     name: 'endpointDomain'
   })
 
-  const endpointPathReplacer = makeReplacer(options.publicPath, {
+  const endpointPathReplacer = makeReplacer(options.endpointPath, {
     name: 'endpointPath',
     required: false
   })
