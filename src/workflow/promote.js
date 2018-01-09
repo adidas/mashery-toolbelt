@@ -53,14 +53,23 @@ function promote(serviceId, options) {
           message: 'Are this valid changes in promoted API?'
         }
       ])
-      .then(() => {
-        return createApi(promote.target)
+      .then(({ confirm }) => {
+        if(confirm === true) {
+          return createApi(promote.target)
+        }
+
+        return false
       })
     })
     .then(newService => {
       spinner.stop()
-      console.log('Promoting done')
-      console.log(`Service id=${newService.id}`)
+
+      if(typeof(newService) === 'object') {
+        console.log('Promoting done')
+        console.log(`Service id=${newService.id}`)
+      } else {
+        console.log('Promoting cancelled')
+      }
     })
     .catch(error => {
       spinner.stop()
