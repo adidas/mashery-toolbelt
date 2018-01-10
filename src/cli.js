@@ -35,21 +35,25 @@ defineProgram({
 
   // Allow to have multiple option values
   function collect(val, memo) {
+    if(typeof(memo) === 'function') { memo = [] }
+
     memo.push(val);
     return memo;
   }
 
   program
     .command('promote <serviceId>')
-    .option('--name <name>', 'name replace pattern', collect, [])
-    .option('--trafficDomain <trafficDomain>', 'traffic domain replace pattern', collect, [])
-    .option('--publicDomain <publicDomain>', 'public domain replace pattern', collect, [])
-    .option('--publicPath <publicPath>', 'public path replace pattern', collect, [])
-    .option('--endpointDomain <endpointDomain>', 'endpoint domain replace pattern', collect, [])
-    .option('--endpointPath <endpointPath>', 'endpoint path replace pattern', collect, [])
+    .option('--name <name>', 'name replace pattern', collect)
+    .option('--trafficDomain <trafficDomain>', 'traffic domain replace pattern', collect)
+    .option('--publicDomain <publicDomain>', 'public domain replace pattern', collect)
+    .option('--publicPath <publicPath>', 'public path replace pattern', collect)
+    .option('--endpointDomain <endpointDomain>', 'endpoint domain replace pattern', collect)
+    .option('--endpointPath <endpointPath>', 'endpoint path replace pattern', collect)
     .option('-i, --ignoreOtherEnv', 'ignore if api contains other environments than requested one')
     .description('Promote service to new API to different environemnt')
-    .action((serviceId, options) => runPromote(serviceId, options))
+    .action((serviceId, options) => {
+      runPromote(serviceId, options)
+    })
 
   // Standalone programs
   program
