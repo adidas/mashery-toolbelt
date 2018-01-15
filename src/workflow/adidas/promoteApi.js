@@ -17,13 +17,18 @@ function promoteApi(api, options = {}) {
     name: 'name'
   })
 
-  const trafficDomainReplacer = makeReplacer(options.trafficDomain, {
-    name: 'trafficDomain'
-  })
+  let trafficDomainReplacer
+
+  if(options.trafficDomain && options.trafficDomain.length) {
+    trafficDomainReplacer = makeReplacer(options.trafficDomain, {
+      name: 'trafficDomain'
+    })
+  }
 
   const publicDomainReplacer = makeReplacer(options.publicDomain, {
     name: 'publicDomain'
   })
+
 
   const publicPathReplacer = makeReplacer(options.publicPath, {
     name: 'publicPath',
@@ -43,7 +48,6 @@ function promoteApi(api, options = {}) {
 
   targetApi.service.endpoints.forEach(endpoint => {
     endpoint.name = nameReplacer(endpoint.name)
-    endpoint.trafficManagerDomain = trafficDomainReplacer(endpoint.trafficManagerDomain)
     // Public
     endpoint.publicDomains[0].address = publicDomainReplacer(endpoint.publicDomains[0].address)
     endpoint.requestPathAlias = publicPathReplacer(endpoint.requestPathAlias)
@@ -51,6 +55,12 @@ function promoteApi(api, options = {}) {
     endpoint.systemDomains[0].address = endpointDomainReplacer(endpoint.systemDomains[0].address)
     endpoint.outboundRequestTargetPath = endpointPathReplacer(endpoint.outboundRequestTargetPath)
 
+
+    if(trafficDomainReplacer) {
+      endpoint.trafficManagerDomain = trafficDomainReplacer(endpoint.trafficManagerDomain)
+    } else {
+      endpoint.trafficManagerDomain = endpoint.publicDomains[0].address
+    }
   })
 
   return { source: sourceApi, target: targetApi }
