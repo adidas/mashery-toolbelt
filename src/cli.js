@@ -35,7 +35,7 @@ defineProgram({
 
   // Allow to have multiple option values
   function collect(val, memo) {
-    if(typeof(memo) === 'function') { memo = [] }
+    if(!Array.isArray(memo)) { memo = [] }
 
     memo.push(val);
     return memo;
