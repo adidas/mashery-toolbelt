@@ -6,7 +6,7 @@ function updateApi(serviceId, api, { verbose = false } = {}) {
   verbose && console.log(`Updating service ${serviceId}`)
 
   return client
-    .updateService(api.service)
+    .updateService(serviceId, api.service)
     .then(createdService => {
       verbose && console.log(`Updating done.`)
     })

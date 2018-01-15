@@ -1,3 +1,35 @@
+const { invalid_field } = require('./error_messages')
+
+function validateFields(methodName, allFields, fields) {
+  const invalidFields = []
+
+  fields.forEach(field => {
+    if(!allFields.includes(field)) { invalidFields.push(field) }
+  })
+
+  if(invalidFields.length > 0) {
+    throw new RequestError('invalid_fields', invalid_field(methodName, invalidFields))
+  }
+}
+
+function makeFieldsParam(methodName, allFields, fields) {
+  let resultFields
+
+  if(fields === true || fields === 'all') {
+    resultFields = allFields
+  } else if(Array.isArray(fields)) {
+    validateFields(methodName, allFields, fields)
+    resultFields = fields
+  } else if(fields && Array.isArray(fields.except)) {
+    validateFields(methodName, allFields, fields.except)
+    resultFields = allFields.filter(field => !fields.except.includes(field))
+  } else {
+    return null
+  }
+
+  return resultFields.join(",")
+}
+
 const service = [
   "id", "name", "description", "created", "updated", "endpoints", "editorHandle",
   "revisionNumber", "robotsPolicy", "crossdomainPolicy", "description",
@@ -59,6 +91,8 @@ const oAuth = [
 const roles = [ "id", "created", "updated", "name", "action" ]
 
 module.exports = {
+  validateFields,
+  makeFieldsParam,
   service,
   endpoint,
   method,
