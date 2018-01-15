@@ -29,7 +29,6 @@ function promoteApi(api, options = {}) {
     name: 'publicDomain'
   })
 
-
   const publicPathReplacer = makeReplacer(options.publicPath, {
     name: 'publicPath',
     required: false
@@ -63,7 +62,7 @@ function promoteApi(api, options = {}) {
     }
   })
 
-  return { source: sourceApi, target: targetApi }
+  return targetApi
 }
 
 module.exports = promoteApi

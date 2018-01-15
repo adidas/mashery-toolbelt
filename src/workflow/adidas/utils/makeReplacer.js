@@ -4,7 +4,7 @@ function validatePatterns(value, name, required) {
   if (Array.isArray(value)) {
     value = value.filter(val => typeof(val) === 'string' && val.length)
   } else {
-    value = typeof(val) === 'string' && value.length ? [value] : []
+    value = typeof(value) === 'string' && value.length ? [value] : []
   }
 
   if (required === true && value.length === 0) {

@@ -40,8 +40,8 @@ function promote(serviceId, options) {
 
   dumpApi(serviceId, DUMP_FIELDS)
     .then(api => {
-      const promote = promoteApi(api, options)
-      const delta = differ.diff(promote.source, promote.target)
+      const newApi = promoteApi(api, options)
+      const delta = differ.diff(api, newApi)
       spinner.stop()
 
       jsondiffpatch.console.log(delta)
@@ -55,7 +55,7 @@ function promote(serviceId, options) {
       ])
       .then(({ confirm }) => {
         if(confirm === true) {
-          return createApi(promote.target)
+          return createApi(newApi)
         }
 
         return false
