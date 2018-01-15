@@ -22,7 +22,7 @@ const qaApi = {
     endpoints: [
       {
         name: 'QA First Endpoint',
-        trafficManagerDomain: 'qa.traffic.domain.com',
+        trafficManagerDomain: 'qa.public.domain.com',
         publicDomains: [{ address: 'qa.public.domain.com' }],
         systemDomains: [{ address: 'backend.qa.domain.com' }],
         requestPathAlias: '/{id}',
@@ -65,23 +65,24 @@ const prdApi = {
 // }
 
 test('promotes DEV API to QA', () => {
-  expect(promoteApi(devApi, 'QA', {
-    trafficDomain: 'qa.traffic.domain.com',
+  expect(promoteApi(devApi, {
+    name: 'DEV*:QA*',
     publicDomain: 'qa.public.domain.com',
-    publicPath: '*/dev/*:*/qa/*',
     endpointDomain: 'backend.qa.domain.com',
+    endpointPath: '*/dev/*:*/qa/*',
   })).toEqual(qaApi)
 })
 
 test('promotes QA API to PRD', () => {
-  expect(promoteApi(qaApi, 'PRD', {
+  expect(promoteApi(qaApi, {
+    name: 'QA*:PRD*',
     trafficDomain: 'traffic.domain.com',
     publicDomain: 'public.domain.com',
-    publicPath: '*/qa/*:*/*',
     endpointDomain: 'backend.domain.com',
+    endpointPath: '*/qa/*:*/*',
   })).toEqual(prdApi)
 })
 
 // test('promotes QA API to SIT', () => {
-//   expect(promoteApi(qaApi, 'sit', 'backend.sit.domain.com')).toEqual(sitApi)
+//   expect(promoteApi(qaApi, 'backend.sit.domain.com')).toEqual(sitApi)
 // })
