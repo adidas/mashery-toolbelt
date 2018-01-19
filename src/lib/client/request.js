@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const { URL, URLSearchParams } = require('url')
 const UrlPattern = require('url-pattern')
 const apiMethods = require('./methods')
+const { refreshToken } = require('./auth')
 const { makeFieldsParam } = require('./fields')
 const { MasheryClientError, AuthenticationError, RequestError }  = require('./errors')
 const ERROR_MESSAGES = require('./error_messages')
