@@ -5,7 +5,7 @@ const apiMethods = require('./methods')
 const { refreshToken } = require('./auth')
 const { makeFieldsParam } = require('./fields')
 const { MasheryClientError, AuthenticationError, RequestError }  = require('./errors')
-const ERROR_MESSAGES = require('./error_messages')
+const errorMessages = require('./error_messages')
 
 function makePath({ pattern, args }) {
   const pathArgs = {}
@@ -15,7 +15,7 @@ function makePath({ pattern, args }) {
     const valType = typeof(val)
 
     if(![ 'number', 'string' ].includes(valType)) {
-      const errorMessage = ERROR_MESSAGES.invalid_url_part({ argName, pattern, val, valType })
+      const errorMessage = errorMessages.invalid_url_part({ argName, pattern, val, valType })
       throw new RequestError('invalid_url_part', errorMessage)
     }
 
@@ -98,7 +98,7 @@ function callClientRequest(client, url, options) {
       }
 
       const errorPayload = isJson ? JSON.stringify(payload) : payload
-      const errorMessage = ERROR_MESSAGES.request_error(
+      const errorMessage = errorMessages.request_error(
         options.method || 'GET', url, response.status, errorPayload
       )
 

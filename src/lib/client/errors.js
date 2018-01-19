@@ -1,5 +1,7 @@
+const errorMessages = require('./error_messages')
+
 class MasheryClientError extends Error {
-  constructor(code, message = ERROR_MESSAGES[code]) {
+  constructor(code, message = errorMessages[code]) {
     super(message)
     this.code = code
     this.name = this.constructor.name
