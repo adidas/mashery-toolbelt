@@ -1,30 +1,8 @@
-const inquirer = require('inquirer')
-const jsondiffpatch = require('jsondiffpatch')
 const dumpApi = require('../mashery/dumpApi')
 const createApi = require('../mashery/createApi')
 const promoteApi = require('./adidas/promoteApi')
 const spinner = require('../utils/spinner')
-
-const differ = jsondiffpatch.create({
-  objectHash: function(obj, index) {
-    // try to find an id property, otherwise just use the index in the array
-    return obj.id || obj.name || '$$index:' + index
-  },
-  textDiff: {
-    // default 60, minimum string length (left and right sides) to use text diff algorythm: google-diff-match-patch
-    minLength: 200
-  },
-  propertyFilter: function(name, context) {
-    return !['created', 'updated'].includes(name)
-  },
-  cloneDiffValues: true,
-  arrays: {
-    // default true, detect items moved inside the array (otherwise they will be registered as remove+add)
-    detectMove: true,
-    // default false, the value of items moved is not included in deltas
-    includeValueOnMove: false
-  }
-})
+const confirmChanges = require('../utils/confirmChanges')
 
 const DUMP_FIELDS = {
   serviceFields: {
@@ -40,36 +18,20 @@ function promote(serviceId, options) {
 
   dumpApi(serviceId, DUMP_FIELDS)
     .then(api => {
-      const newApi = promoteApi(api, options)
-      const delta = differ.diff(api, newApi)
-      spinner.stop()
-
-      jsondiffpatch.console.log(delta)
-
-      return inquirer.prompt([
-        {
-          name: 'confirm',
-          type: 'confirm',
-          message: 'Are this valid changes in promoted API?'
-        }
-      ])
-      .then(({ confirm }) => {
-        if(confirm === true) {
-          return createApi(newApi)
-        }
-
-        return false
+      return confirmChanges({
+        before: api,
+        after: promoteApi(api, options),
+        message: 'Are this valid changes in promoted API?',
+        action: newData => {
+          spinner.start()
+          return createApi(newData)
+        },
       })
     })
     .then(newService => {
       spinner.stop()
-
-      if(typeof(newService) === 'object') {
-        console.log('Promoting done')
-        console.log(`Service id=${newService.id}`)
-      } else {
-        console.log('Promoting cancelled')
-      }
+      console.log('Promoting done')
+      console.log(`Service id=${newService.id}`)
     })
     .catch(error => {
       spinner.stop()
