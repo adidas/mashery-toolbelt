@@ -9,6 +9,7 @@ const runLs = require('./workflow/ls')
 const runBackup = require('./workflow/backup')
 const runRestore = require('./workflow/restore')
 const runPromote = require('./workflow/promote')
+const runErrorSetAdd = require('./workflow/errorSet/add')
 
 defineProgram({
   description: 'Mashery remote command tool'
@@ -55,7 +56,10 @@ defineProgram({
       runPromote(serviceId, options)
     })
 
-  // Standalone programs
   program
-    .command('errorset', 'Interface for error sets')
+    .command('errorset-add <serviceId> <file>')
+    .description('Add given error set to service')
+    .action((serviceId, file) => {
+      runErrorSetAdd(serviceId, file)
+    })
 })
