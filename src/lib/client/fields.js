@@ -32,8 +32,8 @@ function makeFieldsParam(methodName, allFields, fields) {
 
 const service = [
   "id", "name", "description", "created", "updated", "endpoints", "editorHandle",
-  "revisionNumber", "robotsPolicy", "crossdomainPolicy", "description",
-  "errorSets", "qpsLimitOverall", "rfc3986Encode", "securityProfile", "version", "organization"
+  "revisionNumber", "robotsPolicy", "crossdomainPolicy", "errorSets", "qpsLimitOverall", 
+  "rfc3986Encode", "securityProfile", "version", "organization"
 ]
 
 const endpoint = [

@@ -22,7 +22,7 @@ const differ = jsondiffpatch.create({
 })
 
 function printDiff(before, after) {
-  const delta = differ.diff(api, newApi)
+  const delta = differ.diff(before, after)
   jsondiffpatch.console.log(delta)
 }
 

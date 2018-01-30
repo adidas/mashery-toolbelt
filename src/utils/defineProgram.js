@@ -9,29 +9,16 @@ const program = require('commander')
 function defineProgram({ description}, callProgram) {
   program
     .version(package.version)
-    .option('-v, --verbose', 'verbose mode')
+    // .option('-v, --verbose', 'verbose mode')
 
   callProgram(program)
 
-  program
-    .command('*')
-    .action(function(unknownCommand){
-      if(program._execs[unknownCommand]) {
-        // if(program.rawArgs.length === 3) {
-        //   program.help()
-        //   process.exit(1)
-        // }
-      } else if(unknownCommand === '[object Object]') {
-        program.help()
-        process.exit(1)
-      } else {
-        console.error(`\n  error: unknown command \`${unknownCommand}\`\n`)
-        console.log(`  show help with: ${program._name} --help\n`)
-        process.exit(1)
-      }
-    });
-
   program.parse(process.argv)
+
+  if (!process.argv.slice(2).length) {
+    program.help()
+    process.exit(0)
+  }
 }
 
 module.exports = defineProgram
