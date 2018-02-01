@@ -1,6 +1,6 @@
 {
   "name": "mashery-toolbelt",
-  "version": "2.0.0-alpha.6",
+  "version": "2.0.0-alpha.7",
   "description": "CLI tool for Mashery API Management provisioning",
   "main": "index.js",
   "scripts": {
