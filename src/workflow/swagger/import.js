@@ -2,19 +2,23 @@ const path = require('path')
 const SwaggerParser = require('swagger-parser')
 const spinner = require('../../utils/spinner')
 const buildApiFromSwagger = require('../adidas/buildFromSwagger')
+const modifyValues = require('../adidas/modifyValues')
 const confirmChanges = require('../../utils/confirmChanges')
 
 function importSwaggerFile(swagger, options) {
   SwaggerParser
     .parse(swagger)
     .then(swaggerData => {
+      const apiFromSwagger = buildApiFromSwagger(swaggerData, options)
+      const api = modifyValues(apiFromSwagger, options)
+      
       return confirmChanges({
         before: {},
-        after: buildApiFromSwagger(swaggerData, options),
+        after: api,
         message: `Are this valid new api from swagger \'${swagger}\'?`,
-        action: newData => {
+        action: newApi => {
           spinner.start()
-          return createApi(newData)
+          return createApi(newApi)
         },
       })
     })

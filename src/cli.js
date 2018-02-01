@@ -66,7 +66,7 @@ defineProgram({
       })
   )
 
-  // withModificationArguments(
+  withModificationArguments(
     program
       .command('swagger-import <fileOrUrl>')
       .option('-m, --multiMethodEndpoint', 'Creates one endpoint for same resource nad multiple HTTP methods instead of one enpoint per HTTP method')
@@ -75,7 +75,7 @@ defineProgram({
       .action((swagger, options) => {
         runSwaggerImport(swagger, options)
       })
-  // )
+  )
 
   program
     .command('errorset-add <serviceId> <file>')

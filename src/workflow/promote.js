@@ -1,6 +1,6 @@
 const dumpApi = require('../mashery/dumpApi')
 const createApi = require('../mashery/createApi')
-const promoteApi = require('./adidas/promoteApi')
+const modifyValues = require('./adidas/modifyValues')
 const spinner = require('../utils/spinner')
 const confirmChanges = require('../utils/confirmChanges')
 
@@ -20,7 +20,7 @@ function promote(serviceId, options) {
     .then(api => {
       return confirmChanges({
         before: api,
-        after: promoteApi(api, options),
+        after: modifyValues(api, options),
         message: 'Are this valid changes in promoted API?',
         action: newData => {
           spinner.start()
