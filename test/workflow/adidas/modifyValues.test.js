@@ -1,4 +1,4 @@
-const promoteApi = require('../../../src/workflow/adidas/promoteApi')
+const modifyValues = require('../../../src/workflow/adidas/modifyValues')
 
 const devApi = {
   service: {
@@ -65,7 +65,7 @@ const prdApi = {
 // }
 
 test('promotes DEV API to QA', () => {
-  expect(promoteApi(devApi, {
+  expect(modifyValues(devApi, {
     name: 'DEV*:QA*',
     publicDomain: 'qa.public.domain.com',
     endpointDomain: 'backend.qa.domain.com',
@@ -74,7 +74,7 @@ test('promotes DEV API to QA', () => {
 })
 
 test('promotes QA API to PRD', () => {
-  expect(promoteApi(qaApi, {
+  expect(modifyValues(qaApi, {
     name: 'QA*:PRD*',
     trafficDomain: 'traffic.domain.com',
     publicDomain: 'public.domain.com',
@@ -84,7 +84,7 @@ test('promotes QA API to PRD', () => {
 })
 
 // test('promotes QA API to SIT', () => {
-//   expect(promoteApi(qaApi, 'backend.sit.domain.com')).toEqual(sitApi)
+//   expect(modifyValues(qaApi, 'backend.sit.domain.com')).toEqual(sitApi)
 // })
 
 
@@ -94,7 +94,7 @@ const complexApi = require('./fixtures/complexApi.json')
 test('promotes complex API to QA', () => {
   api = JSON.parse(JSON.stringify(complexApi))
   api.service.endpoints = api.service.endpoints.filter(endpoint => endpoint.name.startsWith("DEV"))
-  expect(promoteApi(api, {
+  expect(modifyValues(api, {
     name: ['DEV*:QA*', '*:QA *'],
     publicDomain: 'qa.apiinternal.adidas.com',
     endpointDomain: 'staging.coredam-s3-facade-service.staging.he.k8s.emea.adsint.biz',
@@ -105,7 +105,7 @@ test('promotes complex API to QA', () => {
 test('promotes complex API to PRD', () => {
   api = JSON.parse(JSON.stringify(complexApi))
   api.service.endpoints = api.service.endpoints.filter(endpoint => endpoint.name.startsWith("QA"))
-  expect(promoteApi(api, {
+  expect(modifyValues(api, {
     name: ['QA*:PRD*', '*:PRD *'],
     publicDomain: 'apiinternal.adidas.com',
     endpointDomain: 'production.coredam-s3-facade-service.prod.he.k8s.emea.adsint.biz',
