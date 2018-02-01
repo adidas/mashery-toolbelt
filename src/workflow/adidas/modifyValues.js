@@ -1,13 +1,8 @@
-// Adidas specific feature
-// Promote one api (service with nested entities) to new environment
-//   - prepend env to name of service and endpoints (ie: 'DEV name of service')
-//   - prepend correct subdomain (ie: qa.internal.domain.com)
-//   - prepend 'sit/' to path for SIT environment
-
 const path = require('path')
 const makeReplacer = require('./utils/makeReplacer')
+const deep = require('../../utils/deep')
 
-function promoteApi(api, options = {}) {
+function modifyValues(api, options = {}) {
   // Clone source
   const sourceApi = JSON.parse(JSON.stringify(api))
   const targetApi = JSON.parse(JSON.stringify(sourceApi))
@@ -48,12 +43,18 @@ function promoteApi(api, options = {}) {
   targetApi.service.endpoints.forEach(endpoint => {
     endpoint.name = nameReplacer(endpoint.name)
     // Public
-    endpoint.publicDomains[0].address = publicDomainReplacer(endpoint.publicDomains[0].address)
+    deep.set(
+      endpoint, 'publicDomains.0.address',
+      publicDomainReplacer(deep.get(endpoint, 'publicDomains.0.address'))
+    )
+
     endpoint.requestPathAlias = publicPathReplacer(endpoint.requestPathAlias)
     // Endpoint
-    endpoint.systemDomains[0].address = endpointDomainReplacer(endpoint.systemDomains[0].address)
+    deep.set(
+      endpoint, 'systemDomains.0.address',
+      endpointDomainReplacer(deep.get(endpoint, 'systemDomains.0.address'))
+    )
     endpoint.outboundRequestTargetPath = endpointPathReplacer(endpoint.outboundRequestTargetPath)
-
 
     if(trafficDomainReplacer) {
       endpoint.trafficManagerDomain = trafficDomainReplacer(endpoint.trafficManagerDomain)
@@ -65,4 +66,4 @@ function promoteApi(api, options = {}) {
   return targetApi
 }
 
-module.exports = promoteApi
+module.exports = modifyValues
