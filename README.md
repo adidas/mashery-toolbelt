@@ -99,13 +99,18 @@ mashery-toolbelt promote h9tygfmjttuf9sb6ah8kjftd QA \
 ### #swagger-import
 
 ```
-mashery-toolbelt swagger-import <fileOrUrl> [--organisation='organisationId'] [--multiMethodEndpoint]
+mashery-toolbelt swagger-import <fileOrUrl> \
+                                [--organisation='organisationId'] [--multiMethodEndpoint] \
+                                --name='replaceValue' --trafficDomain='replaceValue' \
+                                --publicDomain='replaceValue' [--publicPath='replaceValue'] \
+                                --endpointDomain='replaceValue' [--endpointPath='replaceValue']
 ```
 
 - Creates service and endpoints from swagger file (local file or url)
 - `--organisation=organisationId` (`-o organisationId`) id of existing organisation under mashery scope (area)
 - `--multiMethodEndpoint` generates just one endpoint for resource and its multiple HTTP methods.
   - Default is one endpoint per resource and HTTP method.
+- Modifier attributes same as **promote** command
 
 
 
