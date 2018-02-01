@@ -66,12 +66,10 @@ mashery-toolbelt restore <serviceId> <backupName>
 ```
 mashery-toolbelt promote <serviceId> --name='replaceValue' --trafficDomain='replaceValue' \
                                      --publicDomain='replaceValue' [--publicPath='replaceValue'] \
-                                     --endpointDomain='replaceValue' [--endpointPath='replaceValue'] \
-                                     [--ignoreOtherEnv]
+                                     --endpointDomain='replaceValue' [--endpointPath='replaceValue']
 ```
 
 - Clone given service with changes defined by other arguments
-- Option `--ignoreOtherEnv` will suppress error when current service contain endpoint from different environment than source one
 - Changing values is via options `name`, `trafficDomain`, `publicDomain`, `publicPath`, `endpointDomain`, `endpointPath`
   - `publicPath` and `endpointPath` are optional
   - each options accept `replaceValue` which can be one of following types
@@ -98,13 +96,23 @@ mashery-toolbelt promote h9tygfmjttuf9sb6ah8kjftd QA \
 
 - More examples in [file with tests](test/workflow/adidas/promoteApi.test.js)
 
-
-### #errorset <subcommand>
-
-### #add
+### #swagger-import
 
 ```
-mashery-toolbelt errorset add <serviceId> <errorSetPath>
+mashery-toolbelt swagger-import <fileOrUrl> [--organisation='organisationId'] [--multiMethodEndpoint]
+```
+
+- Creates service and endpoints from swagger file (local file or url)
+- `--organisation=organisationId` (`-o organisationId`) id of existing organisation under mashery scope (area)
+- `--multiMethodEndpoint` generates just one endpoint for resource and its multiple HTTP methods.
+  - Default is one endpoint per resource and HTTP method.
+
+
+
+### #errorset-add
+
+```
+mashery-toolbelt errorset-add <serviceId> <errorSetPath>
 ```
 
 - Add given errorSet to service

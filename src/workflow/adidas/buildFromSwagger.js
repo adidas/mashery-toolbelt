@@ -100,7 +100,7 @@ function buildApiFromSwagger({
 
   if(organisation) {
     service.organisation = {
-      id: options.organisation
+      id: organisation
     }
   }
 
