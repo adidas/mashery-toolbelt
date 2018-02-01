@@ -4,7 +4,7 @@ const spinner = require('./spinner')
 
 function confirmChanges({ before, after, message, action }) {
   spinner.stop()
-  printDiff(api, newApi)
+  printDiff(before, after)
 
   return inquirer.prompt([
     {
@@ -22,3 +22,5 @@ function confirmChanges({ before, after, message, action }) {
     process.exit(0)
   })
 }
+
+module.exports = confirmChanges

@@ -9,7 +9,9 @@ const runLs = require('./workflow/ls')
 const runBackup = require('./workflow/backup')
 const runRestore = require('./workflow/restore')
 const runPromote = require('./workflow/promote')
+const runSwaggerImport = require('./workflow/swagger/import')
 const runErrorSetAdd = require('./workflow/errorSet/add')
+
 
 defineProgram({
   description: 'Mashery remote command tool'
@@ -42,19 +44,38 @@ defineProgram({
     return memo;
   }
 
-  program
-    .command('promote <serviceId>')
-    .option('--name <name>', 'name replace pattern', collect)
-    .option('--trafficDomain <trafficDomain>', 'traffic domain replace pattern', collect)
-    .option('--publicDomain <publicDomain>', 'public domain replace pattern', collect)
-    .option('--publicPath <publicPath>', 'public path replace pattern', collect)
-    .option('--endpointDomain <endpointDomain>', 'endpoint domain replace pattern', collect)
-    .option('--endpointPath <endpointPath>', 'endpoint path replace pattern', collect)
-    .option('-i, --ignoreOtherEnv', 'ignore if api contains other environments than requested one')
-    .description('Promote service to new API to different environemnt')
-    .action((serviceId, options) => {
-      runPromote(serviceId, options)
-    })
+  function withModificationArguments(command) {
+    return (
+      command
+        .option('--name <name>', 'name replace pattern', collect)
+        .option('--trafficDomain <trafficDomain>', 'traffic domain replace pattern', collect)
+        .option('--publicDomain <publicDomain>', 'public domain replace pattern', collect)
+        .option('--publicPath <publicPath>', 'public path replace pattern', collect)
+        .option('--endpointDomain <endpointDomain>', 'endpoint domain replace pattern', collect)
+        .option('--endpointPath <endpointPath>', 'endpoint path replace pattern', collect)
+    )
+  }
+
+  withModificationArguments(
+    program
+      .command('promote <serviceId>')
+      .option('-i, --ignoreOtherEnv', 'ignore if api contains other environments than requested one')
+      .description('Promote service to new API to different environemnt')
+      .action((serviceId, options) => {
+        runPromote(serviceId, options)
+      })
+  )
+
+  // withModificationArguments(
+    program
+      .command('swagger-import <fileOrUrl>')
+      .option('-m, --multiMethodEndpoint', 'Creates one endpoint for same resource nad multiple HTTP methods instead of one enpoint per HTTP method')
+      .option('-o, --organisation <organisationId>', 'Organisation under which service will be created')
+      .description('Build api from given swagger file or URL')
+      .action((swagger, options) => {
+        runSwaggerImport(swagger, options)
+      })
+  // )
 
   program
     .command('errorset-add <serviceId> <file>')
