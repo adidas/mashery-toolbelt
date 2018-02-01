@@ -1,4 +1,4 @@
-const promoteApi = require('../../../src/workflow/adidas/promoteApi')
+const modifyValues = require('../../../src/workflow/adidas/modifyValues')
 
 const devApi = {
   service: {
@@ -65,7 +65,7 @@ const prdApi = {
 // }
 
 test('promotes DEV API to QA', () => {
-  expect(promoteApi(devApi, {
+  expect(modifyValues(devApi, {
     name: 'DEV*:QA*',
     publicDomain: 'qa.public.domain.com',
     endpointDomain: 'backend.qa.domain.com',
@@ -74,7 +74,7 @@ test('promotes DEV API to QA', () => {
 })
 
 test('promotes QA API to PRD', () => {
-  expect(promoteApi(qaApi, {
+  expect(modifyValues(qaApi, {
     name: 'QA*:PRD*',
     trafficDomain: 'traffic.domain.com',
     publicDomain: 'public.domain.com',
@@ -82,7 +82,3 @@ test('promotes QA API to PRD', () => {
     endpointPath: '*/qa/*:*/*',
   })).toEqual(prdApi)
 })
-
-// test('promotes QA API to SIT', () => {
-//   expect(promoteApi(qaApi, 'backend.sit.domain.com')).toEqual(sitApi)
-// })
