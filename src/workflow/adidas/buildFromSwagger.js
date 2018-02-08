@@ -3,6 +3,10 @@ const METHODS = ["post", "get", "put", "delete", "head", "patch", "options"]
 const defaultService = {}
 const defaultEndpoint = {}
 
+function fixName(name) {
+  return name.trim().replace('[', '(').replace(']', ')')
+}
+
 function buildSingleMethodEnpoints(paths, outboundTransportProtocol) {
   const endpoints = []
 
@@ -21,7 +25,7 @@ function buildSingleMethodEnpoints(paths, outboundTransportProtocol) {
 
       const methodDetails = methods[methodName]
       const endpoint = Object.assign({}, defaultEndpoint, commonEndpoint, {
-        name:  methodDetails.summary,
+        name:  fixName(methodDetails.summary),
         supportedHttpMethods: [ methodName ],
         requestPathAlias: path,
         outboundRequestTargetPath: path,
@@ -38,7 +42,7 @@ function buildSingleMethodEnpoints(paths, outboundTransportProtocol) {
 
 function buildMultiMethodEnpoints(paths, outboundTransportProtocol) {
   const endpoints = []
-  
+
   const commonEndpoint = {
     outboundTransportProtocol
   }
@@ -66,7 +70,7 @@ function buildMultiMethodEnpoints(paths, outboundTransportProtocol) {
     })
 
     const endpoint = Object.assign({}, defaultEndpoint, commonEndpoint, {
-      name:  pathName,
+      name: fixName(pathName),
       supportedHttpMethods,
       requestPathAlias: path,
       outboundRequestTargetPath: path,
@@ -84,16 +88,15 @@ function buildApiFromSwagger({
   securityDefinitions,
   paths,
 }, { multiMethodEndpoint, organisation } = {}) {
-  const outboundTransportProtocol = securityDefinitions && securityDefinitions.length === 1 ? securityDefinitions[0] : "https"  
+  const outboundTransportProtocol = securityDefinitions && securityDefinitions.length === 1 ? securityDefinitions[0] : "https"
   const endpoints = multiMethodEndpoint === true
-                    ? buildMultiMethodEnpoints(paths, outboundTransportProtocol) 
+                    ? buildMultiMethodEnpoints(paths, outboundTransportProtocol)
                     : buildSingleMethodEnpoints(paths, outboundTransportProtocol)
 
   const service = Object.assign(defaultService, {
-    name: info.title.trim(),
+    name: fixName(info.title),
     description: info.description ? info.description.trim() : null,
     version: info.version,
-    // TODO here goes switch
     endpoints
   })
 
