@@ -4,6 +4,7 @@ const spinner = require('../../utils/spinner')
 const buildApiFromSwagger = require('../adidas/buildFromSwagger')
 const modifyValues = require('../adidas/modifyValues')
 const confirmChanges = require('../../utils/confirmChanges')
+const createApi = require('../../mashery/createApi')
 
 function importSwaggerFile(swagger, options) {
   SwaggerParser
@@ -16,7 +17,7 @@ function importSwaggerFile(swagger, options) {
         before: {},
         after: api,
         message: `Are this valid new api from swagger \'${swagger}\'?`,
-        action: newApi => {
+        action(newApi) {
           spinner.start()
           return createApi(newApi)
         },

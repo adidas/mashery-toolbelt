@@ -50,7 +50,6 @@ function buildMultiMethodEnpoints(paths, outboundTransportProtocol) {
     const supportedHttpMethods = []
 
     Object.keys(methods).forEach(methodName => {
-      console.log(methods[methodName])
       // Get name for whole path
       if(methodName === 'x-summary') {
         pathName = methods[methodName]
