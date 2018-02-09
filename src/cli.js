@@ -69,8 +69,9 @@ defineProgram({
   withModificationArguments(
     program
       .command('swagger-import <fileOrUrl>')
+      .option('-s, --https', 'Https protocol for all endpoints')
       .option('-m, --multiMethodEndpoint', 'Creates one endpoint for same resource nad multiple HTTP methods instead of one enpoint per HTTP method')
-      .option('-o, --organisation <organisationId>', 'Organisation under which service will be created')
+      .option('-o, --organization <organizationId>', 'Organization under which service will be created')
       .description('Build api from given swagger file or URL')
       .action((swagger, options) => {
         runSwaggerImport(swagger, options)
