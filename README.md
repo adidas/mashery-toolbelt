@@ -3,6 +3,7 @@
 CLI tool for Mashery API Management provisioning.
 
 
+
 ## Functionality
 
 - Provide various commands to run complex scenarios in Mashery
@@ -10,6 +11,17 @@ CLI tool for Mashery API Management provisioning.
   - osx: `/Users/[HOME]/.mashery-toolbelt/`
   - linux: `/home/[HOME]/.mashery-toolbelt/`
   - windows: `C:\Users\[USERNAME]\.mashery-toolbelt\`
+
+
+
+## Installation
+
+With Node.js v7.5.0 or higher installed, run
+
+```
+$ npm install -g mashery-toolbelt
+```
+
 
 
 ## Commands
@@ -123,13 +135,10 @@ mashery-toolbelt errorset-add <serviceId> <errorSetPath>
 - Add given errorSet to service
 
 
-## Installation
 
-With Node.js v7.5.0 or higher installed, run
+## Mashery notes and f***ups
 
-```
-$ npm install -g mashery-toolbelt
-```
+
 
 
 ## Development

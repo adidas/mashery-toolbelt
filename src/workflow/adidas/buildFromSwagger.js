@@ -87,8 +87,8 @@ function buildApiFromSwagger({
   schemes,
   securityDefinitions,
   paths,
-}, { multiMethodEndpoint, organisation } = {}) {
-  const outboundTransportProtocol = securityDefinitions && securityDefinitions.length === 1 ? securityDefinitions[0] : "https"
+}, { multiMethodEndpoint, organization, https } = {}) {
+  const outboundTransportProtocol = https ? 'https' : 'http';
   const endpoints = multiMethodEndpoint === true
                     ? buildMultiMethodEnpoints(paths, outboundTransportProtocol)
                     : buildSingleMethodEnpoints(paths, outboundTransportProtocol)
@@ -96,15 +96,16 @@ function buildApiFromSwagger({
   const service = Object.assign(defaultService, {
     name: fixName(info.title),
     description: info.description ? info.description.trim() : null,
-    version: info.version,
-    endpoints
+    version: info.version
   })
 
-  if(organisation) {
-    service.organisation = {
-      id: organisation
+  if(organization) {
+    service.organization = {
+      id: organization
     }
   }
+
+  service.endpoints = endpoints;
 
   // TODO:
   // from swagger:
