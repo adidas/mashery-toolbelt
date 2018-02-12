@@ -6,9 +6,9 @@ const confirmChanges = require('../utils/confirmChanges')
 
 const DUMP_FIELDS = {
   serviceFields: {
-    except: ['created', 'updated', 'endpoints', 'errorSets']
+    except: ['id', 'created', 'updated', 'endpoints', 'errorSets']
   },
-  endpointFields: { except: ['created', 'updated', 'methods'] }
+  endpointFields: { except: ['id', 'created', 'updated', 'methods'] }
 }
 
 function promote(serviceId, options) {
