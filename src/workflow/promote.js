@@ -48,9 +48,9 @@ function updateFromPromote(api, swagger) {
 
 const DUMP_FIELDS = {
   serviceFields: {
-    except: ['id', 'created', 'updated', 'endpoints', 'errorSets']
+    except: ['created', 'updated', 'endpoints', 'errorSets']
   },
-  endpointFields: { except: ['id', 'created', 'updated', 'methods'] }
+  endpointFields: { except: ['created', 'updated', 'methods'] }
 }
 
 function promote(serviceId, options) {

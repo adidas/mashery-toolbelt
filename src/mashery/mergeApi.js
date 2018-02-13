@@ -90,7 +90,7 @@ function mergeEndpoints(sourceEndpoints, targetEndpoints) {
   return endpoints;
 }
 
-function mergeEndpoint(sourceEndpoint, targetEndpoint) {
+function mergeEndpoint({id, ...sourceEndpoint}, targetEndpoint) {
   return Object.assign(
     cleanupEntity(targetEndpoint),
     cleanupEntity(sourceEndpoint)

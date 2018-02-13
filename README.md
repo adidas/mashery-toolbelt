@@ -101,7 +101,7 @@ mashery-toolbelt promote <serviceId> --name='replaceValue' --trafficDomain='repl
 Example:
 
 ```
-mashery-toolbelt promote h9tygfmjttuf9sb6ah8kjftd QA \
+mashery-toolbelt promote h9tygfmjttuf9sb6ah8kjftd \
   --name='DEV*:QA*' --name='*:QA *' \
   --trafficDomain=qa.apiinternal.adidas.com \
   --publicDomain='qa.apiinternal.adidas.com' \
