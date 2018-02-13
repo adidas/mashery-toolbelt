@@ -56,3 +56,9 @@ test('makeReplacer with replace path', () => {
 
   expect(replacer('path/dev/{id}')).toBe('path/qa/{id}')
 })
+
+test('real use case #1', () => {
+  const replacer = makeReplacer('(Demo)*:DEV (testplay)*')
+  expect(replacer('(Demo) Approval API')).toBe('DEV (testplay) Approval API')
+})
+

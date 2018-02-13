@@ -1,4 +1,5 @@
 const PATTERN_MATCH = /(\*)/
+const ESCAPE_REGEXP = /[\(\)\.\-]/g
 
 function validatePatterns(value, name, required) {
   if (Array.isArray(value)) {
@@ -56,11 +57,11 @@ function patternsToReplacers(patterns) {
       }
     }
 
+    const regexp = fromParts.map(part => (part === '*' ? '(.*?)' : part.replace(ESCAPE_REGEXP, '\\$&'))).join('')
+
     return {
       type: 'pattern',
-      match: new RegExp(
-        `^${fromParts.map(part => (part === '*' ? '(.*?)' : part)).join('')}$`
-      ),
+      match: new RegExp(`^${regexp}$`),
       replaceWith: match => {
         let matchIndex = 0
 
