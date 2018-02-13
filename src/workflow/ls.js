@@ -1,9 +1,11 @@
 const { fetchAllServices } = require('../client')
 const spinner = require('../utils/spinner')
 
+const LIMIT = 1000
+
 function ls(filter) {
   spinner.start()
-  const servicesRequest = fetchAllServices()
+  const servicesRequest = fetchAllServices({limit: LIMIT})
   servicesRequest.then(spinner.stop, spinner.stop)
 
   servicesRequest
