@@ -137,12 +137,7 @@ mashery-toolbelt swagger-import <fileOrUrl> \
 mashery-toolbelt errorset-add <serviceId> <errorSetPath>
 ```
 
-- Add given errorSet to service
-
-
-
-## Mashery notes and f***ups
-
+- Create given errorSet within service and assign it to each endpoint
 
 
 

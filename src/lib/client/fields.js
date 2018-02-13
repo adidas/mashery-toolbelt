@@ -32,13 +32,13 @@ function makeFieldsParam(methodName, allFields, fields) {
 
 const service = [
   "id", "name", "description", "created", "updated", "endpoints", "editorHandle",
-  "revisionNumber", "robotsPolicy", "crossdomainPolicy", "errorSets", "qpsLimitOverall", 
+  "revisionNumber", "robotsPolicy", "crossdomainPolicy", "errorSets", "qpsLimitOverall",
   "rfc3986Encode", "securityProfile", "version", "organization"
 ]
 
 const endpoint = [
   "id", "allowMissingApiKey", "apiKeyValueLocationKey", "apiKeyValueLocations",
-  "apiMethodDetectionKey", "apiMethodDetectionLocations", "cache",
+  "apiMethodDetectionKey", "apiMethodDetectionLocations", "cache", "errors",
   "connectionTimeoutForSystemDomainRequest", "connectionTimeoutForSystemDomainResponse",
   "cookiesDuringHttpRedirectsEnabled", "cors", "created", "customRequestAuthenticationAdapter",
   "dropApiKeyFromIncomingCall", "forceGzipOfBackendCall", "gzipPassthroughSupportEnabled",
