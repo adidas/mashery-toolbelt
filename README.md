@@ -78,7 +78,8 @@ mashery-toolbelt restore <serviceId> <backupName>
 ```
 mashery-toolbelt promote <serviceId> --name='replaceValue' --trafficDomain='replaceValue' \
                                      --publicDomain='replaceValue' [--publicPath='replaceValue'] \
-                                     --endpointDomain='replaceValue' [--endpointPath='replaceValue']
+                                     --endpointDomain='replaceValue' [--endpointPath='replaceValue'] \
+                                     [--update='updateServiceId']
 ```
 
 - Clone given service with changes defined by other arguments
@@ -93,6 +94,7 @@ mashery-toolbelt promote <serviceId> --name='replaceValue' --trafficDomain='repl
   - **pattern** - `--endpointPath='wip/*/dev/*:*/qa/*'`
     - Expand `*` into simple matcher.
     - `wip/*/dev/*` will match `/wip/root/users/dev/id/{id}` and change it to `root/users/qa/id/{id}`
+- `--update=updateServiceId` - id of service you want to update with promot (use with same arguments as before)
 - Before creating new API, app will print changes in schema and you have to confirm it.
 
 
@@ -112,16 +114,19 @@ mashery-toolbelt promote h9tygfmjttuf9sb6ah8kjftd QA \
 
 ```
 mashery-toolbelt swagger-import <fileOrUrl> \
-                                [--organisation='organisationId'] [--multiMethodEndpoint] \
+                                [--organisation='organisationId'] [--multiMethodEndpoint] [--https] \
                                 --name='replaceValue' --trafficDomain='replaceValue' \
                                 --publicDomain='replaceValue' [--publicPath='replaceValue'] \
-                                --endpointDomain='replaceValue' [--endpointPath='replaceValue']
+                                --endpointDomain='replaceValue' [--endpointPath='replaceValue'] \
+                                [--update='updateServiceId']
 ```
 
 - Creates service and endpoints from swagger file (local file or url)
 - `--organisation=organisationId` (`-o organisationId`) id of existing organisation under mashery scope (area)
 - `--multiMethodEndpoint` generates just one endpoint for resource and its multiple HTTP methods.
   - Default is one endpoint per resource and HTTP method.
+- `--https` protocol of endpoints. Default **http**
+- `--update=updateServiceId` - id of service you want to update from swagger (use with same arguments as before)
 - Modifier attributes same as **promote** command
 
 
