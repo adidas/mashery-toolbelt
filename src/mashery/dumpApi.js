@@ -17,7 +17,10 @@ function dumpEndpoints(service, fields) {
 }
 
 function dumpMethods(service, fields) {
-  if(fields)
+  if(fields === false) {
+    return
+  }
+
   return Promise.all(
     service.endpoints.map(endpoint =>
       client
