@@ -23,9 +23,8 @@ function errorSetAdd(serviceId, errorSetPath) {
       client
         .createServiceErrorSet(serviceId, errorSet)
         .then(newErrorSet => {
-          return Promise.all(
-            api.service.endpoints.map(({id}) => client.updateServiceEndpoint(serviceId, id, { errors: { errorSet: { id: newErrorSet.id } } }))
-          ).then(() => newErrorSet)
+          const endpoints = api.service.endpoints.map(({id}) => ({id, errors: {errorSet: {id: newErrorSet.id}}}))
+          return client.updateService(serviceId, {endpoints}).then(() => newErrorSet)
         })
         .then(newErrorSet => {
           spinner.stop()
