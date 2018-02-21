@@ -62,3 +62,12 @@ test('real use case #1', () => {
   expect(replacer('(Demo) Approval API')).toBe('DEV (testplay) Approval API')
 })
 
+test('real use case with semicolon', () => {
+  const replacerWithoutEscape = makeReplacer('my.domain.com:3000')
+  expect(() => replacerWithoutEscape('some.domain.com')).toThrow(
+    `Can't match value 'some.domain.com' with patterns\nmy.domain.com:3000`
+  )
+
+  const replacerWithEscape = makeReplacer('my.domain.com\\:3000')
+  expect(replacerWithEscape('some.domain.com')).toBe('my.domain.com:3000')
+})

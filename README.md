@@ -94,6 +94,7 @@ mashery-toolbelt promote <serviceId> --name='replaceValue' --trafficDomain='repl
   - **pattern** - `--endpointPath='wip/*/dev/*:*/qa/*'`
     - Expand `*` into simple matcher.
     - `wip/*/dev/*` will match `/wip/root/users/dev/id/{id}` and change it to `root/users/qa/id/{id}`
+  - if you want to match colon (`:`) just escape it `--publicDomain='my.domain.com\:3000`
 - `--update=updateServiceId` - id of service you want to update with promot (use with same arguments as before)
 - Before creating new API, app will print changes in schema and you have to confirm it.
 
