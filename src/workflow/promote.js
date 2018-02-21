@@ -4,6 +4,7 @@ const mergeApi = require('../mashery/mergeApi')
 const updateApi = require('../mashery/updateApi')
 const modifyValues = require('./adidas/modifyValues')
 const spinner = require('../utils/spinner')
+const anonymizeApi = require('../utils/anonymizeApi')
 const confirmChanges = require('../utils/confirmChanges')
 
 function createFromPromote(api, newApi) {
@@ -12,6 +13,7 @@ function createFromPromote(api, newApi) {
     after: newApi,
     message: 'Are this valid changes in promoted API?',
     action: newData => {
+      console.log(anonymizeApi(newData))
       spinner.start()
       return createApi(newData)
     },
