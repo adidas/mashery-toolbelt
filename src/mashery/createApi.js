@@ -2,9 +2,24 @@ const client = require('../client')
 
 function createApi(api, { verbose = false } = {}) {
   verbose && console.log(`Creating service`)
+  api = JSON.parse(JSON.stringify(api))
+
+  const { service } = api
+  service.endpoints = service.endpoints.map(({errors, ...endpoint}) => {
+    // if(errors) {
+    //   endpoint.errors = {
+    //     ...errors,
+    //     errorSet: null
+    //   }
+    // }
+
+    return endpoint
+  })
+
+  delete service.errorSets
 
   return client
-    .createService(api.service)
+    .createService(service)
     .then(createdService => {
       if (verbose) {
         console.log(`Creating done.`)
