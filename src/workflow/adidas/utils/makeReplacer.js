@@ -1,6 +1,6 @@
 const PATTERN_MATCH = /(\*)/
 const ESCAPE_REGEXP = /[\(\)\.\-]/g
-const SPLIT_PATTERN = /(?<!\\):/
+const SPLIT_PATTERN = /[^\\]:/
 
 function validatePatterns(value, name, required) {
   if (Array.isArray(value)) {
@@ -23,7 +23,16 @@ function ident(value) {
 
 function patternsToReplacers(patterns) {
   return patterns.map(pattern => {
-    const [from, to] = pattern.split(SPLIT_PATTERN)
+    let from = pattern
+    let to
+
+    const match = pattern.match(SPLIT_PATTERN)
+
+    if(match) {
+      from = pattern.slice(0, match.index + 1)
+      to = pattern.slice(match.index + 2)
+    }
+
     const isPattern = from.includes('*')
 
     const fromParts = from.split(PATTERN_MATCH)
