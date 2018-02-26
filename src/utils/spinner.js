@@ -1,5 +1,8 @@
 const Spinner = require('cli-spinner').Spinner;
 
+// NOTE: only for debug
+const ENABLED = !process.env['DISABLE_SPINNER']
+
 const spinner = Spinner({
   text: ' ',
   stream: process.stderr,
@@ -14,7 +17,7 @@ spinner.setSpinnerString('⣾⣽⣻⢿⡿⣟⣯⣷');
 const origStart = spinner.start
 const origStop = spinner.stop
 // Allow us to send start/stop to callbacks and promises
-spinner.start = () =>  origStart.call(spinner)
-spinner.stop = () => origStop.call(spinner, true)
+spinner.start = () =>  ENABLED && origStart.call(spinner)
+spinner.stop = () => ENABLED && origStop.call(spinner, true)
 
 module.exports = spinner

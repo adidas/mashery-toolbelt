@@ -1,14 +1,6 @@
 const fs = require('fs')
-const client = require('../../client')
 const spinner = require('../../utils/spinner')
-const dumpApi = require('../../mashery/dumpApi')
-
-const DUMP_FIELDS = {
-  serviceFields: ['id'],
-  endpointFields: ['id', 'errors'],
-  methodFields: false,
-  errorSetFields: false,
-}
+const callErrorSetAdd = require('../../mashery/errorSetAdd')
 
 function errorSetAdd(serviceId, errorSetPath) {
   console.log(`Adding error set ${errorSetPath} to service ${serviceId}`)
@@ -18,24 +10,16 @@ function errorSetAdd(serviceId, errorSetPath) {
   const json = fs.readFileSync(errorSetPath, 'utf8')
   const errorSet = JSON.parse(json)
 
-  dumpApi(serviceId, DUMP_FIELDS)
-    .then(api => {
-      client
-        .createServiceErrorSet(serviceId, errorSet)
-        .then(newErrorSet => {
-          const endpoints = api.service.endpoints.map(({id}) => ({id, errors: {errorSet: {id: newErrorSet.id}}}))
-          return client.updateService(serviceId, {endpoints}).then(() => newErrorSet)
-        })
-        .then(newErrorSet => {
-          spinner.stop()
-          console.log('Error Set created and assigned to all endpoints')
-          console.log(newErrorSet)
-        })
-        .catch(err => {
-          spinner.stop()
-          console.error('Creating failed:')
-          console.error(err)
-        })
+  callErrorSetAdd(serviceId, errorSet)
+    .then(newErrorSet => {
+      spinner.stop()
+      console.log('Error Set created and assigned to all endpoints')
+      console.log(newErrorSet)
+    })
+    .catch(err => {
+      spinner.stop()
+      console.error('Creating failed:')
+      console.error(err)
     })
 }
 
