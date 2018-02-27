@@ -1,5 +1,7 @@
 const client = require('../client')
 
+const ENDPOINTS_LIMIT = 1000
+
 function dumpService(data, serviceId, fields) {
   return client
     .fetchService(serviceId, { fields })
@@ -12,7 +14,7 @@ function dumpEndpoints(service, fields) {
   }
 
   return client
-    .fetchAllServiceEndpoints(service.id, { fields })
+    .fetchAllServiceEndpoints(service.id, { fields, limit: ENDPOINTS_LIMIT })
     .then(endpoints => (service.endpoints = endpoints))
 }
 
@@ -22,11 +24,13 @@ function dumpMethods(service, fields) {
   }
 
   return Promise.all(
-    service.endpoints.map(endpoint =>
-      client
+    service.endpoints.map(endpoint => {
+      if(!endpoint.methods || !endpoint.methods.length) { return }
+
+      return client
         .fetchAllEndpointMethods(service.id, endpoint.id, { fields })
         .then(methods => (endpoint.methods = methods))
-    )
+    })
   )
 }
 
@@ -45,7 +49,7 @@ function dumpApi(serviceId, fields = {}, { verbose = false } = {}) {
 
   const {
     serviceFields = { except: ['endpoints', 'errorSets'] },
-    endpointFields = { except: ['methods'] },
+    endpointFields = true,
     methodFields = true,
     errorSetFields = true
   } = fields
