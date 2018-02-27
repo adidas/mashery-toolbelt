@@ -37,6 +37,11 @@ function createApi(api, { verbose = false } = {}) {
     .createService(service)
     .then(service => {
       createdService = service
+
+      if(!errorSet) {
+        return createdService
+      }
+
       return callErrorSetAdd(service.id, errorSet)
         .catch(error => {
           const rejectError = () => Promise.reject(error)
