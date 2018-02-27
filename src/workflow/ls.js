@@ -2,21 +2,18 @@ const { fetchAllServices } = require('../client')
 const spinner = require('../utils/spinner')
 
 const LIMIT = 1000
+const ID_MATCH = /[a-zA-Z0-9]+/
 
 function ls(filter) {
   spinner.start()
-  const servicesRequest = fetchAllServices({limit: LIMIT})
+
+  const search = [`name:${filter}`, `description:${filter}`]
+  if(filter.match(ID_MATCH)) { search.push(`id:${filter}`)}
+
+  const servicesRequest = fetchAllServices({limit: LIMIT, search: search.join(',')})
   servicesRequest.then(spinner.stop, spinner.stop)
 
   servicesRequest
-    .then(services => {
-      // TODO: mashery api somehow supports filter query param. Try it
-      if(filter !== undefined) {
-        return services.filter(({ name }) => name.toLowerCase().includes(filter.toLowerCase()))
-      }
-
-      return services
-    })
     .then(services => {
       const count = services.length
       services.forEach((service, i) => {
