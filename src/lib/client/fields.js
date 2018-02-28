@@ -1,4 +1,5 @@
 const { invalid_field } = require('./error_messages')
+const { RequestError } = require('./errors')
 
 function validateFields(methodName, allFields, fields) {
   const invalidFields = []
@@ -44,7 +45,7 @@ const endpoint = [
   "dropApiKeyFromIncomingCall", "forceGzipOfBackendCall", "gzipPassthroughSupportEnabled",
   "headersToExcludeFromIncomingCall", "highSecurity", "hostPassthroughIncludedInBackendCallHeader",
   "inboundSslRequired", "jsonpCallbackParameter", "jsonpCallbackParameterValue", "scheduledMaintenanceEvent",
-  "forwardedHeaders", "returnedHeaders", "methods", "name", "numberOfHttpRedirectsToFollow",
+  "forwardedHeaders", "returnedHeaders", "name", "numberOfHttpRedirectsToFollow",
   "outboundRequestTargetPath", "outboundRequestTargetQueryParameters", "outboundTransportProtocol",
   "processor", "publicDomains", "requestAuthenticationType", "requestPathAlias", "requestProtocol",
   "oauthGrantTypes", "stringsToTrimFromApiKey", "supportedHttpMethods", "systemDomainAuthentication",

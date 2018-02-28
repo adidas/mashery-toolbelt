@@ -50,7 +50,7 @@ const DUMP_FIELDS = {
   serviceFields: {
     except: ['created', 'updated', 'endpoints', 'errorSets']
   },
-  endpointFields: { except: ['created', 'updated', 'methods'] }
+  endpointFields: { except: ['created', 'updated'] }
 }
 
 function promote(serviceId, options) {

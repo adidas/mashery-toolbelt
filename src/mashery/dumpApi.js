@@ -24,13 +24,11 @@ function dumpMethods(service, fields) {
   }
 
   return Promise.all(
-    service.endpoints.map(endpoint => {
-      if(!endpoint.methods || !endpoint.methods.length) { return }
-
-      return client
+    service.endpoints.map(endpoint =>
+      client
         .fetchAllEndpointMethods(service.id, endpoint.id, { fields })
         .then(methods => (endpoint.methods = methods))
-    })
+    )
   )
 }
 
