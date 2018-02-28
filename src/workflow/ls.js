@@ -7,10 +7,16 @@ const ID_MATCH = /[a-zA-Z0-9]+/
 function ls(filter) {
   spinner.start()
 
-  const search = [`name:${filter}`, `description:${filter}`]
-  if(filter.match(ID_MATCH)) { search.push(`id:${filter}`)}
+  let query = { limit: LIMIT }
 
-  const servicesRequest = fetchAllServices({limit: LIMIT, search: search.join(',')})
+  // Add search query param when filtering
+  if(filter && filter.length) {
+    const search = [`name:${filter}`, `description:${filter}`]
+    if(filter.match(ID_MATCH)) { search.push(`id:${filter}`)}
+    query.search = search.join(',')
+  }
+
+  const servicesRequest = fetchAllServices(query)
   servicesRequest.then(spinner.stop, spinner.stop)
 
   servicesRequest
@@ -18,7 +24,12 @@ function ls(filter) {
       const count = services.length
       services.forEach((service, i) => {
         console.log(`${service.name}`)
-        console.log(`id: ${service.id}${i < count - 1 ? "\n" : ""}`)
+        console.log(`id: ${service.id}`)
+
+        // New line between each listed service
+        if(i < count - 1) {
+          console.log()
+        }
       })
     })
 }
