@@ -6,6 +6,7 @@ const { refreshToken } = require('./auth')
 const { makeFieldsParam } = require('./fields')
 const { AuthenticationError, RequestError } = require('./errors')
 const errorMessages = require('./error_messages')
+const throttle = require('./throttle')
 
 function makePath ({ pattern, args }) {
   const pathArgs = {}
@@ -157,7 +158,7 @@ function registerClientMethod (client, name, pathPattern, method, fields) {
       options.body = data && JSON.stringify(data)
     }
 
-    return callClientRequest(client, url.toString(), options)
+    return throttle(client, () => callClientRequest(client, url.toString(), options))
   }
 }
 
