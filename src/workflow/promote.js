@@ -23,7 +23,7 @@ function createFromPromote(api, newApi) {
   })
 }
 
-function updateFromPromote(api, swagger) {
+function updateFromPromote(serviceId, api) {
   spinner.start();
 
   return dumpApi(serviceId)
@@ -66,7 +66,7 @@ function promote(serviceId, options) {
 
       const updateServiceId = options.update;
       return updateServiceId
-        ? updateFromPromote(newApi, updateServiceId)
+        ? updateFromPromote(updateServiceId, newApi)
         : createFromPromote(promotingApi, newApi);
     })
     .catch(error => {

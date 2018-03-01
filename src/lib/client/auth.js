@@ -53,7 +53,7 @@ function refreshToken(options, credentials) {
     validateCredentials(credentials, [ 'key', 'secret', 'refreshToken' ])
 
     const params = new URLSearchParams()
-    params.set('grant_type', 'ref resh_token')
+    params.set('grant_type', 'refresh_token')
     params.set('refresh_token', credentials.refreshToken)
 
     makeAuthRequest(options, credentials, params).then(resolve, reject)

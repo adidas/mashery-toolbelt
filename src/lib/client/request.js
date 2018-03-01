@@ -6,6 +6,7 @@ const { refreshToken } = require('./auth')
 const { makeFieldsParam } = require('./fields')
 const { MasheryClientError, AuthenticationError, RequestError }  = require('./errors')
 const errorMessages = require('./error_messages')
+const throttle = require('./throttle')
 
 function makePath({ pattern, args }) {
   const pathArgs = {}
@@ -72,6 +73,7 @@ function callClientRequest(client, url, options) {
 
     // a) Catch throttling limit
     if(errorCode === 'ERR_403_DEVELOPER_OVER_QPS') {
+      console.log("RETRY")
       const retryIn = Number(headers.get('retry-after')) * 1000
       return waitForQps(retryIn).then(() => callClientRequest(client, url, options))
     }
@@ -135,7 +137,7 @@ function registerClientMethod(client, name, pathPattern, method, fields) {
       options.body   = data && JSON.stringify(data)
     }
 
-    return callClientRequest(client, url.toString(), options)
+    return throttle(client, () => callClientRequest(client, url.toString(), options))
   }
 }
 
