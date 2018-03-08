@@ -50,7 +50,7 @@ const endpoint = [
   "processor", "publicDomains", "requestAuthenticationType", "requestPathAlias", "requestProtocol",
   "oauthGrantTypes", "stringsToTrimFromApiKey", "supportedHttpMethods", "systemDomainAuthentication",
   "systemDomains", "trafficManagerDomain", "updated", "useSystemDomainCredentials",
-  "systemDomainCredentialKey", "systemDomainCredentialSecret"
+  "systemDomainCredentialKey", "systemDomainCredentialSecret", "rateLimitHeadersEnabled"
 ]
 
 const method = [
