@@ -115,6 +115,7 @@ mashery-toolbelt promote h9tygfmjttuf9sb6ah8kjftd \
 
 ```
 mashery-toolbelt swagger-import <fileOrUrl> \
+                                [--blueprint='blueprintFile'] \
                                 [--organisation='organisationId'] [--multiMethodEndpoint] [--https] \
                                 --name='replaceValue' --trafficDomain='replaceValue' \
                                 --publicDomain='replaceValue' [--publicPath='replaceValue'] \
@@ -129,6 +130,31 @@ mashery-toolbelt swagger-import <fileOrUrl> \
 - `--https` protocol of endpoints. Default **http**
 - `--update=updateServiceId` - id of service you want to update from swagger (use with same arguments as before)
 - Modifier attributes same as **promote** command
+- `--blueprint=bluePrintFile`
+  - File with default values for endpoint and endpoint methods.
+  - Supported format **yaml** or **json**
+  - When user input is required (like for credentials). set value to "INPUT!"
+  - Definition of valid props and values is in [this source file](https://github.com/adidas-group/mashery-toolbelt/blob/master/src/workflow/adidas/utils/blueprintPropTypes.js#L13)
+  - **example of blueprint.yaml**:
+
+```yaml
+endpoint:
+  publicDomains:
+    -
+      address: "adidas.api.mashery.com"
+  systemDomains:
+    -
+      address: "adidas.api.mashery.com"
+  trafficDomain: "adidas.api.mashery.com"
+  systemDomainAuthentication:
+    type: httpBasic
+    username: INPUT!
+    password: INPUT!
+  methods:
+    - name: "My first method"
+      sampleJsonResponse: "{...}"
+    - name: "My second method"
+```
 
 
 
@@ -141,6 +167,41 @@ mashery-toolbelt errorset-add <serviceId> <errorSetPath>
 - Create given errorSet within service and assign it to each endpoint
 
 
+## Notes
+
+Internaly we represent mashery data in structure called "API" which looks like:
+
+```js
+const api = {
+  service: {
+    id: "service uuid",
+    ...restOfServiceProps,
+    organisation: {
+      id: "organisation uuid",
+      ...restOfOrganisationProps
+    },
+    endpoints: [
+      {
+        id: "endpoint uuid",
+        ...restOfEndpointProps,
+        methods: [
+          {
+            id: "endpoint method uuid",
+            ...restOfMethodProps
+          }
+        ]
+      }
+    ],
+    errorSets: [
+      {
+        id: "error set uuid",
+        ...restOfErrorSetProps
+      }
+    ]
+  }
+}
+```
+
 
 ## Development
 
@@ -149,11 +210,3 @@ $ git clone https://github.com/adidas-group/mashery-toolbelt.git
 $ cd mashery-toolbelt
 $ npm install
 ```
-
-
-## TODO
-
-- [ ] Listing of backups
-  - `mashery-toolbelt snapshots` to list all list all
-  - When restoring by `serviceId` without `backupName`, then give user UI to choose one
-- [ ] Add stats for restoring of service like: `endpoints(created:2, updated:1, deleted:3)`

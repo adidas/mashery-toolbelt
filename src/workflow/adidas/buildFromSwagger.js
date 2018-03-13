@@ -1,3 +1,5 @@
+const loadBlueprint = require('./loadBlueprint')
+
 const METHODS = ["post", "get", "put", "delete", "head", "patch", "options"]
 
 const defaultService = {}
@@ -7,12 +9,8 @@ function fixName(name) {
   return name.trim().replace('[', '(').replace(']', ')')
 }
 
-function buildSingleMethodEnpoints(paths, outboundTransportProtocol) {
+function buildSingleMethodEnpoints(paths, commonEndpoint) {
   const endpoints = []
-
-  const commonEndpoint = {
-    outboundTransportProtocol
-  }
 
   Object.keys(paths).forEach(path => {
     const methods = paths[path]
@@ -40,12 +38,8 @@ function buildSingleMethodEnpoints(paths, outboundTransportProtocol) {
   return endpoints
 }
 
-function buildMultiMethodEnpoints(paths, outboundTransportProtocol) {
+function buildMultiMethodEnpoints(paths, commonEndpoint) {
   const endpoints = []
-
-  const commonEndpoint = {
-    outboundTransportProtocol
-  }
 
   Object.keys(paths).forEach(path => {
     const methods = paths[path]
@@ -87,53 +81,68 @@ function buildApiFromSwagger({
   schemes,
   securityDefinitions,
   paths,
-}, { multiMethodEndpoint, organization, https } = {}) {
-  const outboundTransportProtocol = https ? 'https' : 'http';
-  const endpoints = multiMethodEndpoint === true
-                    ? buildMultiMethodEnpoints(paths, outboundTransportProtocol)
-                    : buildSingleMethodEnpoints(paths, outboundTransportProtocol)
+}, {
+  blueprint: blueprintPath,
+  https,
+  multiMethodEndpoint,
+  organization
+} = {}) {
+  let commonEndpoint = {};
 
-  const service = Object.assign(defaultService, {
-    name: fixName(info.title),
-    description: info.description ? info.description.trim() : null,
-    version: info.version
-  })
+  if(blueprintPath) {
+    commonEndpoint = loadBlueprint(blueprintPath).then(({endpoint}) => endpoint)
+  }
 
-  if(organization) {
-    service.organization = {
-      id: organization
+  return Promise.resolve(commonEndpoint).then(commonEndpoint => {
+    if(!commonEndpoint.outboundTransportProtocol) {
+      commonEndpoint.outboundTransportProtocol = https ? 'https' : 'http'
     }
-  }
 
-  service.endpoints = endpoints;
+    const endpoints = multiMethodEndpoint === true
+                      ? buildMultiMethodEnpoints(paths, commonEndpoint)
+                      : buildSingleMethodEnpoints(paths, commonEndpoint)
 
-  // TODO:
-  // from swagger:
-  // "securityDefinitions": {
-  //   "API Key": {
-  //     "type": "apiKey",
-  //     "in": "header",
-  //     "name": "x-api-key"
-  //   }
-  // },
-  //
-  // to endpoint:
-  // {
-  //   "apiKeyValueLocationKey": "x-api-key",
-  //   "apiKeyValueLocations": [
-  //     "request-header"
-  //     "request-parameters",
-  //     "request-body"
-  //   ],
-  //   "apiMethodDetectionKey": "1",
-  //   "apiMethodDetectionLocations": [
-  //     "request-path"
-  //   ],
-  // }
+    const service = Object.assign(defaultService, {
+      name: fixName(info.title),
+      description: info.description ? info.description.trim() : null,
+      version: info.version
+    })
 
-  return {
-    service
-  }
+    if(organization) {
+      service.organization = {
+        id: organization
+      }
+    }
+
+    service.endpoints = endpoints;
+
+    return {
+      service
+    }
+  })
 }
 
 module.exports = buildApiFromSwagger
+
+// from swagger:
+// "securityDefinitions": {
+//   "API Key": {
+//     "type": "apiKey",
+//     "in": "header",
+//     "name": "x-api-key"
+//   }
+// },
+//
+// to endpoint:
+// {
+//   "apiKeyValueLocationKey": "x-api-key",
+//   "apiKeyValueLocations": [
+//     "request-header"
+//     "request-parameters",
+//     "request-body"
+//   ],
+//   "apiMethodDetectionKey": "1",
+//   "apiMethodDetectionLocations": [
+//     "request-path"
+//   ],
+// }

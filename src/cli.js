@@ -77,6 +77,7 @@ defineProgram({
   withCallers(withUpdateArgument, withModificationArguments)(
     program
       .command('swagger-import <fileOrUrl>')
+      .option('-b, --blueprint <blueprintFile>', 'File with default values.')
       .option('-s, --https', 'Https protocol for all endpoints')
       .option('-m, --multiMethodEndpoint', 'Creates one endpoint for same resource nad multiple HTTP methods instead of one enpoint per HTTP method')
       .option('-o, --organization <organizationId>', 'Organization under which service will be created')

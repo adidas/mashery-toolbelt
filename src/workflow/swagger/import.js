@@ -48,9 +48,10 @@ function updateFromSwagger(api, serviceId, swagger) {
 }
 
 function importSwaggerFile(swagger, options) {
+  console.log(swagger)
   SwaggerParser.parse(swagger)
-    .then(swaggerData => {
-      const apiFromSwagger = buildApiFromSwagger(swaggerData, options);
+    .then(swaggerData => buildApiFromSwagger(swaggerData, options))
+    .then(apiFromSwagger => {
       const newApi = modifyValues(apiFromSwagger, options);
 
       const updateServiceId = options.update;

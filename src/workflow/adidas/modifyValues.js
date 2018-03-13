@@ -16,29 +16,34 @@ function modifyValues(api, options = {}) {
 
   if(options.trafficDomain && options.trafficDomain.length) {
     trafficDomainReplacer = makeReplacer(options.trafficDomain, {
-      name: 'trafficDomain'
+      name: 'trafficDomain',
+      required: false,
     })
   }
 
   const publicDomainReplacer = makeReplacer(options.publicDomain, {
-    name: 'publicDomain'
+    name: 'publicDomain',
+    required: false,
   })
 
   const publicPathReplacer = makeReplacer(options.publicPath, {
     name: 'publicPath',
-    required: false
+    required: false,
   })
 
   const endpointDomainReplacer = makeReplacer(options.endpointDomain, {
-    name: 'endpointDomain'
+    name: 'endpointDomain',
+    required: false,
   })
 
   const endpointPathReplacer = makeReplacer(options.endpointPath, {
     name: 'endpointPath',
-    required: false
+    required: false,
   })
 
-  targetApi.service.name = nameReplacer(targetApi.service.name)
+  targetApi.service.name = nameReplacer(targetApi.service.name, {
+    required: false,
+  })
 
   targetApi.service.endpoints.forEach(endpoint => {
     endpoint.name = nameReplacer(endpoint.name)

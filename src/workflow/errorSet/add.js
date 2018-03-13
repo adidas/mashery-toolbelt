@@ -1,5 +1,6 @@
 const fs = require('fs')
 const spinner = require('../../utils/spinner')
+const loadDataFile = require('../../utils/loadDataFile')
 const callErrorSetAdd = require('../../mashery/errorSetAdd')
 
 function errorSetAdd(serviceId, errorSetPath) {
@@ -7,8 +8,7 @@ function errorSetAdd(serviceId, errorSetPath) {
 
   spinner.start()
 
-  const json = fs.readFileSync(errorSetPath, 'utf8')
-  const errorSet = JSON.parse(json)
+  const errorSet = loadDataFile(errorSetPath)
 
   callErrorSetAdd(serviceId, errorSet)
     .then(newErrorSet => {
