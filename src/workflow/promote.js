@@ -23,7 +23,7 @@ function createFromPromote(api, newApi) {
   })
 }
 
-function updateFromPromote(api, swagger) {
+function updateFromPromote(api, serviceId) {
   spinner.start();
 
   return dumpApi(serviceId)
