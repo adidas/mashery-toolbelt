@@ -18,31 +18,30 @@ function createFromPromote(api, newApi) {
   })
   .then(newService => {
     spinner.stop()
-    console.log('Promoting done')
-    console.log(`Service id=${newService.id}`)
+    console.log(`Promoting done. https://adidas.admin.mashery.com/control-center/api-definitions/${newService.id}`)
   })
 }
 
-function updateFromPromote(api, serviceId) {
+function updateFromPromote(api, updateServiceId) {
   spinner.start();
 
-  return dumpApi(serviceId)
+  return dumpApi(updateServiceId, DUMP_FIELDS)
     .then(dumpedApi => {
       spinner.stop();
 
       return confirmChanges({
         before: dumpedApi,
         after: mergeApi(api, dumpedApi),
-        message: `Are this valid updates from promoting to service '${serviceId}'?`,
+        message: `Are this valid updates from promoting to service '${updateServiceId}'?`,
         action(updatedData) {
           spinner.start();
-          return updateApi(serviceId, updatedData);
+          return updateApi(updateServiceId, updatedData);
         }
       });
     })
-    .then(() => {
+    .then(updatedService => {
       spinner.stop();
-      console.log("Updating api from promoting done");
+      console.log(`Updating api from promoting done https://adidas.admin.mashery.com/control-center/api-definitions/${updatedService.id}`);
     });
 }
 
@@ -59,15 +58,15 @@ function promote(serviceId, options) {
   spinner.start()
 
   dumpApi(serviceId, DUMP_FIELDS)
-    .then(promotingApi => {
+    .then(sourceApi => {
       spinner.stop()
 
-      const newApi = modifyValues(promotingApi, options)
+      const newApi = modifyValues(sourceApi, options)
 
       const updateServiceId = options.update;
       return updateServiceId
         ? updateFromPromote(newApi, updateServiceId)
-        : createFromPromote(promotingApi, newApi);
+        : createFromPromote(sourceApi, newApi);
     })
     .catch(error => {
       spinner.stop()

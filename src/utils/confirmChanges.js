@@ -4,6 +4,7 @@ const spinner = require('./spinner')
 
 function confirmChanges({ before, after, message, action }) {
   spinner.stop()
+
   printDiff(before, after)
 
   return inquirer.prompt([

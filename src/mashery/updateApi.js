@@ -1,14 +1,24 @@
 const client = require('../client')
+const callErrorSetAdd = require('./errorSetAdd')
+const extractErrorSet = require('./utils/extractErrorSet')
 
-// NOTE: updateService can handle creating/updating/deleting of endpoints and endpoints methods
-// But for error sets it can't remove existing or create new one
 function updateApi(serviceId, api, { verbose = false } = {}) {
   verbose && console.log(`Updating service ${serviceId}`)
 
+  const { service, errorSet } = extractErrorSet(api)
+
   return client
     .updateService(serviceId, api.service)
-    .then(createdService => {
+    .then(updateService => {
+      if(errorSet) {
+        return callErrorSetAdd(updateService.id, errorSet).then(() => updateService)
+      }
+
+      return updatedService
+    })
+    .then(updatedService => {
       verbose && console.log(`Updating done.`)
+      return updatedService
     })
     .catch(error => {
       if (verbose) {

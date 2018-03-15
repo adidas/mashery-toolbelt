@@ -1,30 +1,6 @@
 const client = require('../client')
 const callErrorSetAdd = require('./errorSetAdd')
-
-function extractErrorSet({ service: { errorSets, ...service } }) {
-  const endpointErrors = []
-  let errorSet
-
-  service.endpoints = service.endpoints.map(({errors, ...endpoint}) => {
-    if(errors && errors.errorSet && errors.errorSet.id) {
-      endpointErrors[endpoint.name] = errors
-
-      if(!errorSet) {
-        errorSet = errorSets.find(({id}) => id === errors.errorSet.id)
-      }
-    }
-
-    return endpoint
-  })
-
-  return {
-    service: {
-      ...service
-    },
-    endpointErrors,
-    errorSet
-  }
-}
+const extractErrorSet = require('./utils/extractErrorSet')
 
 function createApi(api, { verbose = false } = {}) {
   verbose && console.log(`Creating service`)
@@ -35,25 +11,20 @@ function createApi(api, { verbose = false } = {}) {
   let createdService
   return client
     .createService(service)
-    .then(service => {
-      createdService = service
-
-      if(!errorSet) {
-        return createdService
+    .then(createdService => {
+      if(errorSet) {
+        return callErrorSetAdd(createdService.id, errorSet)
+          .then(() => createdService)
+          .catch(error => {
+            const rejectError = () => Promise.reject(error)
+            return client.deleteService(createdService.id).then(rejectError, rejectError)
+          })
       }
 
-      return callErrorSetAdd(service.id, errorSet)
-        .catch(error => {
-          const rejectError = () => Promise.reject(error)
-          return client.deleteService(service.id).then(rejectError, rejectError)
-        })
+      return createdService
     })
-    .then(() => {
-      if (verbose) {
-        console.log(`Creating done.`)
-        console.log(JSON.stringify(createdService, null, 2))
-      }
-
+    .then(createdService => {
+      verbose && console.log(`Creating done.`)
       return createdService
     })
     .catch(error => {

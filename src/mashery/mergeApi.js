@@ -3,6 +3,7 @@ function mergeApi(sourceAPI, targetAPI) {
     service: {
       endpoints: sourceEndpoints,
       organization: sourceOrganization,
+      errorSets: sourceErrorSets,
       ...sourceService
     }
   } = sourceAPI;
@@ -10,19 +11,23 @@ function mergeApi(sourceAPI, targetAPI) {
     service: {
       endpoints: targetEndpoints,
       organization: targetOrganization,
+      errorSets: targetErrorSets,
       ...targetService
     }
   } = targetAPI;
 
+  // We leave just one error set
+  const errorSet = mergeErrorSets(sourceErrorSets, targetErrorSets)
   const service = mergeService(sourceService, targetService);
   const organization = mergeOrganization(sourceOrganization, targetOrganization);
-  const endpoints = mergeEndpoints(sourceEndpoints, targetEndpoints);
+  const endpoints = mergeEndpoints(sourceEndpoints, targetEndpoints, errorSet);
 
   const api = {
     service: {
       ...service,
       organization,
-      endpoints
+      endpoints,
+      errorSets: errorSet ? [errorSet] : undefined
     }
   };
 
@@ -30,8 +35,24 @@ function mergeApi(sourceAPI, targetAPI) {
 }
 
 // Remove irelevant properties
-function cleanupEntity({ created, updated, ...data }) {
+function cleanupEntity({ created, updated, ...data }, removeId = false) {
+  if(removeId) {
+    delete data.id
+  }
+
   return data;
+}
+
+function mergeErrorSets([sourceErrorSet], [targetErrorSet]) {
+  if(!sourceErrorSet && !targetErrorSet) {
+    return null
+  }
+
+  if(!targetErrorSet || targetErrorSet.name !== sourceErrorSet.name) {
+    return cleanupEntity(sourceErrorSet, true)
+  }
+
+  return targetErrorSet
 }
 
 function mergeService({ id, ...sourceService }, { ...targetService }) {
@@ -49,7 +70,7 @@ function mergeOrganization(source, target) {
   return Object.assign(source, target || {})
 }
 
-function mergeEndpoints(sourceEndpoints, targetEndpoints) {
+function mergeEndpoints(sourceEndpoints, targetEndpoints, errorSet) {
   const endpoints = [];
 
   sourceEndpoints.forEach(sourceEndpoint => {
@@ -87,14 +108,66 @@ function mergeEndpoints(sourceEndpoints, targetEndpoints) {
     }
   });
 
-  return endpoints;
+  return endpoints.map(endpoint => assignErrorSetToEndpoint(endpoint, errorSet))
 }
 
-function mergeEndpoint({id, ...sourceEndpoint}, targetEndpoint) {
+function mergeEndpoint({id, methods: sourceMethods, ...sourceEndpoint}, {methods: targetMethods, ...targetEndpoint}) {
+  const methods = mergeEndpointMethods(sourceMethods, targetMethods)
+
   return Object.assign(
     cleanupEntity(targetEndpoint),
-    cleanupEntity(sourceEndpoint)
+    cleanupEntity(sourceEndpoint),
+    { methods }
   );
+}
+
+function mergeEndpointMethods(sourceMethods = [], targetMethods = []) {
+  const methods = [];
+
+  sourceMethods.forEach(sourceMethod => {
+    const sourceId = sourceMethod.id;
+    let match;
+
+    // 1. Find by ID
+    if (typeof sourceId === "string") {
+      match = targetMethods.find(({ id }) => sourceId === id);
+    }
+
+    // 2. Find by name
+    if (match === undefined) {
+      const sourceName = sourceMethod.name;
+      match = targetMethods.find(({ name }) => sourceName === name);
+    }
+
+    if (match !== undefined) {
+      methods.push(Object.assign({}, match, cleanupEntity(sourceMethod, true)));
+    } else {
+      // Creating new endpoint
+      methods.push(cleanupEntity(sourceMethod));
+    }
+  });
+
+  return methods
+}
+
+function assignErrorSetToEndpoint({errors: {errorSet: _, ...errors}, ...endpoint}, errorSet) {
+  if(!errorSet) {
+    return {
+      ...endpoint,
+      errors
+    }
+  }
+
+  return {
+    ...endpoint,
+    errors: {
+      errorSet: {
+        id: errorSet.id,
+        name: errorSet.name
+      },
+      ...errors
+    }
+  }
 }
 
 module.exports = mergeApi;

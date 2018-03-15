@@ -20,8 +20,7 @@ function createFromSwagger(api, swagger) {
     }
   }).then(newService => {
     spinner.stop();
-    console.log("Creating api from swagger done");
-    console.log(`Service id=${newService.id}`);
+    console.log(`Creating api from swagger done. https://adidas.admin.mashery.com/control-center/api-definitions/${newService.id}`);
   });
 }
 
@@ -41,9 +40,9 @@ function updateFromSwagger(api, serviceId, swagger) {
         }
       });
     })
-    .then(() => {
+    .then(updatedService => {
       spinner.stop();
-      console.log("Updating api from swagger done");
+      console.log(`Updating api from swagger done. https://adidas.admin.mashery.com/control-center/api-definitions/${updatedService.id}`);
     });
 }
 
