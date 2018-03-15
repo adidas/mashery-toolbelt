@@ -48,17 +48,17 @@ function modifyValues(api, options = {}) {
   targetApi.service.endpoints.forEach(endpoint => {
     endpoint.name = nameReplacer(endpoint.name)
     // Public
-    deep.set(
-      endpoint, 'publicDomains.0.address',
-      publicDomainReplacer(deep.get(endpoint, 'publicDomains.0.address'))
-    )
+    endpoint.publicDomains = [
+      { address: publicDomainReplacer(deep.get(endpoint, 'publicDomains.0.address')) }
+    ]
 
     endpoint.requestPathAlias = publicPathReplacer(endpoint.requestPathAlias)
     // Endpoint
-    deep.set(
-      endpoint, 'systemDomains.0.address',
-      endpointDomainReplacer(deep.get(endpoint, 'systemDomains.0.address'))
-    )
+
+    endpoint.systemDomains = [
+      { address: endpointDomainReplacer(deep.get(endpoint, 'systemDomains.0.address')) }
+    ]
+
     endpoint.outboundRequestTargetPath = endpointPathReplacer(endpoint.outboundRequestTargetPath)
 
     if(trafficDomainReplacer) {
