@@ -1,4 +1,3 @@
-const path = require('path')
 const makeReplacer = require('./utils/makeReplacer')
 const deep = require('../../utils/deep')
 

@@ -7,40 +7,40 @@ test('null', () => {
 test('all data', () => {
   const blueprint = {
     endpoint: {
-      outboundTransportProtocol: "https",
+      outboundTransportProtocol: 'https',
       securityDefinitions: {},
       connectionTimeoutForSystemDomainRequest: 10,
       connectionTimeoutForSystemDomainResponse: 20,
       dropApiKeyFromIncomingCall: true,
       processor: {
-        adapter: "com.something.Class",
+        adapter: 'com.something.Class',
         preProcessEnabled: true,
-        preInputs: {a: "2"},
+        preInputs: { a: '2' },
         postProcessEnabled: true,
-        postInputs: {b: "3"},
+        postInputs: { b: '3' }
       },
       systemDomainAuthentication: {
-        type: "httpBasic",
-        username: "!!INPUT",
-        password: "!!INPUT",
+        type: 'httpBasic',
+        username: '!!INPUT',
+        password: '!!INPUT'
       },
-      apiMethodDetectionKey: "2 4",
+      apiMethodDetectionKey: '2 4',
       apiMethodDetectionLocations: ['request-path'],
       cors: {
         maxAge: 10,
         cookiesAllowed: true,
-        domainsAllowed: ["www.seznam.cz"],
+        domainsAllowed: ['www.seznam.cz'],
         headersAllowed: [],
         headersExposed: [],
         subDomainMatchingAllowed: true,
         allDomainsEnabled: false
       },
-      headersToExcludeFromIncomingCall: ""
+      headersToExcludeFromIncomingCall: ''
     },
     endpointMethod: {
-      "name": "default method name",
-      "sampleJsonResponse": "",
-      "sampleXmlResponse": ""
+      name: 'default method name',
+      sampleJsonResponse: '',
+      sampleXmlResponse: ''
     }
   }
 
@@ -50,26 +50,34 @@ test('all data', () => {
 test('error#1', () => {
   const blueprint = {
     endpoint: {
-      outboundTransportProtocol: "ftp",
-    },
+      outboundTransportProtocol: 'ftp'
+    }
   }
 
-  expect(loadBlueprint(blueprint)).rejects.toEqual(new Error('Blueprint contains errors:\nInvalid prop `endpoint.outboundTransportProtocol` of value `ftp` supplied to `blueprint`, expected one of ["http","https"].'))
+  expect(loadBlueprint(blueprint)).rejects.toEqual(
+    new Error(
+      'Blueprint contains errors:\nInvalid prop `endpoint.outboundTransportProtocol` of value `ftp` supplied to `blueprint`, expected one of ["http","https"].'
+    )
+  )
 })
 
 test('error#1', () => {
   const blueprint = {
     endpoint: {
-      outboundTransportProtocol: "http",
+      outboundTransportProtocol: 'http',
       processor: {
-        adapter: "com.something.Class",
+        adapter: 'com.something.Class',
         preProcessEnabled: true,
-        preInputs: {a: false},
+        preInputs: { a: false },
         postProcessEnabled: true,
-        postInputs: {b: "3"},
-      },
-    },
+        postInputs: { b: '3' }
+      }
+    }
   }
 
-  return expect(loadBlueprint(blueprint)).rejects.toEqual(new Error('Blueprint contains errors:\nInvalid prop `endpoint.processor.preInputs.a` of type `boolean` supplied to `blueprint`, expected `string`.'))
+  return expect(loadBlueprint(blueprint)).rejects.toEqual(
+    new Error(
+      'Blueprint contains errors:\nInvalid prop `endpoint.processor.preInputs.a` of type `boolean` supplied to `blueprint`, expected `string`.'
+    )
+  )
 })

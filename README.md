@@ -210,3 +210,11 @@ $ git clone https://github.com/adidas-group/mashery-toolbelt.git
 $ cd mashery-toolbelt
 $ npm install
 ```
+
+### NPM commands
+
+- `npm run test` - runs linter (standard) and jest tests. For CI or generally validate quality and Functionality
+- `npm run tdd` - runs tests with watching. Must have during development for quick check if something is broken
+- `npm run lint` - runs linter
+- `npm run lint:fix` - runs linter and fix what can be fixed
+- Before each commit code is automatically fixed with linter and formatted with prettier.

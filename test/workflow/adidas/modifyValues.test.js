@@ -65,20 +65,24 @@ const prdApi = {
 // }
 
 test('promotes DEV API to QA', () => {
-  expect(modifyValues(devApi, {
-    name: 'DEV*:QA*',
-    publicDomain: 'qa.public.domain.com',
-    endpointDomain: 'backend.qa.domain.com',
-    endpointPath: '*/dev/*:*/qa/*',
-  })).toEqual(qaApi)
+  expect(
+    modifyValues(devApi, {
+      name: 'DEV*:QA*',
+      publicDomain: 'qa.public.domain.com',
+      endpointDomain: 'backend.qa.domain.com',
+      endpointPath: '*/dev/*:*/qa/*'
+    })
+  ).toEqual(qaApi)
 })
 
 test('promotes QA API to PRD', () => {
-  expect(modifyValues(qaApi, {
-    name: 'QA*:PRD*',
-    trafficDomain: 'traffic.domain.com',
-    publicDomain: 'public.domain.com',
-    endpointDomain: 'backend.domain.com',
-    endpointPath: '*/qa/*:*/*',
-  })).toEqual(prdApi)
+  expect(
+    modifyValues(qaApi, {
+      name: 'QA*:PRD*',
+      trafficDomain: 'traffic.domain.com',
+      publicDomain: 'public.domain.com',
+      endpointDomain: 'backend.domain.com',
+      endpointPath: '*/qa/*:*/*'
+    })
+  ).toEqual(prdApi)
 })

@@ -1,14 +1,10 @@
 const fetch = require('node-fetch')
-const { URL, URLSearchParams } = require('url')
+const { URL } = require('url')
 const UrlPattern = require('url-pattern')
 const apiMethods = require('./methods')
 const { refreshToken } = require('./auth')
 const { makeFieldsParam } = require('./fields')
-const {
-  MasheryClientError,
-  AuthenticationError,
-  RequestError
-} = require('./errors')
+const { AuthenticationError, RequestError } = require('./errors')
 const errorMessages = require('./error_messages')
 
 function makePath ({ pattern, args }) {
@@ -62,7 +58,7 @@ function callClientRequestWithAuth (client, url, options) {
         // When refresh token is (probably) expired, try to authenticate again with current credentials
         const shouldAuthenticate =
           error instanceof AuthenticationError &&
-          error.code == 'unsupported_grant_type'
+          error.code === 'unsupported_grant_type'
         const promise = shouldAuthenticate
           ? client.authenticate()
           : Promise.reject(error)
@@ -141,7 +137,7 @@ function registerClientMethod (client, name, pathPattern, method, fields) {
 
     const options = {}
 
-    if (method == 'GET') {
+    if (method === 'GET') {
       // Set query params
       if (data !== null) {
         Object.keys(data).forEach(key => {

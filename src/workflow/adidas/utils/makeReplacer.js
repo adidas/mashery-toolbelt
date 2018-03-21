@@ -1,5 +1,5 @@
 const PATTERN_MATCH = /(\*)/
-const ESCAPE_REGEXP = /[\(\)\.\-]/g
+const ESCAPE_REGEXP = /[().-]/g
 const SPLIT_PATTERN = /[^\\]:/
 
 function validatePatterns (value, name, required) {

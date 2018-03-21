@@ -1,4 +1,3 @@
-const fs = require('fs')
 const spinner = require('../../utils/spinner')
 const loadDataFile = require('../../utils/loadDataFile')
 const callErrorSetAdd = require('../../mashery/errorSetAdd')

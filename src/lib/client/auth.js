@@ -1,5 +1,7 @@
 const fetch = require('node-fetch')
 const { URL, URLSearchParams } = require('url')
+const errorMessages = require('./error_messages')
+const { AuthenticationError } = require('./errors')
 
 function validateCredentials (credentials, required) {
   const missing = []
@@ -14,7 +16,7 @@ function validateCredentials (credentials, required) {
   if (missing.length > 0) {
     throw new AuthenticationError(
       'missing_credentials',
-      ERROR_MESSAGES.missing_credentials(missing)
+      errorMessages.missing_credentials(missing)
     )
   }
 
@@ -23,7 +25,7 @@ function validateCredentials (credentials, required) {
 
 function makeAuthRequest (options, { key, secret }, params) {
   const url = new URL(options.tokenEndpoint, options.host).toString()
-  const basicAuth = new Buffer(`${key}:${secret}`).toString('base64')
+  const basicAuth = Buffer.alloc(`${key}:${secret}`).toString('base64')
   const requestOptions = {
     method: 'POST',
     body: params,

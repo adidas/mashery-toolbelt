@@ -1,4 +1,4 @@
-const { invalid_field } = require('./error_messages')
+const clientErrorMessages = require('./error_messages')
 const { RequestError } = require('./errors')
 
 function validateFields (methodName, allFields, fields) {
@@ -13,7 +13,7 @@ function validateFields (methodName, allFields, fields) {
   if (invalidFields.length > 0) {
     throw new RequestError(
       'invalid_fields',
-      invalid_field(methodName, invalidFields)
+      clientErrorMessages.invalid_field(methodName, invalidFields)
     )
   }
 }
@@ -195,5 +195,6 @@ module.exports = {
   cache,
   endpointCache,
   securityProfile,
-  oAuth
+  oAuth,
+  roles
 }

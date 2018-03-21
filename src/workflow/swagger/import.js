@@ -1,4 +1,3 @@
-const path = require('path')
 const SwaggerParser = require('swagger-parser')
 const spinner = require('../../utils/spinner')
 const buildApiFromSwagger = require('../adidas/buildFromSwagger')
@@ -13,7 +12,7 @@ function createFromSwagger (api, swagger) {
   return confirmChanges({
     before: {},
     after: api,
-    message: `Are this valid new api from swagger \'${swagger}\'?`,
+    message: `Are this valid new api from swagger '${swagger}'?`,
     action (newApi) {
       spinner.start()
       return createApi(newApi)
