@@ -3,13 +3,12 @@
   Supports: auth, ls, backup, restore, promote, errorset
 */
 
-const package = require('../../package.json')
+const appPackage = require('../../package.json')
 const program = require('commander')
 
-function defineProgram({ description}, callProgram) {
-  program
-    .version(package.version)
-    // .option('-v, --verbose', 'verbose mode')
+function defineProgram ({ description }, callProgram) {
+  program.version(appPackage.version)
+  // .option('-v, --verbose', 'verbose mode')
 
   callProgram(program)
 

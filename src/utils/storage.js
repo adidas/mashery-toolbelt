@@ -12,45 +12,45 @@ const os = require('os')
 const path = require('path')
 const fs = require('fs')
 
-const SEPARATOR = path.sep;
+const SEPARATOR = path.sep
 const APP_ROOT = '.mashery-toolbelt'
 
-function mkdirpSync(targetDir) {
-  const initDir = path.isAbsolute(targetDir) ? SEPARATOR : '';
+function mkdirpSync (targetDir) {
+  const initDir = path.isAbsolute(targetDir) ? SEPARATOR : ''
 
   targetDir.split(SEPARATOR).reduce((parentDir, childDir) => {
-    const curDir = path.resolve(parentDir, childDir);
+    const curDir = path.resolve(parentDir, childDir)
 
-    if(!fs.existsSync(curDir)) {
-      fs.mkdirSync(curDir);
+    if (!fs.existsSync(curDir)) {
+      fs.mkdirSync(curDir)
     }
 
-    return curDir;
-  }, initDir);
+    return curDir
+  }, initDir)
 }
 
 // Get full path to file
-function resolveFile(file) {
+function resolveFile (file) {
   return path.join(os.homedir(), APP_ROOT, file)
 }
 
 // Get full path to file and create directory
-function prepareFile(file) {
+function prepareFile (file) {
   const filePath = resolveFile(file)
   mkdirpSync(path.dirname(filePath))
   return filePath
 }
 
-function readFileSync(file, options) {
+function readFileSync (file, options) {
   return fs.readFileSync(resolveFile(file), options)
 }
 
-function writeFileSync(file, data, options) {
-  return fs.writeFileSync(prepareFile(file), data , options)
+function writeFileSync (file, data, options) {
+  return fs.writeFileSync(prepareFile(file), data, options)
 }
 
 // TODO: optimise and remove all parent empty directories
-function unlinkSync(file) {
+function unlinkSync (file) {
   return fs.unlinkSync(resolveFile(file))
 }
 
@@ -58,5 +58,5 @@ module.exports = {
   readFileSync,
   resolveFile,
   unlinkSync,
-  writeFileSync,
+  writeFileSync
 }

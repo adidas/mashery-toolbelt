@@ -2,11 +2,11 @@ const PATTERN_MATCH = /(\*)/
 const ESCAPE_REGEXP = /[\(\)\.\-]/g
 const SPLIT_PATTERN = /[^\\]:/
 
-function validatePatterns(value, name, required) {
+function validatePatterns (value, name, required) {
   if (Array.isArray(value)) {
-    value = value.filter(val => typeof(val) === 'string' && val.length)
+    value = value.filter(val => typeof val === 'string' && val.length)
   } else {
-    value = typeof(value) === 'string' && value.length ? [value] : []
+    value = typeof value === 'string' && value.length ? [value] : []
   }
 
   if (required === true && value.length === 0) {
@@ -17,18 +17,18 @@ function validatePatterns(value, name, required) {
   return value
 }
 
-function ident(value) {
+function ident (value) {
   return value
 }
 
-function patternsToReplacers(patterns) {
+function patternsToReplacers (patterns) {
   return patterns.map(pattern => {
     let from = pattern
     let to
 
     const match = pattern.match(SPLIT_PATTERN)
 
-    if(match) {
+    if (match) {
       from = pattern.slice(0, match.index + 1)
       to = pattern.slice(match.index + 2)
     }
@@ -67,7 +67,11 @@ function patternsToReplacers(patterns) {
       }
     }
 
-    const regexp = fromParts.map(part => (part === '*' ? '(.*?)' : part.replace(ESCAPE_REGEXP, '\\$&'))).join('')
+    const regexp = fromParts
+      .map(
+        part => (part === '*' ? '(.*?)' : part.replace(ESCAPE_REGEXP, '\\$&'))
+      )
+      .join('')
 
     return {
       type: 'pattern',
@@ -83,7 +87,7 @@ function patternsToReplacers(patterns) {
   })
 }
 
-function makeReplacer(patterns, { name, required = true } = {}) {
+function makeReplacer (patterns, { name, required = true } = {}) {
   patterns = validatePatterns(patterns, name, required)
 
   if (patterns.length === 0) {
@@ -92,7 +96,7 @@ function makeReplacer(patterns, { name, required = true } = {}) {
 
   const replacers = patternsToReplacers(patterns)
 
-  return function(value) {
+  return function (value) {
     let newValue
 
     replacers.find(({ type, match, replaceWith }) => {

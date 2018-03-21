@@ -24,7 +24,7 @@ module.exports = {
   endpoint: shape({
     outboundTransportProtocol: oneOf(['http', 'https']),
 
-    //// Domains and paths
+    /// / Domains and paths
     // Public
     publicDomains: domainType,
     requestPathAlias: string,

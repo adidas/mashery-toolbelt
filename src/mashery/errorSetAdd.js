@@ -8,7 +8,7 @@ const DUMP_FIELDS = {
   errorSetFields: ['id']
 }
 
-function errorSetAdd(serviceId, errorSet) {
+function errorSetAdd (serviceId, errorSet) {
   let newErrorSet
 
   return dumpApi(serviceId, DUMP_FIELDS).then(api =>

@@ -1,15 +1,18 @@
 const loadBlueprint = require('./loadBlueprint')
 
-const METHODS = ["post", "get", "put", "delete", "head", "patch", "options"]
+const METHODS = ['post', 'get', 'put', 'delete', 'head', 'patch', 'options']
 
 const defaultService = {}
 const defaultEndpoint = {}
 
-function fixName(name) {
-  return name.trim().replace('[', '(').replace(']', ')')
+function fixName (name) {
+  return name
+    .trim()
+    .replace('[', '(')
+    .replace(']', ')')
 }
 
-function buildSingleMethodEnpoints(paths, commonEndpoint) {
+function buildSingleMethodEnpoints (paths, commonEndpoint) {
   const endpoints = []
 
   Object.keys(paths).forEach(path => {
@@ -17,16 +20,16 @@ function buildSingleMethodEnpoints(paths, commonEndpoint) {
 
     Object.keys(methods).forEach(methodName => {
       // Skip other properties
-      if(!METHODS.includes(methodName)) {
+      if (!METHODS.includes(methodName)) {
         return
       }
 
       const methodDetails = methods[methodName]
       const endpoint = Object.assign({}, defaultEndpoint, commonEndpoint, {
-        name:  fixName(methodDetails.summary),
-        supportedHttpMethods: [ methodName ],
+        name: fixName(methodDetails.summary),
+        supportedHttpMethods: [methodName],
         requestPathAlias: path,
-        outboundRequestTargetPath: path,
+        outboundRequestTargetPath: path
         // TODO: add required query params
         // outboundRequestTargetQueryParameters
       })
@@ -38,25 +41,25 @@ function buildSingleMethodEnpoints(paths, commonEndpoint) {
   return endpoints
 }
 
-function buildMultiMethodEnpoints(paths, commonEndpoint) {
+function buildMultiMethodEnpoints (paths, commonEndpoint) {
   const endpoints = []
 
   Object.keys(paths).forEach(path => {
     const methods = paths[path]
 
     let pathName
-    const supportedHttpMethods = []
+    const supportedHttpMethods = []
 
     Object.keys(methods).forEach(methodName => {
       // Get name for whole path
-      if(methodName === 'x-summary') {
+      if (methodName === 'x-summary') {
         pathName = methods[methodName]
 
         return
       }
 
       // Skip other properties
-      if(!METHODS.includes(methodName)) {
+      if (!METHODS.includes(methodName)) {
         return
       }
 
@@ -67,7 +70,7 @@ function buildMultiMethodEnpoints(paths, commonEndpoint) {
       name: fixName(pathName),
       supportedHttpMethods,
       requestPathAlias: path,
-      outboundRequestTargetPath: path,
+      outboundRequestTargetPath: path
     })
 
     endpoints.push(endpoint)
@@ -76,31 +79,27 @@ function buildMultiMethodEnpoints(paths, commonEndpoint) {
   return endpoints
 }
 
-function buildApiFromSwagger({
-  info,
-  schemes,
-  securityDefinitions,
-  paths,
-}, {
-  blueprint: blueprintPath,
-  https,
-  multiMethodEndpoint,
-  organization
-} = {}) {
-  let commonEndpoint = {};
+function buildApiFromSwagger (
+  { info, schemes, securityDefinitions, paths },
+  { blueprint: blueprintPath, https, multiMethodEndpoint, organization } = {}
+) {
+  let commonEndpoint = {}
 
-  if(blueprintPath) {
-    commonEndpoint = loadBlueprint(blueprintPath).then(({endpoint}) => endpoint)
+  if (blueprintPath) {
+    commonEndpoint = loadBlueprint(blueprintPath).then(
+      ({ endpoint }) => endpoint
+    )
   }
 
   return Promise.resolve(commonEndpoint).then(commonEndpoint => {
-    if(!commonEndpoint.outboundTransportProtocol) {
+    if (!commonEndpoint.outboundTransportProtocol) {
       commonEndpoint.outboundTransportProtocol = https ? 'https' : 'http'
     }
 
-    const endpoints = multiMethodEndpoint === true
-                      ? buildMultiMethodEnpoints(paths, commonEndpoint)
-                      : buildSingleMethodEnpoints(paths, commonEndpoint)
+    const endpoints =
+      multiMethodEndpoint === true
+        ? buildMultiMethodEnpoints(paths, commonEndpoint)
+        : buildSingleMethodEnpoints(paths, commonEndpoint)
 
     const service = Object.assign(defaultService, {
       name: fixName(info.title),
@@ -108,13 +107,13 @@ function buildApiFromSwagger({
       version: info.version
     })
 
-    if(organization) {
+    if (organization) {
       service.organization = {
         id: organization.trim()
       }
     }
 
-    service.endpoints = endpoints;
+    service.endpoints = endpoints
 
     return {
       service

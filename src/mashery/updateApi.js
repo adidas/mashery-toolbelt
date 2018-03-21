@@ -2,19 +2,19 @@ const client = require('../client')
 const callErrorSetAdd = require('./errorSetAdd')
 const extractErrorSet = require('./utils/extractErrorSet')
 
-function updateApi(serviceId, api, { verbose = false } = {}) {
+function updateApi (serviceId, api, { verbose = false } = {}) {
   verbose && console.log(`Updating service ${serviceId}`)
 
-  const { service, errorSet } = extractErrorSet(api)
+  const { errorSet } = extractErrorSet(api)
 
   return client
     .updateService(serviceId, api.service)
     .then(updatedService => {
-      if(errorSet) {
+      if (errorSet) {
         return callErrorSetAdd(updatedService.id, errorSet)
           .then(() => updatedService)
           .catch(() => {
-            console.log("Updating error set failed. Do it manually.")
+            console.log('Updating error set failed. Do it manually.')
             return updatedService
           })
       }

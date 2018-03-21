@@ -3,7 +3,7 @@ const spinner = require('../../utils/spinner')
 const loadDataFile = require('../../utils/loadDataFile')
 const callErrorSetAdd = require('../../mashery/errorSetAdd')
 
-function errorSetAdd(serviceId, errorSetPath) {
+function errorSetAdd (serviceId, errorSetPath) {
   console.log(`Adding error set ${errorSetPath} to service ${serviceId}`)
 
   spinner.start()

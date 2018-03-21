@@ -1,42 +1,51 @@
-const fetch = require('node-fetch');
+const fetch = require('node-fetch')
 const { URL, URLSearchParams } = require('url')
 
-function validateCredentials(credentials, required) {
+function validateCredentials (credentials, required) {
   const missing = []
 
   required.forEach(key => {
     const val = credentials[key]
-    if(typeof(val) !== 'string' || val.trim().length === 0) {
+    if (typeof val !== 'string' || val.trim().length === 0) {
       missing.push(key)
     }
   })
 
-  if(missing.length > 0) {
-    throw new AuthenticationError('missing_credentials', ERROR_MESSAGES.missing_credentials(missing));
+  if (missing.length > 0) {
+    throw new AuthenticationError(
+      'missing_credentials',
+      ERROR_MESSAGES.missing_credentials(missing)
+    )
   }
 
   return true
 }
 
-function makeAuthRequest(options, { key, secret }, params) {
+function makeAuthRequest (options, { key, secret }, params) {
   const url = new URL(options.tokenEndpoint, options.host).toString()
-  const basicAuth = new Buffer(`${key}:${secret}`).toString('base64');
+  const basicAuth = new Buffer(`${key}:${secret}`).toString('base64')
   const requestOptions = {
     method: 'POST',
     body: params,
     headers: {
-      'Accept':        'application/json',
-      'Authorization': `Basic ${basicAuth}`,
-      'Content-Type':  'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+      Authorization: `Basic ${basicAuth}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
   }
 
   return fetch(url.toString(), requestOptions)
 }
 
-function authenticate(options, credentials) {
+function authenticate (options, credentials) {
   return new Promise((resolve, reject) => {
-    validateCredentials(credentials, [ 'username', 'password', 'key', 'secret', 'scope' ])
+    validateCredentials(credentials, [
+      'username',
+      'password',
+      'key',
+      'secret',
+      'scope'
+    ])
 
     const params = new URLSearchParams()
     params.set('grant_type', 'password')
@@ -48,9 +57,9 @@ function authenticate(options, credentials) {
   })
 }
 
-function refreshToken(options, credentials) {
+function refreshToken (options, credentials) {
   return new Promise((resolve, reject) => {
-    validateCredentials(credentials, [ 'key', 'secret', 'refreshToken' ])
+    validateCredentials(credentials, ['key', 'secret', 'refreshToken'])
 
     const params = new URLSearchParams()
     params.set('grant_type', 'ref resh_token')
@@ -62,5 +71,5 @@ function refreshToken(options, credentials) {
 
 module.exports = {
   authenticate,
-  refreshToken,
+  refreshToken
 }

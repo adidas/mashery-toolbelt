@@ -1,8 +1,7 @@
-const applyChanges = require('./utils/applyChanges')
+const client = require('../client')
 
-function removeApi(serviceId, { verbose = false } = {}) {
+function removeApi (serviceId, { verbose = false } = {}) {
   verbose && console.log(`Removing service ${serviceId}`)
-  const service = { id: serviceId }
 
   return client
     .deleteService(serviceId)

@@ -1,15 +1,15 @@
 const jsondiffpatch = require('jsondiffpatch')
 
 const differ = jsondiffpatch.create({
-  objectHash: function(obj, index) {
+  objectHash: function (obj, index) {
     // try to find an id property, otherwise just use the index in the array
-    return obj.$$diffId || obj.__id, obj.id || obj.name || '$$index:' + index
+    return obj.$$diffId || obj.__id || obj.id || obj.name || '$$index:' + index
   },
   textDiff: {
     // default 60, minimum string length (left and right sides) to use text diff algorythm: google-diff-match-patch
     minLength: 200
   },
-  propertyFilter: function(name, context) {
+  propertyFilter: function (name, context) {
     return !['$$diffId', 'created', 'updated'].includes(name)
   },
   cloneDiffValues: true,
@@ -21,7 +21,7 @@ const differ = jsondiffpatch.create({
   }
 })
 
-function printDiff(before, after) {
+function printDiff (before, after) {
   const delta = differ.diff(before, after)
   jsondiffpatch.console.log(delta)
 }

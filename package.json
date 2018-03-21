@@ -4,7 +4,9 @@
   "description": "CLI tool for Mashery API Management provisioning",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "lint": "standard src/**/*.js",
+    "precommit": "lint-staged",
+    "test": "lint && jest",
     "tdd": "jest --watch"
   },
   "repository": {
@@ -40,6 +42,18 @@
     "yamljs": "0.3.0"
   },
   "devDependencies": {
-    "jest": "21.2.1"
+    "husky": "0.14.3",
+    "jest": "21.2.1",
+    "lint-staged": "7.0.0",
+    "prettier-standard": "8.0.0",
+    "standard": "11.0.1"
+  },
+  "lint-staged": {
+    "linters": {
+      "src/**/*.js": [
+        "prettier-standard",
+        "git add"
+      ]
+    }
   }
 }

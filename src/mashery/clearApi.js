@@ -8,7 +8,7 @@ const DUMP_FIELDS = {
   errorSetFields: ['id']
 }
 
-function clearApi(serviceId, { verbose = false } = {}) {
+function clearApi (serviceId, { verbose = false } = {}) {
   verbose && console.log(`Clearing service ${serviceId}`)
 
   return dumpApi(serviceId, DUMP_FIELDS)

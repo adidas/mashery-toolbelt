@@ -2,22 +2,23 @@ const client = require('../client')
 const callErrorSetAdd = require('./errorSetAdd')
 const extractErrorSet = require('./utils/extractErrorSet')
 
-function createApi(api, { verbose = false } = {}) {
+function createApi (api, { verbose = false } = {}) {
   verbose && console.log(`Creating service`)
   api = JSON.parse(JSON.stringify(api))
 
   const { service, errorSet } = extractErrorSet(api)
 
-  let createdService
   return client
     .createService(service)
     .then(createdService => {
-      if(errorSet) {
+      if (errorSet) {
         return callErrorSetAdd(createdService.id, errorSet)
           .then(() => createdService)
           .catch(error => {
             const rejectError = () => Promise.reject(error)
-            return client.deleteService(createdService.id).then(rejectError, rejectError)
+            return client
+              .deleteService(createdService.id)
+              .then(rejectError, rejectError)
           })
       }
 

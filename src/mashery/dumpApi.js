@@ -2,14 +2,14 @@ const client = require('../client')
 
 const ENDPOINTS_LIMIT = 1000
 
-function dumpService(data, serviceId, fields) {
+function dumpService (data, serviceId, fields) {
   return client
     .fetchService(serviceId, { fields })
     .then(service => (data.service = service))
 }
 
-function dumpEndpoints(service, fields) {
-  if(fields === false) {
+function dumpEndpoints (service, fields) {
+  if (fields === false) {
     return
   }
 
@@ -18,8 +18,8 @@ function dumpEndpoints(service, fields) {
     .then(endpoints => (service.endpoints = endpoints))
 }
 
-function dumpMethods(service, fields) {
-  if(fields === false) {
+function dumpMethods (service, fields) {
+  if (fields === false) {
     return
   }
 
@@ -32,8 +32,8 @@ function dumpMethods(service, fields) {
   )
 }
 
-function dumpErrorSets(service, fields) {
-  if(fields === false) {
+function dumpErrorSets (service, fields) {
+  if (fields === false) {
     return
   }
 
@@ -42,7 +42,7 @@ function dumpErrorSets(service, fields) {
     .then(errorSets => (service.errorSets = errorSets))
 }
 
-function dumpApi(serviceId, fields = {}, { verbose = false } = {}) {
+function dumpApi (serviceId, fields = {}, { verbose = false } = {}) {
   verbose && console.log(`Dumping service ${serviceId}`)
 
   const {
@@ -54,24 +54,22 @@ function dumpApi(serviceId, fields = {}, { verbose = false } = {}) {
 
   const data = {}
 
-  return (
-    dumpService(data, serviceId, serviceFields)
-      .then(() => dumpEndpoints(data.service, endpointFields, methodFields))
-      .then(() => dumpMethods(data.service, methodFields))
-      .then(() => dumpErrorSets(data.service, errorSetFields))
-      .then(() => {
-        verbose && console.log('Dump done')
-        return data
-      })
-      .catch(error => {
-        if (verbose) {
-          console.error('Dump failed:')
-          console.log(error)
-        }
+  return dumpService(data, serviceId, serviceFields)
+    .then(() => dumpEndpoints(data.service, endpointFields, methodFields))
+    .then(() => dumpMethods(data.service, methodFields))
+    .then(() => dumpErrorSets(data.service, errorSetFields))
+    .then(() => {
+      verbose && console.log('Dump done')
+      return data
+    })
+    .catch(error => {
+      if (verbose) {
+        console.error('Dump failed:')
+        console.log(error)
+      }
 
-        return Promise.reject(error)
-      })
-  )
+      return Promise.reject(error)
+    })
 }
 
 module.exports = dumpApi
