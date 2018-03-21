@@ -9,9 +9,9 @@ function updateApi(serviceId, api, { verbose = false } = {}) {
 
   return client
     .updateService(serviceId, api.service)
-    .then(updateService => {
+    .then(updatedService => {
       if(errorSet) {
-        return callErrorSetAdd(updateService.id, errorSet).then(() => updateService)
+        return callErrorSetAdd(updatedService.id, errorSet).then(() => updatedService)
       }
 
       return updatedService
