@@ -11,7 +11,12 @@ function updateApi(serviceId, api, { verbose = false } = {}) {
     .updateService(serviceId, api.service)
     .then(updatedService => {
       if(errorSet) {
-        return callErrorSetAdd(updatedService.id, errorSet).then(() => updatedService)
+        return callErrorSetAdd(updatedService.id, errorSet)
+          .then(() => updatedService)
+          .catch(() => {
+            console.log("Updating error set failed. Do it manually.")
+            return updatedService
+          })
       }
 
       return updatedService
