@@ -19,6 +19,10 @@ function waitForUserInputs (blueprint) {
     }
   })
 
+  if (inputs.length === 0) {
+    return Promise.resolve(blueprint)
+  }
+
   const questions = inputs.map(path => ({
     name: path,
     type: 'input',
@@ -27,7 +31,7 @@ function waitForUserInputs (blueprint) {
   }))
 
   return inquirer.prompt(questions).then(answers => {
-    for (key in answers) {
+    for (const key in answers) {
       deep.set(blueprint, key, answers[key])
     }
 
@@ -37,7 +41,7 @@ function waitForUserInputs (blueprint) {
 
 function loadBlueprint (blueprint) {
   if (!blueprint) {
-    return null
+    return Promise.resolve(null)
   }
 
   if (typeof blueprint === 'string') {
@@ -62,7 +66,9 @@ function loadBlueprint (blueprint) {
   console.error = origError
 
   if (errors.length > 0) {
-    throw new Error(`Blueprint contains errors:\n${errors.join('\n')}`)
+    return Promise.reject(
+      new Error(`Blueprint contains errors:\n${errors.join('\n')}`)
+    )
   }
 
   return waitForUserInputs(blueprint)

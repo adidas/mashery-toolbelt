@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "standard src/**/*.js",
     "precommit": "lint-staged",
-    "test": "lint && jest",
+    "test": "npm run lint && jest",
     "tdd": "jest --watch"
   },
   "repository": {

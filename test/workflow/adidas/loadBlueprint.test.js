@@ -1,7 +1,7 @@
 const loadBlueprint = require('../../../src/workflow/adidas/loadBlueprint')
 
 test('null', () => {
-  expect(loadBlueprint(null)).toEqual(null)
+  expect(loadBlueprint(null)).resolves.toEqual(null)
 })
 
 test('all data', () => {
@@ -44,7 +44,7 @@ test('all data', () => {
     }
   }
 
-  expect(loadBlueprint(blueprint)).toEqual(blueprint)
+  expect(loadBlueprint(blueprint)).resolves.toEqual(blueprint)
 })
 
 test('error#1', () => {
@@ -54,7 +54,7 @@ test('error#1', () => {
     },
   }
 
-  expect(() => loadBlueprint(blueprint)).toThrow()
+  expect(loadBlueprint(blueprint)).rejects.toEqual(new Error('Blueprint contains errors:\nInvalid prop `endpoint.outboundTransportProtocol` of value `ftp` supplied to `blueprint`, expected one of ["http","https"].'))
 })
 
 test('error#1', () => {
@@ -71,5 +71,5 @@ test('error#1', () => {
     },
   }
 
-  expect(() => loadBlueprint(blueprint)).toThrow()
+  return expect(loadBlueprint(blueprint)).rejects.toEqual(new Error('Blueprint contains errors:\nInvalid prop `endpoint.processor.preInputs.a` of type `boolean` supplied to `blueprint`, expected `string`.'))
 })
