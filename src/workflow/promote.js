@@ -65,7 +65,7 @@ function promote(serviceId, options) {
 
       const updateServiceId = options.update;
       return updateServiceId
-        ? updateFromPromote(newApi, updateServiceId)
+        ? updateFromPromote(newApi, updateServiceId.trim())
         : createFromPromote(sourceApi, newApi);
     })
     .catch(error => {

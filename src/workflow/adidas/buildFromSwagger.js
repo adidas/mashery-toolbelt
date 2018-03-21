@@ -110,7 +110,7 @@ function buildApiFromSwagger({
 
     if(organization) {
       service.organization = {
-        id: organization
+        id: organization.trim()
       }
     }
 

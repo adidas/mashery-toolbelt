@@ -24,19 +24,19 @@ function createFromSwagger(api, swagger) {
   });
 }
 
-function updateFromSwagger(api, serviceId, swagger) {
+function updateFromSwagger(api, targetServiceId, swagger) {
   spinner.start();
 
-  return dumpApi(serviceId)
-    .then(dumpedApi => {
+  return dumpApi(targetServiceId)
+    .then(dumpedTargetApi => {
       spinner.stop();
       return confirmChanges({
-        before: dumpedApi,
-        after: mergeApi(api, dumpedApi),
-        message: `Are this valid updates to service '${serviceId}' from swagger '${swagger}'?`,
+        before: dumpedTargetApi,
+        after: mergeApi(api, dumpedTargetApi),
+        message: `Are this valid updates to service '${targetServiceId}' from swagger '${swagger}'?`,
         action(updatedApi) {
           spinner.start();
-          return updateApi(serviceId, updatedApi);
+          return updateApi(targetServiceId, updatedApi);
         }
       });
     })
@@ -55,7 +55,7 @@ function importSwaggerFile(swagger, options) {
 
       const updateServiceId = options.update;
       return updateServiceId
-        ? updateFromSwagger(newApi, updateServiceId, swagger)
+        ? updateFromSwagger(newApi, updateServiceId.trim(), swagger)
         : createFromSwagger(newApi, swagger);
     })
     .catch(error => {

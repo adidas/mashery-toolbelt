@@ -35,6 +35,22 @@ module.exports = {
 
     trafficManagerDomain: string,
 
+    apiKeyValueLocationKey: string,
+    apiKeyValueLocations: arrayOf(
+      oneOf([
+        'request-path',
+        'request-parameters',
+        'request-header',
+        'request-body',
+        'custom'
+      ])
+    ),
+    requestAuthenticationType: oneOf([
+      'apiKey',
+      'apiKeyAndSecret_SHA256',
+      'apiKeyAndSecret_MD5'
+    ]),
+
     securityDefinitions: object,
     connectionTimeoutForSystemDomainRequest: number,
     connectionTimeoutForSystemDomainResponse: number,

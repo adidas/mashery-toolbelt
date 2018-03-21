@@ -43,16 +43,16 @@ function cleanupEntity({ created, updated, ...data }, removeId = false) {
   return data;
 }
 
-function mergeErrorSets([sourceErrorSet], [targetErrorSet]) {
+function mergeErrorSets([sourceErrorSet] = [], [targetErrorSet] = []) {
   if(!sourceErrorSet && !targetErrorSet) {
     return null
   }
 
-  if(!targetErrorSet || targetErrorSet.name !== sourceErrorSet.name) {
-    return cleanupEntity(sourceErrorSet, true)
+  if(!sourceErrorSet) {
+    return targetErrorSet
   }
 
-  return targetErrorSet
+  return cleanupEntity(sourceErrorSet, true)
 }
 
 function mergeService({ id, ...sourceService }, { ...targetService }) {
@@ -150,7 +150,7 @@ function mergeEndpointMethods(sourceMethods = [], targetMethods = []) {
   return methods
 }
 
-function assignErrorSetToEndpoint({errors: {errorSet: _, ...errors}, ...endpoint}, errorSet) {
+function assignErrorSetToEndpoint({errors: {errorSet: _, ...errors} = {}, ...endpoint}, errorSet) {
   if(!errorSet) {
     return {
       ...endpoint,
