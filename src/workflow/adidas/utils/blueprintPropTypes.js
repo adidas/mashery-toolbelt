@@ -93,7 +93,7 @@ module.exports = {
       subDomainMatchingAllowed: bool,
       allDomainsEnabled: bool
     }),
-    headersToExcludeFromIncomingCall: string,
+    headersToExcludeFromIncomingCall: arrayOf(string),
     methods: arrayOf(
       shape({
         name: string.required,
