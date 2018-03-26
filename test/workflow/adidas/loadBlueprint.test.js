@@ -35,7 +35,7 @@ test('all data', () => {
         subDomainMatchingAllowed: true,
         allDomainsEnabled: false
       },
-      headersToExcludeFromIncomingCall: ''
+      headersToExcludeFromIncomingCall: ['header']
     },
     endpointMethod: {
       name: 'default method name',
