@@ -1,0 +1,32 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/mashery-toolbelt
+    docker:
+      - image: circleci/node:8.10.0
+        environment:
+          - JEST_JUNIT_OUTPUT=reports/junit/js-test-results.xml
+    steps:
+      - checkout
+      # - restore_cache:
+      #     key: dependency-cache-{{ .Branch }}-{{ checksum "package-lock.json" }}
+      - restore_cache:
+          key: dependency-cache-{{ .Branch }}-{{ checksum "package-lock.json" }}
+      - run:
+          name: update npm
+          command: 'sudo npm install -g npm@5.8.0'
+      - run:
+          name: install packages
+          command: npm ci
+      # - save_cache:
+      #     key: dependency-cache-{{ .Branch }}-{{ checksum "package-lock.json" }}
+      #     paths:
+      #       - ./node_modules
+      - save_cache:
+          key: dependency-cache-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - /root/.npm
+      - run:
+          name: test
+          command: npm run test:ci
+          environment:
