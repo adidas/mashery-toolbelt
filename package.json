@@ -4,11 +4,13 @@
   "description": "CLI tool for Mashery API Management provisioning",
   "main": "index.js",
   "scripts": {
-    "lint": "standard {src,test}/**/*.js",
-    "lint:fix": "standard {src,test}/**/*.js --fix",
-    "precommit": "lint-staged",
-    "test": "npm run lint && jest",
-    "tdd": "jest --watch"
+    "lint": "standard {src,test}/*.js {src,test}/**/*.js",
+    "lint:fix": "npm run lint -- --fix",
+    "jest": "jest",
+    "test": "npm run lint && npm run jest",
+    "test:ci": "npm run lint && npm run jest -- --ci --testResultsProcessor=\"jest-junit\" --runInBand",
+    "tdd": "npm run jest -- --watch",
+    "precommit": "lint-staged"
   },
   "repository": {
     "type": "git",
@@ -45,6 +47,7 @@
   "devDependencies": {
     "husky": "0.14.3",
     "jest": "21.2.1",
+    "jest-junit": "3.6.0",
     "lint-staged": "7.0.0",
     "prettier-standard": "8.0.0",
     "standard": "11.0.1"
@@ -58,6 +61,8 @@
     }
   },
   "standard": {
-    "env": [ "jest" ]
+    "env": [
+      "jest"
+    ]
   }
 }
