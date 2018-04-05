@@ -1,21 +1,17 @@
 const { fetchAllServices } = require('../client')
 const spinner = require('../utils/spinner')
 
-const LIMIT = 1000
-const ID_MATCH = /[a-zA-Z0-9]+/
-
 function ls (filter) {
   spinner.start()
 
-  let query = { limit: LIMIT }
+  let query = {}
 
   // Add search query param when filtering
   if (filter && filter.length) {
-    const search = [`name:${filter}`, `description:${filter}`]
-    if (filter.match(ID_MATCH)) {
-      search.push(`id:${filter}`)
+    query.search = {
+      fields: ['name', 'description', 'id'],
+      value: filter
     }
-    query.search = search.join(',')
   }
 
   const servicesRequest = fetchAllServices(query)

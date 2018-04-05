@@ -30,6 +30,20 @@ function makePath ({ pattern, args }) {
   return pattern.stringify(pathArgs)
 }
 
+function makeFilterParam (filter) {
+  if (typeof filter === 'string') {
+    return filter
+  }
+
+  if (filter.fields && filter.value) {
+    return filter.fields.map(field => `${field}:${filter.value}`).join(',')
+  }
+
+  return Object.keys(filter)
+    .map(field => `${field}:${filter[field]}`)
+    .join(',')
+}
+
 function waitForQps (client, time) {
   if (!client.__qpsWaiting) {
     client.__qpsWaiting = new Promise(resolve => {
@@ -137,18 +151,30 @@ function registerClientMethod (client, name, pathPattern, method, fields) {
     const options = {}
 
     if (method === 'GET') {
+      const isIndex = pattern.names.length === 0
+
       // Set query params
       if (data !== null) {
         Object.keys(data).forEach(key => {
-          const value =
-            key === 'fields'
-              ? makeFieldsParam(name, fields, data[key])
-              : data[key]
+          let value
+
+          if (key === 'fields') {
+            value = makeFieldsParam(name, fields, data[key])
+          } else if (isIndex && (key === 'filter' || key === 'search')) {
+            value = makeFilterParam(data[key])
+          } else {
+            value = data[key]
+          }
 
           if (value !== null && value !== undefined) {
             url.searchParams.set(key, value)
           }
         })
+      }
+
+      // Default limit with almost unlimited count of items
+      if (isIndex && !url.searchParams.get('limit')) {
+        url.searchParams.set('limit', 9999)
       }
     } else {
       options.method = method

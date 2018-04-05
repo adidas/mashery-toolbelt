@@ -1,7 +1,5 @@
 const client = require('../client')
 
-const ENDPOINTS_LIMIT = 1000
-
 function dumpService (data, serviceId, fields) {
   return client
     .fetchService(serviceId, { fields })
@@ -14,7 +12,7 @@ function dumpEndpoints (service, fields) {
   }
 
   return client
-    .fetchAllServiceEndpoints(service.id, { fields, limit: ENDPOINTS_LIMIT })
+    .fetchAllServiceEndpoints(service.id, { fields })
     .then(endpoints => (service.endpoints = endpoints))
 }
 
