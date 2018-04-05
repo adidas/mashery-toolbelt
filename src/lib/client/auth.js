@@ -25,7 +25,7 @@ function validateCredentials (credentials, required) {
 
 function makeAuthRequest (options, { key, secret }, params) {
   const url = new URL(options.tokenEndpoint, options.host).toString()
-  const basicAuth = Buffer.alloc(`${key}:${secret}`).toString('base64')
+  const basicAuth = Buffer.from(`${key}:${secret}`).toString('base64')
   const requestOptions = {
     method: 'POST',
     body: params,
