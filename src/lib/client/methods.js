@@ -1,6 +1,9 @@
 const fields = require('./fields')
 
 module.exports = [
+  ['fetchAllOrganizations', '/organizations', 'GET', fields.organization],
+  ['fetchOrganization', '/organizations/:id', 'GET', fields.organization],
+
   ['fetchAllServices', '/services', 'GET', fields.service],
   ['fetchService', '/services/:id', 'GET', fields.service],
   ['createService', '/services', 'POST', fields.service],

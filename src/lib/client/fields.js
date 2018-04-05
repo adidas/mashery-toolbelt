@@ -36,6 +36,16 @@ function makeFieldsParam (methodName, allFields, fields) {
   return resultFields.join(',')
 }
 
+const organization = [
+  'id',
+  'name',
+  'parent',
+  'suborganizations',
+  'description',
+  'created',
+  'updated'
+]
+
 const service = [
   'id',
   'name',
@@ -196,5 +206,6 @@ module.exports = {
   endpointCache,
   securityProfile,
   oAuth,
-  roles
+  roles,
+  organization
 }
