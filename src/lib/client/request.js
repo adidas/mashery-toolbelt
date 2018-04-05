@@ -2,7 +2,6 @@ const fetch = require('node-fetch')
 const { URL } = require('url')
 const UrlPattern = require('url-pattern')
 const apiMethods = require('./methods')
-const { refreshToken } = require('./auth')
 const { makeFieldsParam } = require('./fields')
 const { AuthenticationError, RequestError } = require('./errors')
 const errorMessages = require('./error_messages')
@@ -31,8 +30,17 @@ function makePath ({ pattern, args }) {
   return pattern.stringify(pathArgs)
 }
 
-function waitForQps (time) {
-  return new Promise(resolve => setTimeout(resolve, time))
+function waitForQps (client, time) {
+  if (!client.__qpsWaiting) {
+    client.__qpsWaiting = new Promise(resolve => {
+      setTimeout(() => {
+        client.__qpsWaiting = null
+        resolve()
+      }, time)
+    })
+  }
+
+  return client.__qpsWaiting
 }
 
 function makeRequestHeaders (credentials) {
@@ -53,18 +61,8 @@ function callClientRequestWithAuth (client, url, options) {
 
   // b) refresh token and repeat
   if (client.isTokenExpired()) {
-    return refreshToken(client.options, client.credentials)
-      .then(client.handleAuthenticationDone)
-      .catch(error => {
-        // When refresh token is (probably) expired, try to authenticate again with current credentials
-        const shouldAuthenticate =
-          error instanceof AuthenticationError &&
-          error.code === 'unsupported_grant_type'
-        const promise = shouldAuthenticate
-          ? client.authenticate()
-          : Promise.reject(error)
-        return promise.catch(client.handleAuthenticationError)
-      })
+    return client
+      .refreshToken()
       .then(() => callClientRequestWithAuth(client, url, options))
   }
 
@@ -84,7 +82,7 @@ function callClientRequest (client, url, options) {
     // a) Catch throttling limit
     if (errorCode === 'ERR_403_DEVELOPER_OVER_QPS') {
       const retryIn = Number(headers.get('retry-after')) * 1000
-      return waitForQps(retryIn).then(() =>
+      return waitForQps(client, retryIn).then(() =>
         callClientRequest(client, url, options)
       )
     }
@@ -158,7 +156,9 @@ function registerClientMethod (client, name, pathPattern, method, fields) {
       options.body = data && JSON.stringify(data)
     }
 
-    return throttle(client, () => callClientRequest(client, url.toString(), options))
+    return throttle(client, () =>
+      callClientRequest(client, url.toString(), options)
+    )
   }
 }
 

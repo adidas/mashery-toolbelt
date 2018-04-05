@@ -9,7 +9,7 @@
     api.fetchAllServices().then(console.log).catch(console.error)
 */
 
-const { authenticate } = require('./client/auth')
+const { authenticate, refreshToken } = require('./client/auth')
 const { registerClientMethods } = require('./client/request')
 const {
   MasheryClientError,
@@ -18,6 +18,7 @@ const {
 } = require('./client/errors')
 
 const defaultOptions = {
+  threads: 3,
   host: 'https://api.mashery.com',
   tokenEndpoint: '/v3/token',
   resourceEndpoint: '/v3/rest'
@@ -64,9 +65,40 @@ class MasheryClient {
       this.credentials = credentials
     }
 
-    return authenticate(this.options, this.credentials)
-      .then(this.handleAuthenticationDone)
-      .catch(this.handleAuthenticationError)
+    return this.authRequest(
+      authenticate(this.options, this.credentials)
+        .then(this.handleAuthenticationDone)
+        .catch(this.handleAuthenticationError)
+    )
+  }
+
+  refreshToken () {
+    return this.authRequest(
+      refreshToken(this.options, this.credentials)
+        .then(this.handleAuthenticationDone)
+        .catch(error => {
+          // When refresh token is (probably) expired, try to authenticate again with current credentials
+          const shouldAuthenticate =
+            error instanceof AuthenticationError &&
+            error.code === 'unsupported_grant_type'
+          const promise = shouldAuthenticate
+            ? authenticate(this.options, this.credentials)
+            : Promise.reject(error)
+          return promise.catch(this.handleAuthenticationError)
+        })
+    )
+  }
+
+  authRequest (request) {
+    if (!this.__authRequest) {
+      this.__authRequest = request
+      const cleanup = () => {
+        this.__authRequest = null
+      }
+      this.__authRequest.then(cleanup, cleanup)
+    }
+
+    return this.__authRequest
   }
 
   handleAuthenticationDone (response) {
@@ -76,7 +108,7 @@ class MasheryClient {
       // Catch auth response errors
       if (!data || data.error) {
         const error = (data && data.error) || 'authentication_failed'
-        throw new AuthenticationError(error)
+        return Promise.reject(new AuthenticationError(error))
       }
 
       // TODO: new Date() should be set before calling request and not after

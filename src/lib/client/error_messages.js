@@ -5,6 +5,7 @@ module.exports = {
   invalid_client: 'Invalid username or password',
   invalid_field: (methodName, fields) =>
     `Invalid fields '${fields.join(',')}' for '${methodName}' method call`,
+  invalid_grant: 'Invalid refresh token',
   invalid_scope: 'Scope (Area UUID) does not exists',
   invalid_request: 'Invalid resource owner password credentials',
   invalid_url_part: ({ argName, pattern, val, valType }) =>

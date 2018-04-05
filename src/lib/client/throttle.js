@@ -1,21 +1,54 @@
-function throttle(client, call) {
-  if(process.env['DISABLE_THROTTLE']) {
-    console.log("Call")
-    return call()
+function throttle (client, originalCall) {
+  if (process.env['DISABLE_THROTTLE']) {
+    return originalCall()
   }
 
-  if(!client.__throttledCall) {
-    client.__throttledCall = Promise.resolve()
+  // Initialize pool for parallels calls
+  if (!client.__pool) {
+    client.__pool = [...Array(client.options.threads)].map((_, i) => ({
+      id: i
+    }))
+    client.__pendingCalls = []
   }
 
-  const throttledCall = () => {
-    console.log("Throttled call")
-    return call()
+  let callResolve
+  let callReject
+
+  const promise = new Promise((resolve, reject) => {
+    callResolve = resolve
+    callReject = reject
+  })
+
+  const call = () => {
+    return originalCall()
+      .then(result => callResolve(result))
+      .catch(error => callReject(error))
   }
 
-  client.__throttledCall = client.__throttledCall.then(throttledCall, throttledCall)
+  client.__pendingCalls.push(call)
 
-  return client.__throttledCall
+  run(client)
+
+  return promise
+}
+
+function processPendingCalls (client, runner) {
+  const pendingCall = client.__pendingCalls.shift()
+
+  if (pendingCall) {
+    pendingCall().then(() => processPendingCalls(client, runner))
+  } else {
+    runner.running = false
+  }
+}
+
+function run (client) {
+  client.__pool.forEach(runner => {
+    if (!runner.running) {
+      runner.running = true
+      processPendingCalls(client, runner)
+    }
+  })
 }
 
 module.exports = throttle
