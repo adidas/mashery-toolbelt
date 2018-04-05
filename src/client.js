@@ -26,7 +26,7 @@ module.exports = new MasheryClient({
   },
   onAuthenticationError: error => {
     console.error(`${error.name}: ${error.message}`)
-    console.log('Try running `heroku-toolbelt auth` again')
+    console.log('Try running `mashery-toolbelt auth` again')
     process.exit(1)
   }
 })
