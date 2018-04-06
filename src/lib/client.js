@@ -81,10 +81,14 @@ class MasheryClient {
           const shouldAuthenticate =
             error instanceof AuthenticationError &&
             ['unsupported_grant_type', 'invalid_grant'].includes(error.code)
-          const promise = shouldAuthenticate
-            ? authenticate(this.options, this.credentials)
-            : Promise.reject(error)
-          return promise.catch(this.handleAuthenticationError)
+
+          if (shouldAuthenticate) {
+            return authenticate(this.options, this.credentials)
+              .then(this.handleAuthenticationDone)
+              .catch(this.handleAuthenticationError)
+          }
+
+          return Promise.reject(error)
         })
     )
   }
