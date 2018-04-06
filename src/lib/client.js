@@ -80,7 +80,7 @@ class MasheryClient {
           // When refresh token is (probably) expired, try to authenticate again with current credentials
           const shouldAuthenticate =
             error instanceof AuthenticationError &&
-            error.code === 'unsupported_grant_type'
+            ['unsupported_grant_type', 'invalid_grant'].includes(error.code)
           const promise = shouldAuthenticate
             ? authenticate(this.options, this.credentials)
             : Promise.reject(error)
