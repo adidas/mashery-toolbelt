@@ -254,24 +254,24 @@ module.exports = [
   ['deleteServiceRole', '/services/:serviceId/roles/:id', 'DELETE'],
 
   // Error Sets: http://support.mashery.com/docs/read/mashery_api/30/resources/services/errorsets
-  ['fetchAllServiceErrorSets', '/services/:id/errorSets', 'GET', 'errorSets'],
+  ['fetchAllServiceErrorSets', '/services/:id/errorSets', 'GET', 'errorSet'],
   [
     'fetchServiceErrorSet',
     '/services/:serviceId/errorSets/:id',
     'GET',
-    'errorSets'
+    'errorSet'
   ],
   [
     'createServiceErrorSet',
     '/services/:serviceId/errorSets',
     'POST',
-    'errorSets'
+    'errorSet'
   ],
   [
     'updateServiceErrorSet',
     '/services/:serviceId/errorSets/:id',
     'PUT',
-    'errorSets'
+    'errorSet'
   ],
   ['deleteServiceErrorSet', '/services/:serviceId/errorSets/:id', 'DELETE'],
 
@@ -280,25 +280,25 @@ module.exports = [
     'fetchAllErrorMessages',
     '/services/:serviceId/errorSets/:errorSetId/errorMessages',
     'GET',
-    'errorMessages'
+    'errorMessage'
   ],
   [
     'fetchErrorMessage',
     '/services/:serviceId/errorSets/:errorSetId/errorMessages/:id',
     'GET',
-    'errorMessages'
+    'errorMessage'
   ],
   [
     'createErrorMessage',
     '/services/:serviceId/errorSets/:errorSetId/errorMessages',
     'POST',
-    'errorMessages'
+    'errorMessage'
   ],
   [
     'updateErrorMessage',
     '/services/:serviceId/errorSets/:errorSetId/errorMessages/:id',
     'PUT',
-    'errorMessages'
+    'errorMessage'
   ],
   [
     'deleteErrorMessage',
@@ -307,11 +307,11 @@ module.exports = [
   ],
 
   // Packages: http://support.mashery.com/docs/read/mashery_api/30/resources/packages
-  ['fetchAllPackages', '/packages', 'GET'],
-  ['fetchPackage', '/packages/:id', 'GET'],
-  ['createPackage', '/packages', 'POST'],
-  ['updatePackage', '/packages/:id', 'PUT'],
-  ['deletePackage', '/packages/:id', 'DELETE'],
+  ['fetchAllPackages', '/packages', 'GET', 'package'],
+  ['fetchPackage', '/packages/:id', 'GET', 'package'],
+  ['createPackage', '/packages', 'POST', 'package'],
+  ['updatePackage', '/packages/:id', 'PUT', 'package'],
+  ['deletePackage', '/packages/:id', 'DELETE', 'package'],
 
   // Package Keys: http://support.mashery.com/docs/read/mashery_api/30/resources/packagekeys
   ['fetchAllPackageKeys', '/packageKeys', 'GET'],
@@ -320,31 +320,41 @@ module.exports = [
   ['deletePackageKey', '/packageKeys/:id', 'DELETE'],
 
   // Plans: http://support.mashery.com/docs/read/mashery_api/30/resources/packages/plans
-  ['fetchAllPlans', '/packages/:packageId/plans', 'GET'],
-  ['fetchPlan', '/packages/:packageId/plans/:id', 'GET'],
-  ['createPlan', '/packages/:packageId/plans', 'POST'],
+  ['fetchAllPlans', '/packages/:packageId/plans', 'GET', 'plan'],
+  ['fetchPlan', '/packages/:packageId/plans/:id', 'GET', 'plan'],
+  ['createPlan', '/packages/:packageId/plans', 'POST', 'plan'],
 
   // Plan Services: http://support.mashery.com/docs/read/mashery_api/30/resources/packages/plans/services
   [
     'fetchAllPlanServices',
     '/packages/:packageId/plans/:planId/services',
-    'GET'
+    'GET',
+    'service'
   ],
   [
     'fetchAllPlanServicesForService',
     '/packages/:packageId/plans/:planId/services/:id',
-    'GET'
+    'GET',
+    'service'
   ],
-  ['createPlanService', '/packages/:packageId/plans/:planId/services', 'POST'],
+  [
+    'createPlanService',
+    '/packages/:packageId/plans/:planId/services',
+    'POST',
+    'service'
+  ],
+
   [
     'createPlanEndpoint',
     '/packages/:packageId/plans/:planId/services/:serviceId/endpoints',
-    'POST'
+    'POST',
+    'endpoint'
   ],
   [
     'createPlanMethod',
     '/packages/:packageId/plans/:planId/services/:serviceId/endpoints/:endpointId/methods',
-    'POST'
+    'POST',
+    'endpoint'
   ],
 
   // Domains: http://support.mashery.com/docs/read/mashery_api/30/resources/domains
