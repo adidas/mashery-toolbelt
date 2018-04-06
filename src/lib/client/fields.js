@@ -242,7 +242,71 @@ const oAuth = [
   'secureTokensEnabled'
 ]
 
-const roles = ['id', 'created', 'updated', 'name', 'action']
+const role = ['id', 'created', 'updated', 'name', 'action']
+
+const packageEntity = [
+  'id',
+  'created',
+  'updated',
+  'name',
+  'description',
+  'notifyDeveloperPeriod',
+  'notifyDeveloperNearQuota',
+  'notifyDeveloperOverQuota',
+  'notifyDeveloperOverThrottle',
+  'notifyAdminPeriod',
+  'notifyAdminNearQuota',
+  'notifyAdminOverQuota',
+  'notifyAdminOverThrottle',
+  'notifyAdminEmails',
+  'nearQuotaThreshold',
+  'eav',
+  'keyAdapter',
+  'keyLength',
+  'sharedSecretLength',
+  'plans'
+]
+
+const plan = [
+  'id',
+  'created',
+  'updated',
+  'name',
+  'description',
+  'eav',
+  'selfServiceKeyProvisioningEnabled',
+  'adminKeyProvisioningEnabled',
+  'notes',
+  'maxNumKeysAllowed',
+  'numKeysBeforeReview',
+  'qpsLimitCeiling',
+  'qpsLimitExempt',
+  'qpsLimitKeyOverrideAllowed',
+  'rateLimitCeiling',
+  'rateLimitExempt',
+  'rateLimitKeyOverrideAllowed',
+  'rateLimitPeriod',
+  'responseFilterOverrideAllowed',
+  'status',
+  'emailTemplateSetId',
+  'services'
+]
+
+const packageKey = [
+  'id',
+  'apikey',
+  'secret',
+  'created',
+  'updated',
+  'rateLimitCeiling',
+  'rateLimitExempt',
+  'qpsLimitCeiling',
+  'qpsLimitExempt',
+  'status',
+  'limits',
+  'package',
+  'plan'
+]
 
 const entityFields = {
   service,
@@ -259,8 +323,11 @@ const entityFields = {
   endpointCache,
   securityProfile,
   oAuth,
-  roles,
-  organization
+  role,
+  organization,
+  package: packageEntity,
+  plan,
+  packageKey
 }
 
 module.exports = {

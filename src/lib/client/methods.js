@@ -6,6 +6,7 @@ module.exports = [
   ['fetchAllOrganizations', '/organizations', 'GET', 'organization'],
   ['fetchOrganization', '/organizations/:id', 'GET', 'organization'],
 
+  // https://support.mashery.com/docs/read/mashery_api/30/resources/services
   ['fetchAllServices', '/services', 'GET', 'service'],
   ['fetchService', '/services/:id', 'GET', 'service'],
   ['createService', '/services', 'POST', 'service'],
@@ -34,7 +35,7 @@ module.exports = [
   ],
   ['deleteServiceEndpoint', '/services/:serviceId/endpoints/:id', 'DELETE'],
 
-  // Endpoint Methods: http://support.mashery.com/docs/read/mashery_api/30/resources/packages/plans/services/endpoints/methods
+  // Endpoint Methods: https://support.mashery.com/docs/read/mashery_api/30/resources/services/endpoints/methods
   [
     'fetchAllEndpointMethods',
     '/services/:serviceId/endpoints/:endpointId/methods',
