@@ -1,444 +1,581 @@
-/*
-[ method name, url pattern, http method, entity name]
-*/
-module.exports = [
-  // Organizations are not documented
-  ['fetchAllOrganizations', '/organizations', 'GET', 'organization'],
-  ['fetchOrganization', '/organizations/:id', 'GET', 'organization'],
+// Key is name of method on client instance
+module.exports = {
+  // Organizations are not documented at all
+  fetchAllOrganizations: {
+    path: '/organizations',
+    method: 'GET',
+    entity: 'organization'
+  },
+  fetchOrganization: {
+    path: '/organizations/:id',
+    method: 'GET',
+    entity: 'organization'
+  },
 
   // https://support.mashery.com/docs/read/mashery_api/30/resources/services
-  ['fetchAllServices', '/services', 'GET', 'service'],
-  ['fetchService', '/services/:id', 'GET', 'service'],
-  ['createService', '/services', 'POST', 'service'],
-  ['updateService', '/services/:id', 'PUT', 'service'],
-  ['deleteService', '/services/:id', 'DELETE'],
+  fetchAllServices: {
+    path: '/services',
+    method: 'GET',
+    entity: 'service'
+  },
+  fetchService: {
+    path: '/services/:id',
+    method: 'GET',
+    entity: 'service'
+  },
+  createService: {
+    path: '/services',
+    method: 'POST',
+    entity: 'service'
+  },
+  updateService: {
+    path: '/services/:id',
+    method: 'PUT',
+    entity: 'service'
+  },
+  deleteService: {
+    path: '/services/:id',
+    method: 'DELETE'
+  },
 
   // Service Endpoints: http://support.mashery.com/docs/read/mashery_api/30/resources/services/endpoints
-  ['fetchAllServiceEndpoints', '/services/:id/endpoints', 'GET', 'endpoint'],
-  [
-    'fetchServiceEndpoint',
-    '/services/:serviceId/endpoints/:id',
-    'GET',
-    'endpoint'
-  ],
-  [
-    'createServiceEndpoint',
-    '/services/:serviceId/endpoints',
-    'POST',
-    'endpoint'
-  ],
-  [
-    'updateServiceEndpoint',
-    '/services/:serviceId/endpoints/:id',
-    'PUT',
-    'endpoint'
-  ],
-  ['deleteServiceEndpoint', '/services/:serviceId/endpoints/:id', 'DELETE'],
+  fetchAllServiceEndpoints: {
+    path: '/services/:id/endpoints',
+    method: 'GET',
+    entity: 'endpoint'
+  },
+  fetchServiceEndpoint: {
+    path: '/services/:serviceId/endpoints/:id',
+    method: 'GET',
+    entity: 'endpoint'
+  },
+  createServiceEndpoint: {
+    path: '/services/:serviceId/endpoints',
+    method: 'POST',
+    entity: 'endpoint'
+  },
+  updateServiceEndpoint: {
+    path: '/services/:serviceId/endpoints/:id',
+    method: 'PUT',
+    entity: 'endpoint'
+  },
+  deleteServiceEndpoint: {
+    path: '/services/:serviceId/endpoints/:id',
+    method: 'DELETE'
+  },
 
   // Endpoint Methods: https://support.mashery.com/docs/read/mashery_api/30/resources/services/endpoints/methods
-  [
-    'fetchAllEndpointMethods',
-    '/services/:serviceId/endpoints/:endpointId/methods',
-    'GET',
-    'method'
-  ],
-  [
-    'fetchEndpointMethod',
-    '/services/:serviceId/endpoints/:endpointId/methods/:id',
-    'GET',
-    'method'
-  ],
-  [
-    'createEndpointMethod',
-    '/services/:serviceId/endpoints/:endpointId/methods',
-    'POST',
-    'method'
-  ],
-  [
-    'updateEndpointMethod',
-    '/services/:serviceId/endpoints/:endpointId/methods/:id',
-    'PUT',
-    'method'
-  ],
-  [
-    'deleteEndpointMethod',
-    '/services/:serviceId/endpoints/:endpointId/methods/:id',
-    'DELETE'
-  ],
+  fetchAllEndpointMethods: {
+    path: '/services/:serviceId/endpoints/:endpointId/methods',
+    method: 'GET',
+    entity: 'method'
+  },
+  fetchEndpointMethod: {
+    path: '/services/:serviceId/endpoints/:endpointId/methods/:id',
+    method: 'GET',
+    entity: 'method'
+  },
+  createEndpointMethod: {
+    path: '/services/:serviceId/endpoints/:endpointId/methods',
+    method: 'POST',
+    entity: 'method'
+  },
+  updateEndpointMethod: {
+    path: '/services/:serviceId/endpoints/:endpointId/methods/:id',
+    method: 'PUT',
+    entity: 'method'
+  },
+  deleteEndpointMethod: {
+    path: '/services/:serviceId/endpoints/:endpointId/methods/:id',
+    method: 'DELETE'
+  },
 
   // Response Filters: http://support.mashery.com/docs/read/mashery_api/30/resources/services/endpoints/methods/responsefilters
-  [
-    'fetchAllResponseFilters',
-    '/services/:serviceId/endpoints/:endpointId/methods/:methodId/responseFilters',
-    'GET',
-    'responseFilters'
-  ],
-  [
-    'fetchResponseFilter',
-    '/services/:serviceId/endpoints/:endpointId/methods/:methodId/responseFilters/:id',
-    'GET',
-    'responseFilters'
-  ],
-  [
-    'createResponseFilter',
-    '/services/:serviceId/endpoints/:endpointId/methods/:methodId/responseFilters',
-    'POST',
-    'responseFilters'
-  ],
-  [
-    'updateResponseFilter',
-    '/services/:serviceId/endpoints/:endpointId/methods/:methodId/responseFilters/:id',
-    'PUT',
-    'responseFilters'
-  ],
-  [
-    'deleteResponseFilter',
-    '/services/:serviceId/endpoints/:endpointId/methods/:methodId/responseFilters/:id',
-    'DELETE'
-  ],
+  fetchAllResponseFilters: {
+    path:
+      '/services/:serviceId/endpoints/:endpointId/methods/:methodId/responseFilters',
+    method: 'GET',
+    entity: 'responseFilters'
+  },
+  fetchResponseFilter: {
+    path:
+      '/services/:serviceId/endpoints/:endpointId/methods/:methodId/responseFilters/:id',
+    method: 'GET',
+    entity: 'responseFilters'
+  },
+  createResponseFilter: {
+    path:
+      '/services/:serviceId/endpoints/:endpointId/methods/:methodId/responseFilters',
+    method: 'POST',
+    entity: 'responseFilters'
+  },
+  updateResponseFilter: {
+    path:
+      '/services/:serviceId/endpoints/:endpointId/methods/:methodId/responseFilters/:id',
+    method: 'PUT',
+    entity: 'responseFilters'
+  },
+  deleteResponseFilter: {
+    path:
+      '/services/:serviceId/endpoints/:endpointId/methods/:methodId/responseFilters/:id',
+    method: 'DELETE'
+  },
 
   // Scheduled Maintenance Events: http://support.mashery.com/docs/read/mashery_api/30/resources/services/endpoints/scheduledmaintenanceevent
-  [
-    'fetchScheduledEvent',
-    '/services/:serviceId/endpoints/:endpointId/scheduledMaintenanceEvent',
-    'GET',
-    'scheduledMaintenanceEvent'
-  ],
-  [
-    'createScheduledEvent',
-    '/services/:serviceId/endpoints/:endpointId/scheduledMaintenanceEvent',
-    'POST',
-    'scheduledMaintenanceEvent'
-  ],
-  [
-    'updateScheduledEvent',
-    '/services/:serviceId/endpoints/:endpointId/scheduledMaintenanceEvent',
-    'PUT',
-    'scheduledMaintenanceEvent'
-  ],
-  [
-    'deleteScheduledEvent',
-    '/services/:serviceId/endpoints/:endpointId/scheduledMaintenanceEvent',
-    'DELETE'
-  ],
+  fetchScheduledEvent: {
+    path:
+      '/services/:serviceId/endpoints/:endpointId/scheduledMaintenanceEvent',
+    method: 'GET',
+    entity: 'scheduledMaintenanceEvent'
+  },
+  createScheduledEvent: {
+    path:
+      '/services/:serviceId/endpoints/:endpointId/scheduledMaintenanceEvent',
+    method: 'POST',
+    entity: 'scheduledMaintenanceEvent'
+  },
+  updateScheduledEvent: {
+    path:
+      '/services/:serviceId/endpoints/:endpointId/scheduledMaintenanceEvent',
+    method: 'PUT',
+    entity: 'scheduledMaintenanceEvent'
+  },
+  deleteScheduledEvent: {
+    path:
+      '/services/:serviceId/endpoints/:endpointId/scheduledMaintenanceEvent',
+    method: 'DELETE'
+  },
 
   // Endpoint Cache: http://support.mashery.com/docs/read/mashery_api/30/resources/services/endpoints/cache
-  [
-    'fetchEndpointCache',
-    '/services/:serviceId/endpoints/:endpointId/cache',
-    'GET',
-    'endpointCache'
-  ],
-  [
-    'createEndpointCache',
-    '/services/:serviceId/endpoints/:endpointId/cache',
-    'POST',
-    'endpointCache'
-  ],
-  [
-    'updateEndpointCache',
-    '/services/:serviceId/endpoints/:endpointId/cache',
-    'PUT',
-    'endpointCache'
-  ],
-  [
-    'deleteEndpointCache',
-    '/services/:serviceId/endpoints/:endpointId/cache',
-    'DELETE'
-  ],
+  fetchEndpointCache: {
+    path: '/services/:serviceId/endpoints/:endpointId/cache',
+    method: 'GET',
+    entity: 'endpointCache'
+  },
+  createEndpointCache: {
+    path: '/services/:serviceId/endpoints/:endpointId/cache',
+    method: 'POST',
+    entity: 'endpointCache'
+  },
+  updateEndpointCache: {
+    path: '/services/:serviceId/endpoints/:endpointId/cache',
+    method: 'PUT',
+    entity: 'endpointCache'
+  },
+  deleteEndpointCache: {
+    path: '/services/:serviceId/endpoints/:endpointId/cache',
+    method: 'DELETE'
+  },
 
   // CORS: http://support.mashery.com/docs/read/mashery_api/30/resources/services/endpoints/cors
-  [
-    'fetchCORS',
-    '/services/:serviceId/endpoints/:endpointId/cors',
-    'GET',
-    'cors'
-  ],
-  [
-    'createCORS',
-    '/services/:serviceId/endpoints/:endpointId/cors',
-    'POST',
-    'cors'
-  ],
-  [
-    'updateCORS',
-    '/services/:serviceId/endpoints/:endpointId/cors',
-    'PUT',
-    'cors'
-  ],
-  ['deleteCORS', '/services/:serviceId/endpoints/:endpointId/cors', 'DELETE'],
+  fetchCORS: {
+    path: '/services/:serviceId/endpoints/:endpointId/cors',
+    method: 'GET',
+    entity: 'cors'
+  },
+  createCORS: {
+    path: '/services/:serviceId/endpoints/:endpointId/cors',
+    method: 'POST',
+    entity: 'cors'
+  },
+  updateCORS: {
+    path: '/services/:serviceId/endpoints/:endpointId/cors',
+    method: 'PUT',
+    entity: 'cors'
+  },
+  deleteCORS: {
+    path: '/services/:serviceId/endpoints/:endpointId/cors',
+    method: 'DELETE'
+  },
 
   // System Domain Auth: http://support.mashery.com/docs/read/mashery_api/30/resources/services/endpoints/systemdomainauthentication
-  [
-    'fetchSysAuth',
-    '/services/:serviceId/endpoints/:endpointId/systemDomainAuthentication',
-    'GET',
-    'systemDomainAuthentication'
-  ],
-  [
-    'createSysAuth',
-    '/services/:serviceId/endpoints/:endpointId/systemDomainAuthentication',
-    'POST',
-    'systemDomainAuthentication'
-  ],
-  [
-    'updateSysAuth',
-    '/services/:serviceId/endpoints/:endpointId/systemDomainAuthentication',
-    'PUT',
-    'systemDomainAuthentication'
-  ],
-  [
-    'deleteSysAuth',
-    '/services/:serviceId/endpoints/:endpointId/systemDomainAuthentication',
-    'DELETE'
-  ],
+  fetchSysAuth: {
+    path:
+      '/services/:serviceId/endpoints/:endpointId/systemDomainAuthentication',
+    method: 'GET',
+    entity: 'systemDomainAuthentication'
+  },
+  createSysAuth: {
+    path:
+      '/services/:serviceId/endpoints/:endpointId/systemDomainAuthentication',
+    method: 'POST',
+    entity: 'systemDomainAuthentication'
+  },
+  updateSysAuth: {
+    path:
+      '/services/:serviceId/endpoints/:endpointId/systemDomainAuthentication',
+    method: 'PUT',
+    entity: 'systemDomainAuthentication'
+  },
+  deleteSysAuth: {
+    path:
+      '/services/:serviceId/endpoints/:endpointId/systemDomainAuthentication',
+    method: 'DELETE'
+  },
 
   // Security Profile: http://support.mashery.com/docs/read/mashery_api/30/resources/services/securityprofile
-  [
-    'fetchSecurityProfile',
-    '/services/:serviceId/securityProfile',
-    'GET',
-    'securityProfile'
-  ],
-  [
-    'createSecurityProfile',
-    '/services/:serviceId/securityProfile',
-    'POST',
-    'securityProfile'
-  ],
-  [
-    'updateSecurityProfile',
-    '/services/:serviceId/securityProfile',
-    'PUT',
-    'securityProfile'
-  ],
-  ['deleteSecurityProfile', '/services/:serviceId/securityProfile', 'DELETE'],
+  fetchSecurityProfile: {
+    path: '/services/:serviceId/securityProfile',
+    method: 'GET',
+    entity: 'securityProfile'
+  },
+  createSecurityProfile: {
+    path: '/services/:serviceId/securityProfile',
+    method: 'POST',
+    entity: 'securityProfile'
+  },
+  updateSecurityProfile: {
+    path: '/services/:serviceId/securityProfile',
+    method: 'PUT',
+    entity: 'securityProfile'
+  },
+  deleteSecurityProfile: {
+    path: '/services/:serviceId/securityProfile',
+    method: 'DELETE'
+  },
 
   // Security Profile - OAuth: http://support.mashery.com/docs/read/mashery_api/30/resources/services/securityprofile/oauth
-  [
-    'fetchSecurityProfileOAuth',
-    '/services/:serviceId/securityProfile/oauth',
-    'GET',
-    'oAuth'
-  ],
-  [
-    'createSecurityProfileOAuth',
-    '/services/:serviceId/securityProfile/oauth',
-    'POST',
-    'oAuth'
-  ],
-  [
-    'updateSecurityProfileOAuth',
-    '/services/:serviceId/securityProfile/oauth',
-    'PUT',
-    'oAuth'
-  ],
-  [
-    'deleteSecurityProfileOAuth',
-    '/services/:serviceId/securityProfile/oauth',
-    'DELETE',
-    'oAuth'
-  ],
+  fetchSecurityProfileOAuth: {
+    path: '/services/:serviceId/securityProfile/oauth',
+    method: 'GET',
+    entity: 'oAuth'
+  },
+  createSecurityProfileOAuth: {
+    path: '/services/:serviceId/securityProfile/oauth',
+    method: 'POST',
+    entity: 'oAuth'
+  },
+  updateSecurityProfileOAuth: {
+    path: '/services/:serviceId/securityProfile/oauth',
+    method: 'PUT',
+    entity: 'oAuth'
+  },
+  deleteSecurityProfileOAuth: {
+    path: '/services/:serviceId/securityProfile/oauth',
+    method: 'DELETE'
+  },
 
   // Service Cache: http://support.mashery.com/docs/read/mashery_api/30/resources/services/cache
-  ['fetchServiceCache', '/services/:serviceId/cache', 'GET', 'cache'],
-  ['createServiceCache', '/services/:serviceId/cache', 'POST', 'cache'],
-  ['updateServiceCache', '/services/:serviceId/cache', 'PUT', 'cache'],
-  ['deleteServiceCache', '/services/:serviceId/cache', 'DELETE', 'cache'],
+  fetchServiceCache: {
+    path: '/services/:serviceId/cache',
+    method: 'GET',
+    entity: 'cache'
+  },
+  createServiceCache: {
+    path: '/services/:serviceId/cache',
+    method: 'POST',
+    entity: 'cache'
+  },
+  updateServiceCache: {
+    path: '/services/:serviceId/cache',
+    method: 'PUT',
+    entity: 'cache'
+  },
+  deleteServiceCache: {
+    path: '/services/:serviceId/cache',
+    method: 'DELETE'
+  },
 
   // Service Roles: http://support.mashery.com/docs/read/mashery_api/30/resources/services/roles
-  ['fetchAllServiceRoles', '/services/:id/roles', 'GET', 'roles'],
-  ['fetchServiceRole', '/services/:serviceId/roles/:id', 'GET', 'roles'],
-  ['createServiceRole', '/services/:serviceId/roles', 'POST', 'roles'],
-  ['updateServiceRole', '/services/:serviceId/roles/:id', 'PUT', 'roles'],
-  ['deleteServiceRole', '/services/:serviceId/roles/:id', 'DELETE'],
+  fetchAllServiceRoles: {
+    path: '/services/:id/roles',
+    method: 'GET',
+    entity: 'roles'
+  },
+  fetchServiceRole: {
+    path: '/services/:serviceId/roles/:id',
+    method: 'GET',
+    entity: 'roles'
+  },
+  createServiceRole: {
+    path: '/services/:serviceId/roles',
+    method: 'POST',
+    entity: 'roles'
+  },
+  updateServiceRole: {
+    path: '/services/:serviceId/roles/:id',
+    method: 'PUT',
+    entity: 'roles'
+  },
+  deleteServiceRole: {
+    path: '/services/:serviceId/roles/:id',
+    method: 'DELETE'
+  },
 
   // Error Sets: http://support.mashery.com/docs/read/mashery_api/30/resources/services/errorsets
-  ['fetchAllServiceErrorSets', '/services/:id/errorSets', 'GET', 'errorSet'],
-  [
-    'fetchServiceErrorSet',
-    '/services/:serviceId/errorSets/:id',
-    'GET',
-    'errorSet'
-  ],
-  [
-    'createServiceErrorSet',
-    '/services/:serviceId/errorSets',
-    'POST',
-    'errorSet'
-  ],
-  [
-    'updateServiceErrorSet',
-    '/services/:serviceId/errorSets/:id',
-    'PUT',
-    'errorSet'
-  ],
-  ['deleteServiceErrorSet', '/services/:serviceId/errorSets/:id', 'DELETE'],
+  fetchAllServiceErrorSets: {
+    path: '/services/:id/errorSets',
+    method: 'GET',
+    entity: 'errorSet'
+  },
+  fetchServiceErrorSet: {
+    path: '/services/:serviceId/errorSets/:id',
+    method: 'GET',
+    entity: 'errorSet'
+  },
+  createServiceErrorSet: {
+    path: '/services/:serviceId/errorSets',
+    method: 'POST',
+    entity: 'errorSet'
+  },
+  updateServiceErrorSet: {
+    path: '/services/:serviceId/errorSets/:id',
+    method: 'PUT',
+    entity: 'errorSet'
+  },
+  deleteServiceErrorSet: {
+    path: '/services/:serviceId/errorSets/:id',
+    method: 'DELETE'
+  },
 
   // Error Messages: http://support.mashery.com/docs/read/mashery_api/30/resources/services/errorsets/errormessages
-  [
-    'fetchAllErrorMessages',
-    '/services/:serviceId/errorSets/:errorSetId/errorMessages',
-    'GET',
-    'errorMessage'
-  ],
-  [
-    'fetchErrorMessage',
-    '/services/:serviceId/errorSets/:errorSetId/errorMessages/:id',
-    'GET',
-    'errorMessage'
-  ],
-  [
-    'createErrorMessage',
-    '/services/:serviceId/errorSets/:errorSetId/errorMessages',
-    'POST',
-    'errorMessage'
-  ],
-  [
-    'updateErrorMessage',
-    '/services/:serviceId/errorSets/:errorSetId/errorMessages/:id',
-    'PUT',
-    'errorMessage'
-  ],
-  [
-    'deleteErrorMessage',
-    '/services/:serviceId/errorSets/:errorSetId/errorMessages/:id',
-    'DELETE'
-  ],
+  fetchAllErrorMessages: {
+    path: '/services/:serviceId/errorSets/:errorSetId/errorMessages',
+    method: 'GET',
+    entity: 'errorMessage'
+  },
+  fetchErrorMessage: {
+    path: '/services/:serviceId/errorSets/:errorSetId/errorMessages/:id',
+    method: 'GET',
+    entity: 'errorMessage'
+  },
+  createErrorMessage: {
+    path: '/services/:serviceId/errorSets/:errorSetId/errorMessages',
+    method: 'POST',
+    entity: 'errorMessage'
+  },
+  updateErrorMessage: {
+    path: '/services/:serviceId/errorSets/:errorSetId/errorMessages/:id',
+    method: 'PUT',
+    entity: 'errorMessage'
+  },
+  deleteErrorMessage: {
+    path: '/services/:serviceId/errorSets/:errorSetId/errorMessages/:id',
+    method: 'DELETE'
+  },
 
   // Packages: http://support.mashery.com/docs/read/mashery_api/30/resources/packages
-  ['fetchAllPackages', '/packages', 'GET', 'package'],
-  ['fetchPackage', '/packages/:id', 'GET', 'package'],
-  ['createPackage', '/packages', 'POST', 'package'],
-  ['updatePackage', '/packages/:id', 'PUT', 'package'],
-  ['deletePackage', '/packages/:id', 'DELETE', 'package'],
+  fetchAllPackages: {
+    path: '/packages',
+    method: 'GET',
+    entity: 'package'
+  },
+  fetchPackage: {
+    path: '/packages/:id',
+    method: 'GET',
+    entity: 'package'
+  },
+  createPackage: {
+    path: '/packages',
+    method: 'POST',
+    entity: 'package'
+  },
+  updatePackage: {
+    path: '/packages/:id',
+    method: 'PUT',
+    entity: 'package'
+  },
+  deletePackage: {
+    path: '/packages/:id',
+    method: 'DELETE'
+  },
 
   // Package Keys: http://support.mashery.com/docs/read/mashery_api/30/resources/packagekeys
-  ['fetchAllPackageKeys', '/packageKeys', 'GET'],
-  ['fetchPackageKey', '/packageKeys/:id', 'GET'],
-  ['updatePackageKey', '/packageKeys/:id', 'PUT'],
-  ['deletePackageKey', '/packageKeys/:id', 'DELETE'],
+  fetchAllPackageKeys: {
+    path: '/packageKeys',
+    method: 'GET',
+    entity: 'packageKey'
+  },
+  fetchPackageKey: {
+    path: '/packageKeys/:id',
+    method: 'GET',
+    entity: 'packageKey'
+  },
+  updatePackageKey: {
+    path: '/packageKeys/:id',
+    method: 'PUT',
+    entity: 'packageKey'
+  },
+  deletePackageKey: {
+    path: '/packageKeys/:id',
+    method: 'DELETE'
+  },
 
   // Plans: http://support.mashery.com/docs/read/mashery_api/30/resources/packages/plans
-  ['fetchAllPlans', '/packages/:packageId/plans', 'GET', 'plan'],
-  ['fetchPlan', '/packages/:packageId/plans/:id', 'GET', 'plan'],
-  ['createPlan', '/packages/:packageId/plans', 'POST', 'plan'],
+  fetchAllPlans: {
+    path: '/packages/:packageId/plans',
+    method: 'GET',
+    entity: 'plan'
+  },
+  fetchPlan: {
+    path: '/packages/:packageId/plans/:id',
+    method: 'GET',
+    entity: 'plan'
+  },
+  createPlan: {
+    path: '/packages/:packageId/plans',
+    method: 'POST',
+    entity: 'plan'
+  },
 
   // Plan Services: http://support.mashery.com/docs/read/mashery_api/30/resources/packages/plans/services
-  [
-    'fetchAllPlanServices',
-    '/packages/:packageId/plans/:planId/services',
-    'GET',
-    'service'
-  ],
-  [
-    'fetchAllPlanServicesForService',
-    '/packages/:packageId/plans/:planId/services/:id',
-    'GET',
-    'service'
-  ],
-  [
-    'createPlanService',
-    '/packages/:packageId/plans/:planId/services',
-    'POST',
-    'service'
-  ],
-
-  [
-    'createPlanEndpoint',
-    '/packages/:packageId/plans/:planId/services/:serviceId/endpoints',
-    'POST',
-    'endpoint'
-  ],
-  [
-    'createPlanMethod',
-    '/packages/:packageId/plans/:planId/services/:serviceId/endpoints/:endpointId/methods',
-    'POST',
-    'endpoint'
-  ],
+  fetchAllPlanServices: {
+    path: '/packages/:packageId/plans/:planId/services',
+    method: 'GET',
+    entity: 'service'
+  },
+  fetchAllPlanServicesForService: {
+    path: '/packages/:packageId/plans/:planId/services/:id',
+    method: 'GET',
+    entity: 'service'
+  },
+  createPlanService: {
+    path: '/packages/:packageId/plans/:planId/services',
+    method: 'POST',
+    entity: 'service'
+  },
+  createPlanEndpoint: {
+    path: '/packages/:packageId/plans/:planId/services/:serviceId/endpoints',
+    method: 'POST',
+    entity: 'endpoint'
+  },
+  createPlanMethod: {
+    path:
+      '/packages/:packageId/plans/:planId/services/:serviceId/endpoints/:endpointId/methods',
+    method: 'POST',
+    entity: 'endpoint'
+  },
 
   // Domains: http://support.mashery.com/docs/read/mashery_api/30/resources/domains
-  ['fetchAllDomains', '/domains', 'GET'],
-  ['fetchDomain', '/domains/:id', 'GET'],
-  ['createDomain', '/domains', 'POST'],
+  fetchAllDomains: {
+    path: '/domains',
+    method: 'GET',
+    entity: 'domain'
+  },
+  fetchDomain: {
+    path: '/domains/:id',
+    method: 'GET',
+    entity: 'domain'
+  },
+  createDomain: {
+    path: '/domains',
+    method: 'POST',
+    entity: 'domain'
+  },
 
   // Public Domains: http://support.mashery.com/docs/read/mashery_api/30/resources/domains/public
-  ['fetchPublicDomains', '/domains/public', 'GET'],
+  fetchPublicDomains: {
+    path: '/domains/public',
+    method: 'GET',
+    entity: 'domain'
+  },
 
   // Public FQDN: http://support.mashery.com/docs/read/mashery_api/30/resources/domains/public/hostnames
-  ['fetchPublicDomainFQDNs', '/domains/public/hostnames', 'GET'],
+  fetchPublicDomainFQDNs: {
+    path: '/domains/public/hostnames',
+    method: 'GET',
+    entity: 'domain'
+  },
 
   // System Domains: http://support.mashery.com/docs/read/mashery_api/30/resources/domains/system
-  ['fetchSystemDomains', '/domains/system', 'GET'],
+  fetchSystemDomains: {
+    path: '/domains/system',
+    method: 'GET',
+    entity: 'domain'
+  },
 
   // Roles: http://support.mashery.com/docs/read/mashery_api/30/resources/roles
-  ['fetchAllRoles', '/roles', 'GET'],
+  fetchAllRoles: {
+    path: '/roles',
+    method: 'GET',
+    entity: 'role'
+  },
 
   // Scheduled Maintenance Events: http://support.mashery.com/docs/read/mashery_api/30/resources/scheduledmaintenanceevents
-  ['fetchAllScheduledMaintenance', '/scheduledMaintenanceEvents', 'GET'],
-  ['fetchScheduledMaintenance', '/scheduledMaintenanceEvents/:id', 'GET'],
-  ['createScheduledMaintenance', '/scheduledMaintenanceEvents', 'POST'],
-  ['updateScheduledMaintenance', '/scheduledMaintenanceEvents/:id', 'PUT'],
-  ['deleteScheduledMaintenance', '/scheduledMaintenanceEvents/:id', 'DELETE'],
+  fetchAllScheduledMaintenance: {
+    path: '/scheduledMaintenanceEvents',
+    method: 'GET'
+  },
+  fetchScheduledMaintenance: {
+    path: '/scheduledMaintenanceEvents/:id',
+    method: 'GET'
+  },
+  createScheduledMaintenance: {
+    path: '/scheduledMaintenanceEvents',
+    method: 'POST'
+  },
+  updateScheduledMaintenance: {
+    path: '/scheduledMaintenanceEvents/:id',
+    method: 'PUT'
+  },
+  deleteScheduledMaintenance: {
+    path: '/scheduledMaintenanceEvents/:id',
+    method: 'DELETE'
+  },
 
   // Scheduled Maintenance Event Endpoints: http://support.mashery.com/docs/read/mashery_api/30/resources/scheduledmaintenanceevents/endpoints
-  [
-    'fetchAllScheduledMaintenanceEndpoints',
-    '/scheduledMaintenanceEvents/:maintenanceId/endpoints',
-    'GET'
-  ],
-  [
-    'fetchScheduledMaintenanceEndpoint',
-    '/scheduledMaintenanceEvents/:maintenanceId/endpoints/:id',
-    'GET'
-  ],
-  [
-    'createScheduledMaintenanceEndpoint',
-    '/scheduledMaintenanceEvents/:maintenanceId/endpoints',
-    'POST'
-  ],
-  [
-    'updateScheduledMaintenanceEndpoint',
-    '/scheduledMaintenanceEvents/:maintenanceId/endpoints/:id',
-    'PUT'
-  ],
-  [
-    'deleteScheduledMaintenanceEndpoint',
-    '/scheduledMaintenanceEvents/:maintenanceId/endpoints/:id',
-    'DELETE'
-  ],
+  fetchAllScheduledMaintenanceEndpoints: {
+    path: '/scheduledMaintenanceEvents/:maintenanceId/endpoints',
+    method: 'GET'
+  },
+  fetchScheduledMaintenanceEndpoint: {
+    path: '/scheduledMaintenanceEvents/:maintenanceId/endpoints/:id',
+    method: 'GET'
+  },
+  createScheduledMaintenanceEndpoint: {
+    path: '/scheduledMaintenanceEvents/:maintenanceId/endpoints',
+    method: 'POST'
+  },
+  updateScheduledMaintenanceEndpoint: {
+    path: '/scheduledMaintenanceEvents/:maintenanceId/endpoints/:id',
+    method: 'PUT'
+  },
+  deleteScheduledMaintenanceEndpoint: {
+    path: '/scheduledMaintenanceEvents/:maintenanceId/endpoints/:id',
+    method: 'DELETE'
+  },
 
   // Email Sets: http://support.mashery.com/docs/read/mashery_api/30/resources/emailtemplatesets
-  ['fetchAllEmailTemplateSets', '/emailTemplateSets', 'GET'],
-  ['fetchEmailTemplateSet', '/emailTemplateSets/:id', 'GET'],
-  ['createEmailTemplateSet', '/emailTemplateSets', 'POST'],
-  ['updateEmailTemplateSet', '/emailTemplateSets/:id', 'PUT'],
-  ['deleteEmailTemplateSet', '/emailTemplateSets/:id', 'DELETE'],
+  fetchAllEmailTemplateSets: {
+    path: '/emailTemplateSets',
+    method: 'GET'
+  },
+  fetchEmailTemplateSet: {
+    path: '/emailTemplateSets/:id',
+    method: 'GET'
+  },
+  createEmailTemplateSet: {
+    path: '/emailTemplateSets',
+    method: 'POST'
+  },
+  updateEmailTemplateSet: {
+    path: '/emailTemplateSets/:id',
+    method: 'PUT'
+  },
+  deleteEmailTemplateSet: {
+    path: '/emailTemplateSets/:id',
+    method: 'DELETE'
+  },
 
   // Email Templates: http://support.mashery.com/docs/read/mashery_api/30/resources/emailtemplatesets/emailtemplates
-  [
-    'fetchAllEmailTemplates',
-    '/emailTemplateSets/:emailSetId/emailTemplates',
-    'GET'
-  ],
-  [
-    'fetchEmailTemplate',
-    '/emailTemplateSets/:emailSetId/emailTemplates/:id',
-    'GET'
-  ],
-  [
-    'createEmailTemplate',
-    '/emailTemplateSets/:emailSetId/emailTemplates',
-    'POST'
-  ],
-  [
-    'updateEmailTemplate',
-    '/emailTemplateSets/:emailSetId/emailTemplates/:id',
-    'PUT'
-  ],
-  [
-    'deleteEmailTemplate',
-    '/emailTemplateSets/:emailSetId/emailTemplates/:id',
-    'DELETE'
-  ]
-]
+  fetchAllEmailTemplates: {
+    path: '/emailTemplateSets/:emailSetId/emailTemplates',
+    method: 'GET'
+  },
+  fetchEmailTemplate: {
+    path: '/emailTemplateSets/:emailSetId/emailTemplates/:id',
+    method: 'GET'
+  },
+  createEmailTemplate: {
+    path: '/emailTemplateSets/:emailSetId/emailTemplates',
+    method: 'POST'
+  },
+  updateEmailTemplate: {
+    path: '/emailTemplateSets/:emailSetId/emailTemplates/:id',
+    method: 'PUT'
+  },
+  deleteEmailTemplate: {
+    path: '/emailTemplateSets/:emailSetId/emailTemplates/:id',
+    method: 'DELETE'
+  }
+}

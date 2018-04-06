@@ -135,11 +135,17 @@ function callClientRequest (client, url, options) {
   })
 }
 
-function registerClientMethod (client, name, pathPattern, method, entityName) {
-  const pattern = new UrlPattern(pathPattern)
-  method = method.toUpperCase()
+function registerClientMethod (client, methodName, methodDetails) {
+  let {
+    path: pathPattern,
+    method: httpMethod,
+    entity: entityName
+  } = methodDetails
 
-  client[name] = function (...args) {
+  const pattern = new UrlPattern(pathPattern)
+  httpMethod = httpMethod.toUpperCase()
+
+  client[methodName] = function (...args) {
     const path = makePath({ pattern, args })
     const url = new URL(
       `${client.options.resourceEndpoint}${path}`,
@@ -150,7 +156,7 @@ function registerClientMethod (client, name, pathPattern, method, entityName) {
 
     const options = {}
 
-    if (method === 'GET') {
+    if (httpMethod === 'GET') {
       const isIndex = pattern.names.length === 0
 
       // Set query params
@@ -159,7 +165,7 @@ function registerClientMethod (client, name, pathPattern, method, entityName) {
           let value
 
           if (key === 'fields') {
-            value = makeFieldsParam(name, entityName, data[key])
+            value = makeFieldsParam(methodName, entityName, data[key])
           } else if (isIndex && (key === 'filter' || key === 'search')) {
             value = makeFilterParam(data[key])
           } else {
@@ -177,7 +183,7 @@ function registerClientMethod (client, name, pathPattern, method, entityName) {
         url.searchParams.set('limit', 9999)
       }
     } else {
-      options.method = method
+      options.method = httpMethod
       // TODO: validate data againts fields
       options.body = data && JSON.stringify(data)
     }
@@ -189,8 +195,8 @@ function registerClientMethod (client, name, pathPattern, method, entityName) {
 }
 
 function registerClientMethods (client) {
-  apiMethods.forEach(methodDefinition => {
-    registerClientMethod(client, ...methodDefinition)
+  Object.keys(apiMethods).forEach(methodName => {
+    registerClientMethod(client, methodName, apiMethods[methodName])
   })
 }
 
