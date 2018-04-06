@@ -1,4 +1,5 @@
 const loadBlueprint = require('./loadBlueprint')
+const findOrganization = require('../../mashery/findOrganization')
 
 const METHODS = ['post', 'get', 'put', 'delete', 'head', 'patch', 'options']
 
@@ -91,34 +92,35 @@ function buildApiFromSwagger (
     )
   }
 
-  return Promise.resolve(commonEndpoint).then(commonEndpoint => {
-    if (!commonEndpoint.outboundTransportProtocol) {
-      commonEndpoint.outboundTransportProtocol = https ? 'https' : 'http'
-    }
+  if (organization) {
+    organization = findOrganization(organization)
+  }
 
-    const endpoints =
-      multiMethodEndpoint === true
-        ? buildMultiMethodEnpoints(paths, commonEndpoint)
-        : buildSingleMethodEnpoints(paths, commonEndpoint)
+  return Promise.all([commonEndpoint, organization]).then(
+    ([commonEndpoint, organization]) => {
+      if (!commonEndpoint.outboundTransportProtocol) {
+        commonEndpoint.outboundTransportProtocol = https ? 'https' : 'http'
+      }
 
-    const service = Object.assign(defaultService, {
-      name: fixName(info.title),
-      description: info.description ? info.description.trim() : null,
-      version: info.version
-    })
+      const endpoints =
+        multiMethodEndpoint === true
+          ? buildMultiMethodEnpoints(paths, commonEndpoint)
+          : buildSingleMethodEnpoints(paths, commonEndpoint)
 
-    if (organization) {
-      service.organization = {
-        id: organization.trim()
+      const service = Object.assign(defaultService, {
+        name: fixName(info.title),
+        description: info.description ? info.description.trim() : null,
+        version: info.version
+      })
+
+      service.organization = organization
+      service.endpoints = endpoints
+
+      return {
+        service
       }
     }
-
-    service.endpoints = endpoints
-
-    return {
-      service
-    }
-  })
+  )
 }
 
 module.exports = buildApiFromSwagger
