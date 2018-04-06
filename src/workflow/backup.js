@@ -8,7 +8,7 @@ function backup (serviceId, backupName) {
   dumpApi(serviceId)
     .then(data => {
       backupName = backupName || +new Date()
-      const path = `backup/service/${serviceId}/${backupName}.json`
+      const path = `backup/services/${serviceId}/${backupName}.json`
       writeFileSync(path, JSON.stringify(data, null, 2))
       spinner.stop()
       console.log(`Service backup done in '${resolveFile(path)}'`)
