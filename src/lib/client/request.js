@@ -135,7 +135,7 @@ function callClientRequest (client, url, options) {
   })
 }
 
-function registerClientMethod (client, name, pathPattern, method, fields) {
+function registerClientMethod (client, name, pathPattern, method, entityName) {
   const pattern = new UrlPattern(pathPattern)
   method = method.toUpperCase()
 
@@ -159,7 +159,7 @@ function registerClientMethod (client, name, pathPattern, method, fields) {
           let value
 
           if (key === 'fields') {
-            value = makeFieldsParam(name, fields, data[key])
+            value = makeFieldsParam(name, entityName, data[key])
           } else if (isIndex && (key === 'filter' || key === 'search')) {
             value = makeFilterParam(data[key])
           } else {

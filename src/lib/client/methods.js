@@ -1,39 +1,36 @@
-const fields = require('./fields')
-
+/*
+[ method name, url pattern, http method, entity name]
+*/
 module.exports = [
-  ['fetchAllOrganizations', '/organizations', 'GET', fields.organization],
-  ['fetchOrganization', '/organizations/:id', 'GET', fields.organization],
+  // Organizations are not documented
+  ['fetchAllOrganizations', '/organizations', 'GET', 'organization'],
+  ['fetchOrganization', '/organizations/:id', 'GET', 'organization'],
 
-  ['fetchAllServices', '/services', 'GET', fields.service],
-  ['fetchService', '/services/:id', 'GET', fields.service],
-  ['createService', '/services', 'POST', fields.service],
-  ['updateService', '/services/:id', 'PUT', fields.service],
+  ['fetchAllServices', '/services', 'GET', 'service'],
+  ['fetchService', '/services/:id', 'GET', 'service'],
+  ['createService', '/services', 'POST', 'service'],
+  ['updateService', '/services/:id', 'PUT', 'service'],
   ['deleteService', '/services/:id', 'DELETE'],
 
   // Service Endpoints: http://support.mashery.com/docs/read/mashery_api/30/resources/services/endpoints
-  [
-    'fetchAllServiceEndpoints',
-    '/services/:id/endpoints',
-    'GET',
-    fields.endpoint
-  ],
+  ['fetchAllServiceEndpoints', '/services/:id/endpoints', 'GET', 'endpoint'],
   [
     'fetchServiceEndpoint',
     '/services/:serviceId/endpoints/:id',
     'GET',
-    fields.endpoint
+    'endpoint'
   ],
   [
     'createServiceEndpoint',
     '/services/:serviceId/endpoints',
     'POST',
-    fields.endpoint
+    'endpoint'
   ],
   [
     'updateServiceEndpoint',
     '/services/:serviceId/endpoints/:id',
     'PUT',
-    fields.endpoint
+    'endpoint'
   ],
   ['deleteServiceEndpoint', '/services/:serviceId/endpoints/:id', 'DELETE'],
 
@@ -42,25 +39,25 @@ module.exports = [
     'fetchAllEndpointMethods',
     '/services/:serviceId/endpoints/:endpointId/methods',
     'GET',
-    fields.method
+    'method'
   ],
   [
     'fetchEndpointMethod',
     '/services/:serviceId/endpoints/:endpointId/methods/:id',
     'GET',
-    fields.method
+    'method'
   ],
   [
     'createEndpointMethod',
     '/services/:serviceId/endpoints/:endpointId/methods',
     'POST',
-    fields.method
+    'method'
   ],
   [
     'updateEndpointMethod',
     '/services/:serviceId/endpoints/:endpointId/methods/:id',
     'PUT',
-    fields.method
+    'method'
   ],
   [
     'deleteEndpointMethod',
@@ -73,25 +70,25 @@ module.exports = [
     'fetchAllResponseFilters',
     '/services/:serviceId/endpoints/:endpointId/methods/:methodId/responseFilters',
     'GET',
-    fields.responseFilters
+    'responseFilters'
   ],
   [
     'fetchResponseFilter',
     '/services/:serviceId/endpoints/:endpointId/methods/:methodId/responseFilters/:id',
     'GET',
-    fields.responseFilters
+    'responseFilters'
   ],
   [
     'createResponseFilter',
     '/services/:serviceId/endpoints/:endpointId/methods/:methodId/responseFilters',
     'POST',
-    fields.responseFilters
+    'responseFilters'
   ],
   [
     'updateResponseFilter',
     '/services/:serviceId/endpoints/:endpointId/methods/:methodId/responseFilters/:id',
     'PUT',
-    fields.responseFilters
+    'responseFilters'
   ],
   [
     'deleteResponseFilter',
@@ -104,19 +101,19 @@ module.exports = [
     'fetchScheduledEvent',
     '/services/:serviceId/endpoints/:endpointId/scheduledMaintenanceEvent',
     'GET',
-    fields.scheduledMaintenanceEvent
+    'scheduledMaintenanceEvent'
   ],
   [
     'createScheduledEvent',
     '/services/:serviceId/endpoints/:endpointId/scheduledMaintenanceEvent',
     'POST',
-    fields.scheduledMaintenanceEvent
+    'scheduledMaintenanceEvent'
   ],
   [
     'updateScheduledEvent',
     '/services/:serviceId/endpoints/:endpointId/scheduledMaintenanceEvent',
     'PUT',
-    fields.scheduledMaintenanceEvent
+    'scheduledMaintenanceEvent'
   ],
   [
     'deleteScheduledEvent',
@@ -129,19 +126,19 @@ module.exports = [
     'fetchEndpointCache',
     '/services/:serviceId/endpoints/:endpointId/cache',
     'GET',
-    fields.endpointCache
+    'endpointCache'
   ],
   [
     'createEndpointCache',
     '/services/:serviceId/endpoints/:endpointId/cache',
     'POST',
-    fields.endpointCache
+    'endpointCache'
   ],
   [
     'updateEndpointCache',
     '/services/:serviceId/endpoints/:endpointId/cache',
     'PUT',
-    fields.endpointCache
+    'endpointCache'
   ],
   [
     'deleteEndpointCache',
@@ -154,19 +151,19 @@ module.exports = [
     'fetchCORS',
     '/services/:serviceId/endpoints/:endpointId/cors',
     'GET',
-    fields.cors
+    'cors'
   ],
   [
     'createCORS',
     '/services/:serviceId/endpoints/:endpointId/cors',
     'POST',
-    fields.cors
+    'cors'
   ],
   [
     'updateCORS',
     '/services/:serviceId/endpoints/:endpointId/cors',
     'PUT',
-    fields.cors
+    'cors'
   ],
   ['deleteCORS', '/services/:serviceId/endpoints/:endpointId/cors', 'DELETE'],
 
@@ -175,19 +172,19 @@ module.exports = [
     'fetchSysAuth',
     '/services/:serviceId/endpoints/:endpointId/systemDomainAuthentication',
     'GET',
-    fields.systemDomainAuthentication
+    'systemDomainAuthentication'
   ],
   [
     'createSysAuth',
     '/services/:serviceId/endpoints/:endpointId/systemDomainAuthentication',
     'POST',
-    fields.systemDomainAuthentication
+    'systemDomainAuthentication'
   ],
   [
     'updateSysAuth',
     '/services/:serviceId/endpoints/:endpointId/systemDomainAuthentication',
     'PUT',
-    fields.systemDomainAuthentication
+    'systemDomainAuthentication'
   ],
   [
     'deleteSysAuth',
@@ -200,19 +197,19 @@ module.exports = [
     'fetchSecurityProfile',
     '/services/:serviceId/securityProfile',
     'GET',
-    fields.securityProfile
+    'securityProfile'
   ],
   [
     'createSecurityProfile',
     '/services/:serviceId/securityProfile',
     'POST',
-    fields.securityProfile
+    'securityProfile'
   ],
   [
     'updateSecurityProfile',
     '/services/:serviceId/securityProfile',
     'PUT',
-    fields.securityProfile
+    'securityProfile'
   ],
   ['deleteSecurityProfile', '/services/:serviceId/securityProfile', 'DELETE'],
 
@@ -221,64 +218,59 @@ module.exports = [
     'fetchSecurityProfileOAuth',
     '/services/:serviceId/securityProfile/oauth',
     'GET',
-    fields.oAuth
+    'oAuth'
   ],
   [
     'createSecurityProfileOAuth',
     '/services/:serviceId/securityProfile/oauth',
     'POST',
-    fields.oAuth
+    'oAuth'
   ],
   [
     'updateSecurityProfileOAuth',
     '/services/:serviceId/securityProfile/oauth',
     'PUT',
-    fields.oAuth
+    'oAuth'
   ],
   [
     'deleteSecurityProfileOAuth',
     '/services/:serviceId/securityProfile/oauth',
     'DELETE',
-    fields.oAuth
+    'oAuth'
   ],
 
   // Service Cache: http://support.mashery.com/docs/read/mashery_api/30/resources/services/cache
-  ['fetchServiceCache', '/services/:serviceId/cache', 'GET', fields.cache],
-  ['createServiceCache', '/services/:serviceId/cache', 'POST', fields.cache],
-  ['updateServiceCache', '/services/:serviceId/cache', 'PUT', fields.cache],
-  ['deleteServiceCache', '/services/:serviceId/cache', 'DELETE', fields.cache],
+  ['fetchServiceCache', '/services/:serviceId/cache', 'GET', 'cache'],
+  ['createServiceCache', '/services/:serviceId/cache', 'POST', 'cache'],
+  ['updateServiceCache', '/services/:serviceId/cache', 'PUT', 'cache'],
+  ['deleteServiceCache', '/services/:serviceId/cache', 'DELETE', 'cache'],
 
   // Service Roles: http://support.mashery.com/docs/read/mashery_api/30/resources/services/roles
-  ['fetchAllServiceRoles', '/services/:id/roles', 'GET', fields.roles],
-  ['fetchServiceRole', '/services/:serviceId/roles/:id', 'GET', fields.roles],
-  ['createServiceRole', '/services/:serviceId/roles', 'POST', fields.roles],
-  ['updateServiceRole', '/services/:serviceId/roles/:id', 'PUT', fields.roles],
+  ['fetchAllServiceRoles', '/services/:id/roles', 'GET', 'roles'],
+  ['fetchServiceRole', '/services/:serviceId/roles/:id', 'GET', 'roles'],
+  ['createServiceRole', '/services/:serviceId/roles', 'POST', 'roles'],
+  ['updateServiceRole', '/services/:serviceId/roles/:id', 'PUT', 'roles'],
   ['deleteServiceRole', '/services/:serviceId/roles/:id', 'DELETE'],
 
   // Error Sets: http://support.mashery.com/docs/read/mashery_api/30/resources/services/errorsets
-  [
-    'fetchAllServiceErrorSets',
-    '/services/:id/errorSets',
-    'GET',
-    fields.errorSets
-  ],
+  ['fetchAllServiceErrorSets', '/services/:id/errorSets', 'GET', 'errorSets'],
   [
     'fetchServiceErrorSet',
     '/services/:serviceId/errorSets/:id',
     'GET',
-    fields.errorSets
+    'errorSets'
   ],
   [
     'createServiceErrorSet',
     '/services/:serviceId/errorSets',
     'POST',
-    fields.errorSets
+    'errorSets'
   ],
   [
     'updateServiceErrorSet',
     '/services/:serviceId/errorSets/:id',
     'PUT',
-    fields.errorSets
+    'errorSets'
   ],
   ['deleteServiceErrorSet', '/services/:serviceId/errorSets/:id', 'DELETE'],
 
@@ -287,25 +279,25 @@ module.exports = [
     'fetchAllErrorMessages',
     '/services/:serviceId/errorSets/:errorSetId/errorMessages',
     'GET',
-    fields.errorMessages
+    'errorMessages'
   ],
   [
     'fetchErrorMessage',
     '/services/:serviceId/errorSets/:errorSetId/errorMessages/:id',
     'GET',
-    fields.errorMessages
+    'errorMessages'
   ],
   [
     'createErrorMessage',
     '/services/:serviceId/errorSets/:errorSetId/errorMessages',
     'POST',
-    fields.errorMessages
+    'errorMessages'
   ],
   [
     'updateErrorMessage',
     '/services/:serviceId/errorSets/:errorSetId/errorMessages/:id',
     'PUT',
-    fields.errorMessages
+    'errorMessages'
   ],
   [
     'deleteErrorMessage',

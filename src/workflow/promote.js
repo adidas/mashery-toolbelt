@@ -53,10 +53,12 @@ function updateFromPromote (api, updateServiceId) {
 }
 
 const DUMP_FIELDS = {
-  serviceFields: {
-    except: ['created', 'updated', 'endpoints', 'errorSets']
+  except: ['created', 'updated'],
+  endpoints: {
+    except: ['created', 'updated'],
+    methods: true
   },
-  endpointFields: { except: ['created', 'updated'] }
+  errorSets: true
 }
 
 function promote (serviceId, options) {

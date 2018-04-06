@@ -1,3 +1,5 @@
+const isObject = require('isobject')
+const pluralize = require('pluralize')
 const clientErrorMessages = require('./error_messages')
 const { RequestError } = require('./errors')
 
@@ -16,24 +18,76 @@ function validateFields (methodName, allFields, fields) {
       clientErrorMessages.invalid_field(methodName, invalidFields)
     )
   }
+
+  return fields
 }
 
-function makeFieldsParam (methodName, allFields, fields) {
-  let resultFields
+function collectFieldsFromObject (methodName, entityName, fields) {
+  const allFields = entityFields[entityName]
+  const { all, only, except, ...nested } = fields
+  let collectedFields = []
+
+  if (except) {
+    const exceptFields = typeof except === 'string' ? except.split(',') : except
+    validateFields(methodName, allFields, exceptFields)
+    collectedFields = allFields.filter(field => !exceptFields.includes(field))
+  } else if (all || only) {
+    collectedFields = collectFields(methodName, entityName, all || only)
+  }
+
+  // Iterate over nested associations
+  Object.keys(nested).forEach(nestedEntityName => {
+    const pluralEntityName = pluralize.plural(nestedEntityName)
+    const singularEntityName = pluralize.singular(nestedEntityName)
+
+    // Check if nested association is valid
+    if (!allFields.includes(pluralEntityName)) {
+      throw new RequestError(
+        'invalid_fields',
+        clientErrorMessages.invalid_field(methodName, [
+          `${entityName}.${nestedEntityName}`
+        ])
+      )
+    }
+
+    // Remove nested association when is presented as single field
+    const nestedFieldIndex = collectedFields.findIndex(
+      field => field === pluralEntityName
+    )
+    if (nestedFieldIndex > -1) {
+      collectedFields.splice(nestedFieldIndex, 1)
+    }
+
+    // Recursively grap fields for nested association(s)
+    const nestedFields = collectFields(
+      methodName,
+      singularEntityName,
+      nested[nestedEntityName]
+    ).map(nestedField => `${pluralEntityName}.${nestedField}`)
+    collectedFields.push(...nestedFields)
+  })
+
+  return collectedFields
+}
+
+function collectFields (methodName, entityName, fields) {
+  const allFields = entityFields[entityName]
 
   if (fields === true || fields === 'all') {
-    resultFields = allFields
+    return allFields
+  } else if (typeof fields === 'string') {
+    return validateFields(methodName, allFields, fields.split(','))
   } else if (Array.isArray(fields)) {
-    validateFields(methodName, allFields, fields)
-    resultFields = fields
-  } else if (fields && Array.isArray(fields.except)) {
-    validateFields(methodName, allFields, fields.except)
-    resultFields = allFields.filter(field => !fields.except.includes(field))
+    return validateFields(methodName, allFields, fields)
+  } else if (isObject(fields)) {
+    return collectFieldsFromObject(methodName, entityName, fields)
   } else {
     return null
   }
+}
 
-  return resultFields.join(',')
+function makeFieldsParam (methodName, entityName, fields) {
+  return collectFields(methodName, entityName, fields).join(',')
 }
 
 const organization = [
@@ -67,6 +121,7 @@ const service = [
 
 const endpoint = [
   'id',
+  'methods',
   'allowMissingApiKey',
   'apiKeyValueLocationKey',
   'apiKeyValueLocations',
@@ -124,7 +179,7 @@ const method = [
   'sampleXmlResponse'
 ]
 
-const responseFilters = [
+const responseFilter = [
   'id',
   'name',
   'created',
@@ -156,11 +211,11 @@ const systemDomainAuthentication = [
   'password'
 ]
 
-const serviceErrors = ['id', 'created', 'updated', 'name', 'action']
+const serviceError = ['id', 'created', 'updated', 'name', 'action']
 
-const errorSets = ['id', 'name', 'type', 'jsonp', 'jsonpType', 'errorMessages']
+const errorSet = ['id', 'name', 'type', 'jsonp', 'jsonpType', 'errorMessages']
 
-const errorMessages = ['id', 'code', 'status', 'detailHeader', 'responseBody']
+const errorMessage = ['id', 'code', 'status', 'detailHeader', 'responseBody']
 
 const cache = ['cacheTtl']
 
@@ -189,23 +244,26 @@ const oAuth = [
 
 const roles = ['id', 'created', 'updated', 'name', 'action']
 
-module.exports = {
-  validateFields,
-  makeFieldsParam,
+const entityFields = {
   service,
   endpoint,
   method,
-  responseFilters,
+  responseFilter,
   scheduledMaintenanceEvent,
   cors,
   systemDomainAuthentication,
-  serviceErrors,
-  errorSets,
-  errorMessages,
+  serviceError,
+  errorSet,
+  errorMessage,
   cache,
   endpointCache,
   securityProfile,
   oAuth,
   roles,
   organization
+}
+
+module.exports = {
+  ...entityFields,
+  makeFieldsParam
 }

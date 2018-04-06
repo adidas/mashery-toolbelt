@@ -1,64 +1,19 @@
 const client = require('../client')
 
-function dumpService (data, serviceId, fields) {
-  return client
-    .fetchService(serviceId, { fields })
-    .then(service => (data.service = service))
+const FIELDS = {
+  all: true,
+  endpoint: { all: true, methods: { all: true } },
+  errorSets: true
 }
 
-function dumpEndpoints (service, fields) {
-  if (fields === false) {
-    return
-  }
-
-  return client
-    .fetchAllServiceEndpoints(service.id, { fields })
-    .then(endpoints => (service.endpoints = endpoints))
-}
-
-function dumpMethods (service, fields) {
-  if (fields === false) {
-    return
-  }
-
-  return Promise.all(
-    service.endpoints.map(endpoint =>
-      client
-        .fetchAllEndpointMethods(service.id, endpoint.id, { fields })
-        .then(methods => (endpoint.methods = methods))
-    )
-  )
-}
-
-function dumpErrorSets (service, fields) {
-  if (fields === false) {
-    return
-  }
-
-  return client
-    .fetchAllServiceErrorSets(service.id, { fields })
-    .then(errorSets => (service.errorSets = errorSets))
-}
-
-function dumpApi (serviceId, fields = {}, { verbose = false } = {}) {
+function dumpApi (serviceId, fields = FIELDS, { verbose = false } = {}) {
   verbose && console.log(`Dumping service ${serviceId}`)
 
-  const {
-    serviceFields = { except: ['endpoints', 'errorSets'] },
-    endpointFields = true,
-    methodFields = true,
-    errorSetFields = true
-  } = fields
-
-  const data = {}
-
-  return dumpService(data, serviceId, serviceFields)
-    .then(() => dumpEndpoints(data.service, endpointFields, methodFields))
-    .then(() => dumpMethods(data.service, methodFields))
-    .then(() => dumpErrorSets(data.service, errorSetFields))
-    .then(() => {
+  return client
+    .fetchService(serviceId, { fields: FIELDS })
+    .then(service => {
       verbose && console.log('Dump done')
-      return data
+      return { service }
     })
     .catch(error => {
       if (verbose) {
