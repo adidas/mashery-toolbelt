@@ -2,6 +2,7 @@ const isObject = require('isobject')
 const pluralize = require('pluralize')
 const clientErrorMessages = require('./error_messages')
 const { RequestError } = require('./errors')
+const validFields = require('./validFields')
 
 function validateFields (methodName, allFields, fields) {
   const invalidFields = []
@@ -23,7 +24,7 @@ function validateFields (methodName, allFields, fields) {
 }
 
 function collectFieldsFromObject (methodName, entityName, fields) {
-  const allFields = entityFields[entityName]
+  const allFields = validFields[entityName]
   const { all, only, except, ...nested } = fields
   let collectedFields = []
 
@@ -71,7 +72,7 @@ function collectFieldsFromObject (methodName, entityName, fields) {
 }
 
 function collectFields (methodName, entityName, fields) {
-  const allFields = entityFields[entityName]
+  const allFields = validFields[entityName]
 
   if (fields === true || fields === 'all') {
     return allFields
@@ -90,247 +91,7 @@ function makeFieldsParam (methodName, entityName, fields) {
   return collectFields(methodName, entityName, fields).join(',')
 }
 
-const organization = [
-  'id',
-  'name',
-  'parent',
-  'suborganizations',
-  'description',
-  'created',
-  'updated'
-]
-
-const service = [
-  'id',
-  'name',
-  'description',
-  'created',
-  'updated',
-  'endpoints',
-  'editorHandle',
-  'revisionNumber',
-  'robotsPolicy',
-  'crossdomainPolicy',
-  'errorSets',
-  'qpsLimitOverall',
-  'rfc3986Encode',
-  'securityProfile',
-  'version',
-  'organization'
-]
-
-const endpoint = [
-  'id',
-  'methods',
-  'allowMissingApiKey',
-  'apiKeyValueLocationKey',
-  'apiKeyValueLocations',
-  'apiMethodDetectionKey',
-  'apiMethodDetectionLocations',
-  'cache',
-  'errors',
-  'connectionTimeoutForSystemDomainRequest',
-  'connectionTimeoutForSystemDomainResponse',
-  'cookiesDuringHttpRedirectsEnabled',
-  'cors',
-  'created',
-  'customRequestAuthenticationAdapter',
-  'dropApiKeyFromIncomingCall',
-  'forceGzipOfBackendCall',
-  'gzipPassthroughSupportEnabled',
-  'headersToExcludeFromIncomingCall',
-  'highSecurity',
-  'hostPassthroughIncludedInBackendCallHeader',
-  'inboundSslRequired',
-  'jsonpCallbackParameter',
-  'jsonpCallbackParameterValue',
-  'scheduledMaintenanceEvent',
-  'forwardedHeaders',
-  'returnedHeaders',
-  'name',
-  'numberOfHttpRedirectsToFollow',
-  'outboundRequestTargetPath',
-  'outboundRequestTargetQueryParameters',
-  'outboundTransportProtocol',
-  'processor',
-  'publicDomains',
-  'requestAuthenticationType',
-  'requestPathAlias',
-  'requestProtocol',
-  'oauthGrantTypes',
-  'stringsToTrimFromApiKey',
-  'supportedHttpMethods',
-  'systemDomainAuthentication',
-  'systemDomains',
-  'trafficManagerDomain',
-  'updated',
-  'useSystemDomainCredentials',
-  'systemDomainCredentialKey',
-  'systemDomainCredentialSecret',
-  'rateLimitHeadersEnabled'
-]
-
-const method = [
-  'id',
-  'name',
-  'created',
-  'updated',
-  'sampleJsonResponse',
-  'sampleXmlResponse'
-]
-
-const responseFilter = [
-  'id',
-  'name',
-  'created',
-  'updated',
-  'notes',
-  'xmlFilterFields',
-  'jsonFilterFields'
-]
-
-const scheduledMaintenanceEvent = [
-  'id',
-  'name',
-  'startDateTime',
-  'endDateTime',
-  'endpoints'
-]
-
-const endpointCache = [
-  'clientSurrogateControlEnabled',
-  'contentCacheKeyHeaders'
-]
-
-const cors = ['allDomainsEnabled', 'maxAge']
-
-const systemDomainAuthentication = [
-  'type',
-  'username',
-  'certificate',
-  'password'
-]
-
-const serviceError = ['id', 'created', 'updated', 'name', 'action']
-
-const errorSet = ['id', 'name', 'type', 'jsonp', 'jsonpType', 'errorMessages']
-
-const errorMessage = ['id', 'code', 'status', 'detailHeader', 'responseBody']
-
-const cache = ['cacheTtl']
-
-const securityProfile = ['oauth']
-
-const oAuth = [
-  'accessTokenTtlEnabled',
-  'accessTokenTtl',
-  'accessTokenType',
-  'allowMultipleToken',
-  'authorizationCodeTtl',
-  'forwardedHeaders',
-  'masheryTokenApiEnabled',
-  'refreshTokenEnabled',
-  'enableRefreshTokenTtl',
-  'tokenBasedRateLimitsEnabled',
-  'forceOauthRedirectUrl',
-  'forceSslRedirectUrlEnabled',
-  'grantTypes',
-  'macAlgorithm',
-  'qpsLimitCeiling',
-  'rateLimitCeiling',
-  'refreshTokenTtl',
-  'secureTokensEnabled'
-]
-
-const role = ['id', 'created', 'updated', 'name', 'action']
-
-const packageEntity = [
-  'id',
-  'created',
-  'updated',
-  'name',
-  'description',
-  'notifyDeveloperPeriod',
-  'notifyDeveloperNearQuota',
-  'notifyDeveloperOverQuota',
-  'notifyDeveloperOverThrottle',
-  'notifyAdminPeriod',
-  'notifyAdminNearQuota',
-  'notifyAdminOverQuota',
-  'notifyAdminOverThrottle',
-  'notifyAdminEmails',
-  'nearQuotaThreshold',
-  'eav',
-  'keyAdapter',
-  'keyLength',
-  'sharedSecretLength',
-  'plans'
-]
-
-const plan = [
-  'id',
-  'created',
-  'updated',
-  'name',
-  'description',
-  'eav',
-  'selfServiceKeyProvisioningEnabled',
-  'adminKeyProvisioningEnabled',
-  'notes',
-  'maxNumKeysAllowed',
-  'numKeysBeforeReview',
-  'qpsLimitCeiling',
-  'qpsLimitExempt',
-  'qpsLimitKeyOverrideAllowed',
-  'rateLimitCeiling',
-  'rateLimitExempt',
-  'rateLimitKeyOverrideAllowed',
-  'rateLimitPeriod',
-  'responseFilterOverrideAllowed',
-  'status',
-  'emailTemplateSetId',
-  'services'
-]
-
-const packageKey = [
-  'id',
-  'apikey',
-  'secret',
-  'created',
-  'updated',
-  'rateLimitCeiling',
-  'rateLimitExempt',
-  'qpsLimitCeiling',
-  'qpsLimitExempt',
-  'status',
-  'limits',
-  'package',
-  'plan'
-]
-
-const entityFields = {
-  service,
-  endpoint,
-  method,
-  responseFilter,
-  scheduledMaintenanceEvent,
-  cors,
-  systemDomainAuthentication,
-  serviceError,
-  errorSet,
-  errorMessage,
-  cache,
-  endpointCache,
-  securityProfile,
-  oAuth,
-  role,
-  organization,
-  package: packageEntity,
-  plan,
-  packageKey
-}
-
 module.exports = {
-  ...entityFields,
+  ...validFields,
   makeFieldsParam
 }
