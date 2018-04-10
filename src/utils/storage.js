@@ -13,7 +13,7 @@ const path = require('path')
 const fs = require('fs')
 
 const SEPARATOR = path.sep
-const APP_ROOT = '.mashery-toolbelt'
+const APP_ROOT = path.join(os.homedir(), '.mashery-toolbelt')
 
 function mkdirpSync (targetDir) {
   const initDir = path.isAbsolute(targetDir) ? SEPARATOR : ''
@@ -31,7 +31,7 @@ function mkdirpSync (targetDir) {
 
 // Get full path to file
 function resolveFile (file) {
-  return path.join(os.homedir(), APP_ROOT, file)
+  return path.join(APP_ROOT, file)
 }
 
 // Get full path to file and create directory
@@ -55,6 +55,7 @@ function unlinkSync (file) {
 }
 
 module.exports = {
+  dir: APP_ROOT,
   readFileSync,
   resolveFile,
   unlinkSync,

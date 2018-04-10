@@ -4,6 +4,7 @@
 */
 
 const defineProgram = require('./utils/defineProgram')
+const { dir: appDir } = require('./utils/storage')
 const runAuth = require('./workflow/auth')
 const runLs = require('./workflow/ls')
 const runBackup = require('./workflow/backup')
@@ -23,6 +24,11 @@ defineProgram(
       .command('auth' /* <username> <password> <key> <secret> <areauuid> */)
       .description('Authenticate to mashery API with simple wizard')
       .action(() => runAuth())
+
+    program
+      .command('dir')
+      .description('Get path to root folder of mashery-toolbelt')
+      .action(() => console.log(appDir))
 
     program
       .command('ls [search]')
