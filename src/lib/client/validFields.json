@@ -129,7 +129,7 @@
     "secureTokensEnabled"
   ],
   "role": ["id", "created", "updated", "name", "action"],
-  "packageEntity": [
+  "package": [
     "id",
     "created",
     "updated",
