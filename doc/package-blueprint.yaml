@@ -9,6 +9,13 @@ package:
   notifyAdminEmails: Mashery_Support@adidas.com
   notifyAdminPeriod: day
   notifyDeveloperPeriod: day
+  sharedSecretLength: 10
+  notifyAdminNearQuota: true
+  notifyAdminOverQuota: true
+  notifyAdminOverThrottle: true
+  notifyDeveloperNearQuota: true
+  notifyDeveloperOverQuota: true
+  notifyDeveloperOverThrottle: true
 
 # Plans are not nested under package to simplify structure
 # Plans are array of objects (hashes)
