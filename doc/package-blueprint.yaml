@@ -53,6 +53,7 @@ plans:
     # You can provide name or/and id of endpoint
     - id: dsakhdksahdksahdksjak
       name: My endpoint
+      undefinedMethodsAllowed: true | false
       # Methods are array of objects
       methods:
       # You can provide name and when for method under specific endpoint even id
