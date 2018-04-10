@@ -40,6 +40,14 @@ mashery-toolbelt auth
 - Need to run just for first time. Then it can handle refresh tokens itself
   - Rerun only on serious issues
 
+### #dir
+
+```
+mashery-toolbelt dir
+```
+
+- print path to mashery-toolbelt directory
+
 
 ### #ls
 
