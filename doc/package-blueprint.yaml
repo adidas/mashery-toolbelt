@@ -1,0 +1,72 @@
+# Other properties than designer are not consolidated.
+# They are just plain as they are in Mashery
+package:
+  name: Some package
+  description: Package description
+  eav: {}
+  keyLength: 24
+  nearQuotaThreshold: 50
+  notifyAdminEmails: Mashery_Support@adidas.com
+  notifyAdminPeriod: day
+  notifyDeveloperPeriod: day
+
+# Plans are not nested under package to simplify structure
+# Plans are array of objects (hashes)
+plans:
+# First plan with all allowed properties
+- name: Plan name
+  description: This is an unlimited PLN demo
+  status: active
+  description: This is a plan which should be used by application's which needs to write into Documentum API.
+  emailTemplateSetId: null
+  eav: {}
+  notes: null
+  maxNumKeysAllowed: 4
+  numKeysBeforeReview: 0
+  qpsLimitCeiling: 1000
+  rateLimitCeiling: 0
+  rateLimitPeriod: day
+  adminKeyProvisioningEnabled: true
+  qpsLimitExempt: false
+  qpsLimitKeyOverrideAllowed: true
+  rateLimitExempt: true
+  rateLimitKeyOverrideAllowed: true
+  responseFilterOverrideAllowed: true
+  selfServiceKeyProvisioningEnabled: false
+
+  # Designer structure
+  # Services are array of objects
+  services:
+
+  # First service with specific endpoints and specific method
+  # You can provide name or/and id of service
+  - id: lkdsjaljdsalkjdlkas
+    # Endpoints can be array of objects or 'all' to include all
+    endpoints:
+    # You can provide name or/and id of endpoint
+    - id: dsakhdksahdksahdksjak
+      name: My endpoint
+      # Methods are array of objects
+      methods:
+      # You can provide name and when for method under specific endpoint even id
+      - id: jhdsauzdsadjsaldjal
+        name: demo
+      - name: test
+
+  # Second service with all endpoints and specific method
+  - name: Another service
+    endpoints: all
+    methods:
+    # This will use method 'demo' from each endpoint
+    # You can provide only name when methods are on service level.
+    - name: demo
+
+  # Third service with all endpoints and all methods
+  - name: Another plan
+    description: Something something
+    endpoints: all
+    methods: all
+
+# Second plan just as example how to write more of them
+- name: My second plan
+  services: ...
