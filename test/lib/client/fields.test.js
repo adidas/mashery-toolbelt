@@ -96,7 +96,7 @@ test('nested #2', () => {
     'endpoints.requestPathAlias,endpoints.requestProtocol,endpoints.oauthGrantTypes,endpoints.stringsToTrimFromApiKey',
     'endpoints.supportedHttpMethods,endpoints.systemDomainAuthentication,endpoints.systemDomains',
     'endpoints.trafficManagerDomain,endpoints.useSystemDomainCredentials,endpoints.systemDomainCredentialKey',
-    'endpoints.systemDomainCredentialSecret,endpoints.rateLimitHeadersEnabled,endpoints.methods.id',
+    'endpoints.systemDomainCredentialSecret,endpoints.rateLimitHeadersEnabled,endpoints.undefinedMethodsAllowed,endpoints.methods.id',
     'endpoints.methods.name,endpoints.methods.created,endpoints.methods.updated,endpoints.methods.sampleJsonResponse',
     'endpoints.methods.sampleXmlResponse,errorSets.id,errorSets.name,errorSets.type',
     'errorSets.jsonp,errorSets.jsonpType,errorSets.errorMessages'

@@ -7,7 +7,7 @@ const FIELDS = {
     services: {
       only: ['id', 'name'],
       endpoints: {
-        only: ['id', 'name'],
+        only: ['id', 'name', 'undefinedMethodsAllowed'],
         methods: ['id', 'name']
       }
     }
