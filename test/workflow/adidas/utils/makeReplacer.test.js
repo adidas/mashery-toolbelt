@@ -62,6 +62,11 @@ test('real use case #1', () => {
   expect(replacer('(Demo) Approval API')).toBe('DEV (testplay) Approval API')
 })
 
+test.only('real use case #2 should replace any type of brackets', () => {
+  const replacer = makeReplacer('(Demo)*:DEV (testplay)*')
+  expect(replacer('[Demo] Approval API')).toBe('DEV (testplay) Approval API')
+})
+
 test('real use case with semicolon', () => {
   const replacerWithoutEscape = makeReplacer('my.domain.com:3000')
   expect(() => replacerWithoutEscape('some.domain.com')).toThrow(

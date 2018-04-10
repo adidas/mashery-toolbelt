@@ -1,6 +1,8 @@
 const PATTERN_MATCH = /(\*)/
 const ESCAPE_REGEXP = /[().-]/g
 const SPLIT_PATTERN = /[^\\]:/
+const LEFT_BRACKETS = /[[(]/g
+const RIGHT_BRACKETS = /[\])]/g
 
 function validatePatterns (value, name, required) {
   if (Array.isArray(value)) {
@@ -69,7 +71,13 @@ function patternsToReplacers (patterns) {
 
     const regexp = fromParts
       .map(
-        part => (part === '*' ? '(.*?)' : part.replace(ESCAPE_REGEXP, '\\$&'))
+        part =>
+          part === '*'
+            ? '(.*?)'
+            : part
+              .replace(LEFT_BRACKETS, '(')
+              .replace(RIGHT_BRACKETS, ')')
+              .replace(ESCAPE_REGEXP, '\\$&')
       )
       .join('')
 
@@ -97,6 +105,7 @@ function makeReplacer (patterns, { name, required = true } = {}) {
   const replacers = patternsToReplacers(patterns)
 
   return function (value) {
+    value = value.replace(LEFT_BRACKETS, '(').replace(RIGHT_BRACKETS, ')')
     let newValue
 
     replacers.find(({ type, match, replaceWith }) => {
