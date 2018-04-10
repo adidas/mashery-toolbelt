@@ -24,7 +24,6 @@ function validateFields (methodName, allFields, fields) {
 }
 
 function collectFieldsFromObject (methodName, entityName, fields) {
-  console.log(entityName)
   const allFields = validFields[entityName]
   const { all, only, except, ...nested } = fields
   let collectedFields = []
