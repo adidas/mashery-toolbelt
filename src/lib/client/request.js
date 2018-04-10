@@ -66,7 +66,6 @@ function makeRequestHeaders (credentials) {
 }
 
 function callClientRequestWithAuth (client, url, options) {
-  console.log(url, options)
   // a) authenticate and repeat
   if (!client.isAuthenticated()) {
     return client
