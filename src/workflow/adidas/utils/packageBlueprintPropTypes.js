@@ -15,7 +15,6 @@ const {
 const value = value => oneOf([value])
 const timeIntervals = oneOf(['minute', 'hour', 'day', 'week', 'month'])
 const allOrArrayOf = shape => oneOfType([value('all'), arrayOf(shape)])
-const methods = allOrArrayOf(shape({ name: string }))
 
 // Main definition
 module.exports = {
@@ -66,10 +65,10 @@ module.exports = {
               id: string,
               name: string,
               undefinedMethodsAllowed: bool,
-              methods
+              methods: allOrArrayOf(shape({ id: string, name: string }))
             })
           ).isRequired,
-          methods
+          methods: allOrArrayOf(shape({ name: string.isRequired }))
         })
       )
     })

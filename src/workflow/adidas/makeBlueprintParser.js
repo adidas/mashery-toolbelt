@@ -3,7 +3,6 @@ const eachProps = require('each-props')
 const inquirer = require('inquirer')
 const deep = require('../../utils/deep')
 const loadDataFile = require('../../utils/loadDataFile')
-const blueprintPropTypes = require('./utils/blueprintPropTypes')
 
 const USER_INPUT = 'INPUT!'
 const PROP_TYPE_LOG_TEXT = 'Warning: Failed prop type: '
@@ -39,7 +38,7 @@ function waitForUserInputs (blueprint) {
   })
 }
 
-function loadBlueprint (blueprint) {
+function loadBlueprint (blueprint, blueprintPropTypes) {
   if (!blueprint) {
     return Promise.resolve(null)
   }
@@ -74,4 +73,8 @@ function loadBlueprint (blueprint) {
   return waitForUserInputs(blueprint)
 }
 
-module.exports = loadBlueprint
+function makeBlueprintParser (blueprintPropTypes) {
+  return blueprint => loadBlueprint(blueprint, blueprintPropTypes)
+}
+
+module.exports = makeBlueprintParser
