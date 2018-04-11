@@ -1,3 +1,6 @@
+// These fields are aggregated from https://developer.mashery.com/docs/read/mashery_api/30/resources
+// But some entities (like organization) or some fields was added based on real application calls
+// If you find that any field is missing there feel free to add it and comment it when it makes sense
 module.exports = {
   organization: [
     'id',
@@ -75,6 +78,8 @@ module.exports = {
     'systemDomainCredentialKey',
     'systemDomainCredentialSecret',
     'rateLimitHeadersEnabled',
+    // This fields works only when endpoint is scoped under `package -> plan -> service -> endpoint`
+    // In other scopes like `service -> endpoint` is ignored
     'undefinedMethodsAllowed'
   ],
   method: [
