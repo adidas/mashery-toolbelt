@@ -1,4 +1,5 @@
 const loadBlueprint = require('./loadBlueprint')
+const servicePropTypes = require('./utils/serviceBlueprintPropTypes')
 const findOrganization = require('../../mashery/findOrganization')
 
 const METHODS = ['post', 'get', 'put', 'delete', 'head', 'patch', 'options']
@@ -87,7 +88,7 @@ function buildApiFromSwagger (
   let commonEndpoint = {}
 
   if (blueprintPath) {
-    commonEndpoint = loadBlueprint(blueprintPath).then(
+    commonEndpoint = loadBlueprint(blueprintPath, servicePropTypes).then(
       ({ endpoint }) => endpoint
     )
   }
