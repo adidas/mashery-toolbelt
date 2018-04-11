@@ -84,14 +84,16 @@ mashery-toolbelt restore <serviceId> <backupName>
 
 
 ```
-mashery-toolbelt promote <serviceId> --name='replaceValue' --trafficDomain='replaceValue' \
+mashery-toolbelt promote <serviceId> --name='replaceValue' [--serviceName='replaceValue'] \
+                                     --trafficDomain='replaceValue' \
                                      --publicDomain='replaceValue' [--publicPath='replaceValue'] \
                                      --endpointDomain='replaceValue' [--endpointPath='replaceValue'] \
                                      [--update='updateServiceId']
 ```
 
 - Clone given service with changes defined by other arguments
-- Changing values is via options `name`, `trafficDomain`, `publicDomain`, `publicPath`, `endpointDomain`, `endpointPath`
+- Changing values is via options `name`, `serviceName`, `trafficDomain`, `publicDomain`, `publicPath`, `endpointDomain`, `endpointPath`
+  - when `serviceName` is not provided then `name` is used to replace service name
   - `publicPath` and `endpointPath` are optional
   - each options accept `replaceValue` which can be one of following types
   - **simple** - `--publicDomain='new.domain.com'`
@@ -125,7 +127,8 @@ mashery-toolbelt promote h9tygfmjttuf9sb6ah8kjftd \
 mashery-toolbelt swagger-import <fileOrUrl> \
                                 [--blueprint='blueprintFile'] \
                                 [--organisation='organisationId'] [--multiMethodEndpoint] [--https] \
-                                --name='replaceValue' --trafficDomain='replaceValue' \
+                                --name='replaceValue' [--serviceName='replaceValue'] \
+                                --trafficDomain='replaceValue' \
                                 --publicDomain='replaceValue' [--publicPath='replaceValue'] \
                                 --endpointDomain='replaceValue' [--endpointPath='replaceValue'] \
                                 [--update='updateServiceId']

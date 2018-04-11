@@ -79,6 +79,11 @@ defineProgram(
       return command
         .option('--name <name>', 'Name replace pattern', collect)
         .option(
+          '--serviceName <name>',
+          'Service name replace pattern (only when different to endpoint)',
+          collect
+        )
+        .option(
           '--trafficDomain <trafficDomain>',
           'Traffic domain replace pattern',
           collect

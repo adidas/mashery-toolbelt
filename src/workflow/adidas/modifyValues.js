@@ -11,6 +11,16 @@ function modifyValues (api, options = {}) {
     name: 'name'
   })
 
+  let serviceNameReplacer
+
+  if (options.serviceName && options.serviceName.length) {
+    serviceNameReplacer = makeReplacer(options.serviceName, {
+      name: 'serviceName'
+    })
+  } else {
+    serviceNameReplacer = nameReplacer
+  }
+
   let trafficDomainReplacer
 
   if (options.trafficDomain && options.trafficDomain.length) {
@@ -40,9 +50,8 @@ function modifyValues (api, options = {}) {
     required: false
   })
 
-  targetApi.service.name = nameReplacer(targetApi.service.name, {
-    required: false
-  })
+  // Using of replacers
+  targetApi.service.name = serviceNameReplacer(targetApi.service.name)
 
   targetApi.service.endpoints.forEach(endpoint => {
     endpoint.name = nameReplacer(endpoint.name)
