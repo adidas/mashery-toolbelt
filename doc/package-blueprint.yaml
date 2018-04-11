@@ -24,7 +24,6 @@ plans:
 - name: Plan name
   description: This is an unlimited PLN demo
   status: active
-  description: This is a plan which should be used by application's which needs to write into Documentum API.
   emailTemplateSetId: null
   eav: {}
   notes: null

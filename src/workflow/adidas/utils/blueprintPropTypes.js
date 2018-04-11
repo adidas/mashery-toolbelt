@@ -16,7 +16,7 @@ const {
 const value = value => oneOf([value])
 // Shortcut for single value with text of USER_INPUT
 const userInput = string
-// Shortcut for domain domain: [{address: "www.domain.com"}]
+// Shortcut for domain { domain: [{address: "www.domain.com"}] }
 const domainType = arrayOf(shape({ address: string.isRequired }))
 
 // Main definition
