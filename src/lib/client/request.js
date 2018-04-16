@@ -166,8 +166,12 @@ function registerClientMethod (client, methodName, methodDetails) {
 
           if (key === 'fields') {
             value = makeFieldsParam(methodName, entityName, data[key])
+            // Filter or search on index endpoint
           } else if (isIndex && (key === 'filter' || key === 'search')) {
             value = makeFilterParam(data[key])
+            // Default limit with almost unlimited count of items
+          } else if (isIndex && key === 'limit') {
+            value = data[key] || 9999
           } else {
             value = data[key]
           }
@@ -177,20 +181,14 @@ function registerClientMethod (client, methodName, methodDetails) {
           }
         })
       }
-
-      // Default limit with almost unlimited count of items
-      if (isIndex && !url.searchParams.get('limit')) {
-        url.searchParams.set('limit', 9999)
-      }
     } else {
       options.method = httpMethod
       // TODO: validate data againts fields
       options.body = data && JSON.stringify(data)
     }
 
-    return throttle(client, () =>
-      callClientRequest(client, url.toString(), options)
-    )
+    const call = () => callClientRequest(client, url.toString(), options)
+    return throttle(client, call, client.options.threads)
   }
 }
 
