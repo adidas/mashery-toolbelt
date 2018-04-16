@@ -1,7 +1,8 @@
-const loadBlueprint = require('./loadBlueprint')
+const makeBlueprintParser = require('./makeBlueprintParser')
 const servicePropTypes = require('./utils/serviceBlueprintPropTypes')
-const findOrganization = require('../../mashery/findOrganization')
+const findOne = require('../../mashery/findOne')
 
+const loadBlueprint = makeBlueprintParser(servicePropTypes)
 const METHODS = ['post', 'get', 'put', 'delete', 'head', 'patch', 'options']
 
 const defaultService = {}
@@ -88,13 +89,13 @@ function buildApiFromSwagger (
   let commonEndpoint = {}
 
   if (blueprintPath) {
-    commonEndpoint = loadBlueprint(blueprintPath, servicePropTypes).then(
+    commonEndpoint = loadBlueprint(blueprintPath).then(
       ({ endpoint }) => endpoint
     )
   }
 
   if (organization) {
-    organization = findOrganization(organization)
+    organization = findOne('organization', organization)
   }
 
   return Promise.all([commonEndpoint, organization]).then(
