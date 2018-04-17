@@ -23,17 +23,21 @@ function validateFields (methodName, allFields, fields) {
   return fields
 }
 
-function collectFieldsFromObject (methodName, entityName, fields) {
+function collectFieldsFromObject (methodName, entityName, fieldsObject) {
   const allFields = validFields[entityName]
-  const { all, only, except, ...nested } = fields
+  const { all, fields, only, except, ...nested } = fieldsObject
   let collectedFields = []
 
   if (except) {
     const exceptFields = typeof except === 'string' ? except.split(',') : except
     validateFields(methodName, allFields, exceptFields)
     collectedFields = allFields.filter(field => !exceptFields.includes(field))
-  } else if (all || only) {
-    collectedFields = collectFields(methodName, entityName, all || only)
+  } else if (all || only || fields) {
+    collectedFields = collectFields(
+      methodName,
+      entityName,
+      all || only || fields
+    )
   }
 
   // Iterate over nested associations
@@ -74,12 +78,12 @@ function collectFieldsFromObject (methodName, entityName, fields) {
 function collectFields (methodName, entityName, fields) {
   const allFields = validFields[entityName]
 
-  if (fields === true || fields === 'all') {
+  if (fields === true || fields === 'all' || fields === '*') {
     return allFields
   } else if (typeof fields === 'string') {
     return validateFields(methodName, allFields, fields.split(','))
   } else if (Array.isArray(fields)) {
-    return validateFields(methodName, allFields, fields)
+    return validateFields(methodName, allFields, [...fields])
   } else if (isObject(fields)) {
     return collectFieldsFromObject(methodName, entityName, fields)
   } else {
@@ -88,6 +92,10 @@ function collectFields (methodName, entityName, fields) {
 }
 
 function makeFieldsParam (methodName, entityName, fields) {
+  if (!fields) {
+    return null
+  }
+
   return collectFields(methodName, entityName, fields).join(',')
 }
 

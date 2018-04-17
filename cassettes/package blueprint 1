@@ -1,0 +1,117 @@
+[
+  {
+    "scope": "https://api.mashery.com:443",
+    "method": "POST",
+    "path": "/v3/token",
+    "body": "grant_type=refresh_token&refresh_token=afvfsvs29283wh6wzb9n6k2p",
+    "status": 400,
+    "response": {
+      "error": "invalid_grant",
+      "error_description": "Expired refresh token"
+    },
+    "rawHeaders": [
+      "Cache-Control",
+      "no-store",
+      "Content-Type",
+      "application/json;charset=UTF-8",
+      "Date",
+      "Tue, 17 Apr 2018 19:14:05 GMT",
+      "Pragma",
+      "no-cache",
+      "Server",
+      "Mashery Proxy",
+      "X-Mashery-Error-Code",
+      "ERR_400_BAD_REQUEST",
+      "X-Mashery-Responder",
+      "prod-j-worker-us-east-1e-71.mashery.com",
+      "Content-Length",
+      "69",
+      "Connection",
+      "Close"
+    ]
+  },
+  {
+    "scope": "https://api.mashery.com:443",
+    "method": "GET",
+    "path": "/v3/rest/packages?filter=name%3A%28Toolbelt+Test%29+Some+package",
+    "body": "",
+    "status": 200,
+    "response": [
+      "1f8b08000000000000008b8e050029bb4c0d02000000"
+    ],
+    "rawHeaders": [
+      "Content-Encoding",
+      "gzip",
+      "Content-Type",
+      "application/json;charset=UTF-8",
+      "Date",
+      "Tue, 17 Apr 2018 19:14:06 GMT",
+      "Server",
+      "Mashery API Server v1.1.0.v20180329-2016",
+      "X-Mashery-Responder",
+      "prod-j-worker-us-east-1b-51.mashery.com",
+      "X-Total-Count",
+      "0",
+      "transfer-encoding",
+      "chunked",
+      "Connection",
+      "Close"
+    ]
+  },
+  {
+    "scope": "https://api.mashery.com:443",
+    "method": "GET",
+    "path": "/v3/rest/services?fields=id%2Cname%2Cendpoints.id%2Cendpoints.name%2Cendpoints.undefinedMethodsAllowed%2Cendpoints.methods.id%2Cendpoints.methods.name&filter=name%3APRD-DE+%28GTS%29+Content+Service",
+    "body": "",
+    "status": 200,
+    "response": [
+      "1f8b08000000000000008d534d4f5c310cfc2bab776a252ce5fb836b41ed1195de1007c7b1611f6c76595ed9b215ffbd292af0102aedc587c433ce7826673f87862b1e0e8793af477074bcf8f0f9dbe9c7c5a7759bb84d8b53dede2d89878361597b8f8c37a9fcf8beaa630e7bd9b5d18d63dee7d4efb9d5cd7ad9a6dbe1f0ecbf38175f18afa7cbc5f1d14987af78ba5cd757e00d5e3c0f0e4a25ed304188d981434f507c12f0d121064c629c1a1e0e9eb10def9617382dd7ed89812888512460290470b96a48d44bd1d5d4e225bb62e60cd316dbedf523c5ed130727295885204b52e0aa47c8d57aa8a83184a28cb561ceb1c2ed154fcff0e8abaae23db0d5115c21d5893a47e4eca960b22efa397cd996d313d661669d30021563c1399fa044cd60b42a55f9dcd5bd5a00ad579b75e3f6329d738d5e3a433485c1192380d84b2287a26c0a82697838ffd35d77f729eefc4dabbb8de4b194b8dd8d426d3ee35d77ff6aeb5b6b541476a22a14132bb8c00c458421554fba6f3911c5f9dc7930248a75642d307a0d4e7201f439432c29549d5454b6fccb5614c331f648e9203d1ad81f91850c849a8b21cf497b7a7fb755a1d5980a7487119cfaad200705c654978c0ea1fbfe4e3058852e3806c8c81e9c0fb18b2808d84f0d996cfceb05cc83910211251780a9f45065a3a147e55106794d2c19fd8bad7b673d87e9aa8571badaddf7dfbcc790cda6773c9cff02e0c886140c040000"
+    ],
+    "rawHeaders": [
+      "Content-Encoding",
+      "gzip",
+      "Content-Type",
+      "application/json;charset=UTF-8",
+      "Date",
+      "Tue, 17 Apr 2018 19:14:07 GMT",
+      "Server",
+      "Mashery API Server v1.1.0.v20180329-2016",
+      "X-Mashery-Responder",
+      "prod-j-worker-us-east-1b-50.mashery.com",
+      "X-Total-Count",
+      "1",
+      "transfer-encoding",
+      "chunked",
+      "Connection",
+      "Close"
+    ]
+  },
+  {
+    "scope": "https://api.mashery.com:443",
+    "method": "GET",
+    "path": "/v3/rest/services?fields=id%2Cname%2Cendpoints.id%2Cendpoints.name%2Cendpoints.undefinedMethodsAllowed%2Cendpoints.methods.id%2Cendpoints.methods.name&filter=id%3Aun66jvab5bq6zbtdfvhcm9xg",
+    "body": "",
+    "status": 200,
+    "response": [
+      "1f8b08000000000000008d934b4f1b411084ff8ab5a744a2a579f4bcb8862839a2909c10879e47db6bd8b5b1170788f8ef69500c460928b79566beaa9eeadaf35fdd4843eb8ebbd36f27f0e36cf6e1cbf7b38fb34fab716ae3343b6b9b5d5f5a77d4f555eedc8cde2f77945dbef6f779aabc5b9421ddcee5bc8d75bdeac769db1d9fff97e6ecf3c9a970439b16abfa8a9a36346eaf68ea57e376efac10a96270105b8a80cd23e4681404a728d4d26ca6d43d1c3d6bf4633fedd9526c706c3310170b983901351fa0c5a638596aaed943b6ac86f56a6c8f6ff9a310aab80466a83630203342f41a817c496872128357ee23edfaf9d303f60a31b69c8cc02a0887563150721a3cd51a5a629f2a1e2aac69fe9cba372e070e5ee6170263d2f2c5195c40f2c966c5251cb2036d2edbcbf0ca1305cf152c3905589211eb20b8ced5aae25093585fec07c53bb75b5e0f3caee7d3756cb7ec7fdaa5591e1abcbbd6af8daea6c5dbdbfd3b1b2e9414b528e91a27bbb501b26d4aa664cbba84a09c7e7f3f8c0d5d2805b2760d301484c75ca06ad2b61a79a2e3b7d28d59eb5a05e390b3b84b503149d154d4a690d646537c27dd20adf40d15247c4a379014f331624c6843261691b78ac914333a97c0a724a528dc2019afc17031890a2b93eb21fbaf1f436e6ae93f41f549c263eb211534109a6d59c64929c497ed5e96ed38f8713d951bbae5fb1b8b77bbcd02a53e170f17bf017a48f5cf0c040000"
+    ],
+    "rawHeaders": [
+      "Content-Encoding",
+      "gzip",
+      "Content-Type",
+      "application/json;charset=UTF-8",
+      "Date",
+      "Tue, 17 Apr 2018 19:14:07 GMT",
+      "Server",
+      "Mashery API Server v1.1.0.v20180329-2016",
+      "X-Mashery-Responder",
+      "prod-j-worker-us-east-1b-55.mashery.com",
+      "X-Total-Count",
+      "1",
+      "transfer-encoding",
+      "chunked",
+      "Connection",
+      "Close"
+    ]
+  }
+]

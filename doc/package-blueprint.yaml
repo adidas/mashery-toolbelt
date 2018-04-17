@@ -62,7 +62,7 @@ plans:
 
   # Second service with all endpoints and specific method
   - name: Another service
-    endpoints: all
+    endpoints: *
     methods:
     # This will use method 'demo' from each endpoint
     # You can provide only name when methods are on service level.
@@ -71,8 +71,8 @@ plans:
   # Third service with all endpoints and all methods
   - name: Another plan
     description: Something something
-    endpoints: all
-    methods: all
+    endpoints: *
+    methods: *
 
 # Second plan just as example how to write more of them
 - name: My second plan

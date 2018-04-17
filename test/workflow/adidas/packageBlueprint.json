@@ -1,0 +1,39 @@
+{
+  "package": {
+    "name": "(Toolbelt Test) Some package",
+    "description": "Package description"
+  },
+  "plans": [
+    {
+      "name": "(Toolbelt Test) Plan name",
+      "description": "This is an unlimited PLN demo",
+      "status": "active",
+      "services": [
+        {
+          "name": "PRD-DE (GTS) Content Service",
+          "endpoints": [
+            {
+              "name": "PRD-DE (GTS) Content Service Health EDP",
+              "methods": [
+                "components",
+                { "id": "4a9e18a7-cb23-4458-b71e-210bd059c6f0" },
+                { "name": "markets" }
+              ]
+            },
+            {
+              "id": "z435e6tkn6jtkwyq8bza692p",
+              "methods": "*"
+            }
+          ]
+        },
+        {
+          "id": "un66jvab5bq6zbtdfvhcm9xg",
+          "endpoints": [
+            { "id": "kcsnm6nptcuaxfzu34yvrh47" }
+          ],
+          "methods": "*"
+        }
+      ]
+    }
+  ]
+}

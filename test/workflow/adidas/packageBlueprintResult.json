@@ -1,0 +1,105 @@
+{
+  "package": {
+    "name": "(Toolbelt Test) Some package",
+    "description": "Package description",
+    "plans": [
+      {
+        "name": "(Toolbelt Test) Plan name",
+        "description": "This is an unlimited PLN demo",
+        "services": [
+          {
+            "id": "fjq8bxumdj96zfwnj4jj9z98",
+            "name": "PRD-DE (GTS) Content Service",
+            "endpoints": [
+              {
+                "id": "dwy87w5qndwpf9jbb7rwjfcn",
+                "name": "PRD-DE (GTS) Content Service Health EDP",
+                "methods": [
+                  {
+                    "id": "e9d75fa7-72be-422f-aa2f-8c4af0386fa8",
+                    "name": "components"
+                  },
+                  {
+                    "id": "4a9e18a7-cb23-4458-b71e-210bd059c6f0",
+                    "name": "init"
+                  },
+                  {
+                    "id": "75d0df55-e317-4bc0-9f5a-7e95cba83475",
+                    "name": "markets"
+                  }
+                ]
+              },
+              {
+                "id": "z435e6tkn6jtkwyq8bza692p",
+                "name": "PRD-DE (GTS) Content Service EDP",
+                "methods": [
+                  {
+                    "id": "d0a31a8b-5d0a-40ee-b960-22d4821660df",
+                    "name": "components"
+                  },
+                  {
+                    "id": "07fe4f0d-b27d-46ee-bffe-8d5c14d58cc7",
+                    "name": "navigation"
+                  },
+                  {
+                    "id": "e06bff76-9ae5-4567-a5ba-abff2c2925c7",
+                    "name": "markets"
+                  },
+                  {
+                    "id": "af2e775c-16f6-4a7d-9fc2-6d9b2c5e815c",
+                    "name": "translations"
+                  },
+                  {
+                    "id": "f7f34c33-ea51-4f9b-a599-7b86d180703b",
+                    "name": "page"
+                  },
+                  {
+                    "id": "86ccc846-ecb7-4921-a9e6-4a7c51cef9a5",
+                    "name": "init"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "un66jvab5bq6zbtdfvhcm9xg",
+            "name": "PRD-US (GTS) Content Service",
+            "endpoints": [
+              {
+                "id": "kcsnm6nptcuaxfzu34yvrh47",
+                "name": "PRD-US (GTS) Content Service Health EDP",
+                "methods": [
+                  {
+                    "id": "7d476e40-9450-4c7a-b892-a49437baf2ca",
+                    "name": "markets"
+                  },
+                  {
+                    "id": "f4e457cc-b15e-47c4-93b0-d1a13d25415f",
+                    "name": "components"
+                  },
+                  {
+                    "id": "8b11dd5e-f7bb-4efd-8975-0812ca1121a8",
+                    "name": "page"
+                  },
+                  {
+                    "id": "fca90ae8-d325-4e37-b3e0-a9f3f1c77051",
+                    "name": "navigation"
+                  },
+                  {
+                    "id": "fa8b4559-6994-4cfe-9261-2fc29acf02bd",
+                    "name": "init"
+                  },
+                  {
+                    "id": "c291dcea-d695-4f36-9c42-7e3eb4c79978",
+                    "name": "translations"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "status": "active"
+      }
+    ]
+  }
+}

@@ -38,6 +38,12 @@ test('object with only #1', () => {
   )
 })
 
+test('object with fields (only) #1', () => {
+  expect(makeServiceFieldsParam({ fields: 'id,name,endpoints' })).toEqual(
+    onlyServiceFields
+  )
+})
+
 test('object with only #2', () => {
   expect(makeServiceFieldsParam({ only: ['id', 'name', 'endpoints'] })).toEqual(
     onlyServiceFields
