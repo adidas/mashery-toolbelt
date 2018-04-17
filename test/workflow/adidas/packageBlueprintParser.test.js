@@ -50,28 +50,21 @@ test('all data', () => {
                 name: 'My endpoint',
                 undefinedMethodsAllowed: true,
                 methods: [
-                  {
-                    id: 'jhdsauzdsadjsaldjal'
-                  },
-                  {
-                    name: 'demo'
-                  }
+                  { id: 'jhdsauzdsadjsaldjal' },
+                  { name: 'demo' },
+                  'demo'
                 ]
               },
               {
                 name: 'Another service',
-                endpoints: 'all',
-                methods: [
-                  {
-                    name: 'demo'
-                  }
-                ]
+                endpoints: '*',
+                methods: [{ name: 'demo' }, 'demo']
               },
               {
                 name: 'Another plan',
                 description: 'Something something',
-                endpoints: 'all',
-                methods: 'all'
+                endpoints: '*',
+                methods: '*'
               }
             ]
           }

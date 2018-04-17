@@ -14,7 +14,7 @@ const {
 // Shortcut for single value
 const value = value => oneOf([value])
 const timeIntervals = oneOf(['minute', 'hour', 'day', 'week', 'month'])
-const allOrArrayOf = shape => oneOfType([value('all'), arrayOf(shape)])
+const allOrArrayOf = shape => oneOfType([value('*'), arrayOf(shape)])
 
 // Main definition
 module.exports = {
@@ -65,10 +65,14 @@ module.exports = {
               id: string,
               name: string,
               undefinedMethodsAllowed: bool,
-              methods: allOrArrayOf(shape({ id: string, name: string }))
+              methods: allOrArrayOf(
+                oneOfType([string, shape({ id: string, name: string })])
+              )
             })
-          ).isRequired,
-          methods: allOrArrayOf(shape({ name: string.isRequired }))
+          ),
+          methods: allOrArrayOf(
+            oneOfType([string, shape({ name: string.isRequired })])
+          )
         })
       )
     })
