@@ -44,6 +44,7 @@ class Worker {
  *
  * @param {any} key - identifier of pool
  * @param {function(): any} originalCall
+ * @param {number} [threads=2]
  * @returns {Promise<any, Error>}
  */
 function throttle (key, call, threads = 2) {
@@ -51,7 +52,7 @@ function throttle (key, call, threads = 2) {
     try {
       return Promise.resolve(call())
     } catch (e) {
-      Promise.reject(e)
+      return Promise.reject(e)
     }
   }
 
@@ -63,6 +64,7 @@ function throttle (key, call, threads = 2) {
  * Throttle parallel calls to API based on client.options.threads size
  *
  * @param {any} key - identifier of pool
+ * @param {number} threads
  * @returns {Object} pool
  * @property {Array<function(): Promise<any, Error>>} pool.calls
  * @property {Array<{id: number, running: boolean}>} pool.workers
