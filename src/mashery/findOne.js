@@ -9,7 +9,7 @@ const find = require('./utils/find')
  *   .catch(console.error)
  *
  * @param {string} entity - name of entity
- * @param {string} query
+ * @param {string|Object} query
  * @param {Object} [options]
  * @param {boolean} [options.optional] - when true allow to return `null` when no match
  * @param {boolean} [options.fields]
@@ -21,13 +21,17 @@ function findOne (entity, query, { optional = false, fields }) {
 
     if (count > 2) {
       throw new Error(
-        `found more than one entitiy '${entity}' with query '${query}'`
+        `found more than one entitiy '${entity}' with query '${JSON.stringify(
+          query
+        )}'`
       )
     }
 
     if (count === 0) {
       if (optional === false) {
-        throw new Error(`found no entity '${entity}' with query '${query}'`)
+        throw new Error(
+          `found no entity '${entity}' with query '${JSON.stringify(query)}'`
+        )
       }
 
       return null

@@ -30,18 +30,32 @@ function makePath ({ pattern, args }) {
   return pattern.stringify(pathArgs)
 }
 
+/**
+ * Make filter or search query param value
+ *
+ * @example
+ * makeFilterParam('id:1') // 'id:1'
+ * makeFilterPara({ fields: ['id', 'name'], value: 'query' }) // 'id:query,name:query'
+ * makeFilterPara({ protocol: 'https' }) // 'protocol:https'
+ *
+ * @param {(string | { fields: string, value: string } | Object)} filter
+ * @returns {string}
+ */
 function makeFilterParam (filter) {
   if (typeof filter === 'string') {
     return filter
   }
 
+  let query
   if (filter.fields && filter.value) {
-    return filter.fields.map(field => `${field}:${filter.value}`).join(',')
+    query = filter.fields.map(field => `${field}:${filter.value}`)
+  } else {
+    query = Object.keys(filter)
+      .filter(field => filter[field])
+      .map(field => `${field}:${filter[field]}`)
   }
 
-  return Object.keys(filter)
-    .map(field => `${field}:${filter[field]}`)
-    .join(',')
+  return query.join(',')
 }
 
 function waitForQps (client, time) {

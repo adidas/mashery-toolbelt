@@ -1,4 +1,4 @@
-const client = require('../client')
+const client = require('../../client')
 const { plural } = require('pluralize')
 const casex = require('casex')
 
@@ -17,15 +17,16 @@ function find (entity, query, { all = false, required = true, fields }) {
     throw new Error(`unknown query method '${method}' for entity '${entity}'`)
   }
 
-  query = query.trim()
-
   if (!query) {
     throw new Error(`missing query for finding entity by '${method}'`)
   }
 
+  const filter =
+    typeof query === 'object' ? query : { fields: ['id', 'name'], value: query }
+
   return client[method]({
     fields,
-    filter: { fields: ['id', 'name'], value: query }
+    filter
   })
 }
 

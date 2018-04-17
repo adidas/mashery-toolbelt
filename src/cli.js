@@ -14,6 +14,7 @@ const runSwaggerImport = require('./workflow/swagger/import')
 const runErrorSetAdd = require('./workflow/errorSet/add')
 const runBackupPackage = require('./workflow/backupPackage')
 // const runRestorePackage = require('./workflow/restorePackage')
+const createPackage = require('./workflow/createPackage')
 
 defineProgram(
   {
@@ -148,6 +149,13 @@ defineProgram(
           runSwaggerImport(swagger, options)
         })
     )
+
+    program
+      .command('package <blueprint>')
+      .description('Create package from blueprint file')
+      .action(blueprintPath => {
+        createPackage(blueprintPath)
+      })
 
     program
       .command('errorset-add <serviceId> <file>')
