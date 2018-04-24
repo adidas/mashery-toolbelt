@@ -155,7 +155,8 @@ module.exports = {
     'keyAdapter',
     'keyLength',
     'sharedSecretLength',
-    'plans'
+    'plans',
+    'organization'
   ],
   plan: [
     'id',

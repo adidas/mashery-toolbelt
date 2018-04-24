@@ -18,6 +18,14 @@ const allOrArrayOf = shape => oneOfType([value('*'), arrayOf(shape)])
 
 // Main definition
 module.exports = {
+  organization: oneOfType([
+    string,
+    shape({
+      id: string,
+      name: string
+    })
+  ]).isRequired,
+
   package: shape({
     name: string.isRequired,
     description: string,
