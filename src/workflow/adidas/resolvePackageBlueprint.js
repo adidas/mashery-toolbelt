@@ -154,6 +154,10 @@ function resolveEndpoint (planEndpoint, methods, persistedEndpoints) {
  * @returns
  */
 function resolveMethods (planMethods, persistedMethods) {
+  if (!planMethods) {
+    return
+  }
+
   if (planMethods === '*') {
     return persistedMethods
   }
