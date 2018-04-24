@@ -12,7 +12,8 @@ async function resolvePackageBlueprint (blueprint) {
   const bpOrganization = blueprint.organization
   const organization = await findOne(
     'organization',
-    bpOrganization.id || bpOrganization.name || bpOrganization
+    bpOrganization.id || bpOrganization.name || bpOrganization,
+    { fields: ['id', 'name'] }
   )
   const persistedEntity = await findOne(
     'package',

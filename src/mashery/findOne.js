@@ -15,7 +15,7 @@ const find = require('./utils/find')
  * @param {boolean} [options.fields]
  * @returns {Promise<?Object, Error>} found entity
  */
-function findOne (entity, query, { optional = false, fields }) {
+function findOne (entity, query, { optional = false, fields } = {}) {
   return find(entity, query, { limit: 2, fields }).then(entities => {
     const count = entities.length
 
