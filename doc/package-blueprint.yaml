@@ -1,4 +1,6 @@
-# Other properties than designer are not consolidated.
+organization: adidas playground
+
+# NOTE: Other properties than designer are not consolidated.
 # They are just plain as they are in Mashery
 package:
   name: Some package

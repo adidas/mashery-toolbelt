@@ -9,6 +9,11 @@ const findOne = require('../../mashery/findOne')
  * @returns {Promise<Object,Error>} package
  */
 async function resolvePackageBlueprint (blueprint) {
+  const bpOrganization = blueprint.organization
+  const organization = await findOne(
+    'organization',
+    bpOrganization.id || bpOrganization.name || bpOrganization
+  )
   const persistedEntity = await findOne(
     'package',
     { name: blueprint.package.name },
@@ -26,7 +31,10 @@ async function resolvePackageBlueprint (blueprint) {
   return {
     // TODO: keep there full structure downloaded from server to allow comparsion
     persisted: persistedEntity,
-    package: resolvedPackage
+    package: {
+      ...resolvedPackage,
+      organization
+    }
   }
 }
 
