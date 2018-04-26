@@ -1,4 +1,5 @@
 const findOne = require('../../mashery/findOne')
+const dumpPackage = require('../../mashery/dumpPackage')
 // const dumpPackage = require('../../mashery/dumpPackage')
 
 /**
@@ -13,27 +14,22 @@ async function resolvePackageBlueprint (blueprint) {
   const organization = await findOne(
     'organization',
     bpOrganization.id || bpOrganization.name || bpOrganization,
-    { fields: ['id', 'name'] }
+    { fields: ['id', 'name', 'description', 'parent'] }
   )
-  const persistedEntity = await findOne(
+
+  let persistedPackage = await findOne(
     'package',
     { name: blueprint.package.name },
     { optional: true }
   )
 
-  let resolvedPackage
-
-  if (persistedEntity) {
-    // resolvedPackage = await resolveExistingPackage(persistedEntity.id, blueprint)
-  } else {
-    resolvedPackage = await resolveNewPackage(blueprint)
+  if (persistedPackage) {
+    return resolveExistingPackage(persistedPackage.id, blueprint, organization)
   }
 
   return {
-    // TODO: keep there full structure downloaded from server to allow comparsion
-    persisted: persistedEntity,
     package: {
-      ...resolvedPackage,
+      ...(await resolveNewPackage(blueprint)),
       organization
     }
   }
@@ -60,6 +56,53 @@ async function resolveNewPackage (blueprint) {
  */
 async function resolveNewPlan (plan) {
   return {
+    ...plan,
+    services: await Promise.all(plan.services.map(resolveService))
+  }
+}
+
+/**
+ * Dump package and merge data with new from blueprint
+ *
+ * @param {string} packageId
+ * @param {Object} blueprint
+ * @param {Object} organization
+ * @returns {Promise<Object,Error>}
+ * @property {Object} persisted is current package dump
+ * @property {Object} package is new version
+ */
+async function resolveExistingPackage (packageId, blueprint, organization) {
+  const dump = await dumpPackage(packageId)
+
+  return {
+    persisted: dump.package,
+    package: {
+      ...dump.package,
+      ...blueprint.package,
+      organization,
+      plans: await Promise.all(
+        blueprint.plans.map(plan =>
+          resolveExistingPlan(plan, dump.package.plans)
+        )
+      )
+    }
+  }
+}
+
+/**
+ * Merge existing plans with data from blueprint
+ *
+ * @param {Object} plan
+ * @param {Array<Object>} persistedPlans
+ * @returns {Promise<Object,Error>}
+ */
+async function resolveExistingPlan (plan, persistedPlans) {
+  const foundPlan = persistedPlans.find(
+    persistedPlan => persistedPlan.name === plan.name
+  )
+
+  return {
+    ...foundPlan,
     ...plan,
     services: await Promise.all(plan.services.map(resolveService))
   }
@@ -104,8 +147,12 @@ async function resolveService (service) {
 function resolveEndpoints (planEndpoints, serviceMethods, persistedEndpoints) {
   if (planEndpoints === '*') {
     return persistedEndpoints.map(endpoint => ({
+      undefinedMethodsAllowed: true, // Default value. TODO: solve better
       ...endpoint,
-      methods: resolveMethods(endpoint, serviceMethods)
+      methods: resolveMethods(
+        endpoint.methods || serviceMethods,
+        serviceMethods
+      )
     }))
   } else {
     return planEndpoints.map(endpoint =>
@@ -155,7 +202,7 @@ function resolveEndpoint (planEndpoint, methods, persistedEndpoints) {
  */
 function resolveMethods (planMethods, persistedMethods) {
   if (!planMethods) {
-    return
+    return []
   }
 
   if (planMethods === '*') {
