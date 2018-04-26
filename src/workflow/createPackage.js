@@ -31,7 +31,6 @@ function updatePackage (packageData) {
     message: 'Is this valid update of package?',
     action: updatedData => {
       spinner.start()
-      throw new Error(`update package not implemented`)
       return client.updatePackage(packageData.package.id, updatedData)
     }
   })
