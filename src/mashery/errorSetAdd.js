@@ -2,10 +2,9 @@ const client = require('../client')
 const dumpApi = require('./dumpApi')
 
 const DUMP_FIELDS = {
-  serviceFields: ['id'],
-  endpointFields: ['id', 'errors'],
-  methodFields: false,
-  errorSetFields: ['id']
+  fields: ['id'],
+  endpoint: ['id', 'errors'],
+  errorSets: true
 }
 
 function errorSetAdd (serviceId, errorSet) {
@@ -22,11 +21,13 @@ function errorSetAdd (serviceId, errorSet) {
         }))
         return client.updateService(serviceId, { endpoints })
       })
-      .then(() => {
-        return api.service.errorSets.map(({ id }) =>
-          client.deleteServiceErrorSet(serviceId, id)
+      .then(() =>
+        Promise.all(
+          api.service.errorSets.map(({ id }) =>
+            client.deleteServiceErrorSet(serviceId, id)
+          )
         )
-      })
+      )
       .then(() => newErrorSet)
   )
 }
