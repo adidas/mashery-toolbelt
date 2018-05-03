@@ -434,6 +434,11 @@ module.exports = {
     method: 'DELETE',
     entity: 'service'
   },
+  updatePlanService: {
+    path: '/packages/:packageId/plans/:planId/services/:id',
+    method: 'PUT',
+    entity: 'service'
+  },
   createPlanService: {
     path: '/packages/:packageId/plans/:planId/services',
     method: 'POST',
