@@ -76,7 +76,7 @@ function collectFieldsFromObject (methodName, entityName, fieldsObject) {
 }
 
 function collectFields (methodName, entityName, fields) {
-  const allFields = validFields[entityName]
+  const allFields = [...validFields[entityName]]
 
   if (fields === true || fields === 'all' || fields === '*') {
     return allFields

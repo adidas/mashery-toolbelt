@@ -10,7 +10,7 @@ function dumpApi (serviceId, fields = FIELDS, { verbose = false } = {}) {
   verbose && console.log(`Dumping service ${serviceId}`)
 
   return client
-    .fetchService(serviceId, { fields: FIELDS })
+    .fetchService(serviceId, { fields: fields })
     .then(service => {
       verbose && console.log('Dump done')
       return { service }

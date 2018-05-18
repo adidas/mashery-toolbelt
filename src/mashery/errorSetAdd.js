@@ -1,16 +1,16 @@
 const client = require('../client')
 const dumpApi = require('./dumpApi')
 
-const DUMP_FIELDS = {
-  fields: ['id'],
-  endpoint: ['id', 'errors'],
+const FIELDS = {
+  only: ['id'],
+  endpoints: ['id', 'errors'],
   errorSets: true
 }
 
 function errorSetAdd (serviceId, errorSet) {
   let newErrorSet
 
-  return dumpApi(serviceId, DUMP_FIELDS).then(api =>
+  return dumpApi(serviceId, FIELDS).then(api =>
     client
       .createServiceErrorSet(serviceId, errorSet)
       .then(errorSet => {
