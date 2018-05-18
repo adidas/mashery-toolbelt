@@ -2,7 +2,7 @@ const client = require('../client')
 
 const FIELDS = {
   all: true,
-  endpoint: { all: true, methods: { all: true } },
+  endpoints: { all: true, methods: { all: true } },
   errorSets: true
 }
 
