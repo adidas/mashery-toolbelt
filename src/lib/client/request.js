@@ -183,9 +183,6 @@ function registerClientMethod (client, methodName, methodDetails) {
             // Filter or search on index endpoint
           } else if (isIndex && (key === 'filter' || key === 'search')) {
             value = makeFilterParam(data[key])
-            // Default limit with almost unlimited count of items
-          } else if (isIndex && key === 'limit') {
-            value = data[key] || 9999
           } else {
             value = data[key]
           }
@@ -194,6 +191,13 @@ function registerClientMethod (client, methodName, methodDetails) {
             url.searchParams.set(key, value)
           }
         })
+      }
+
+      // Default limit with almost unlimited count of items
+      if (isIndex) {
+        if (!url.searchParams.get('limit')) {
+          url.searchParams.set('limit', '9999')
+        }
       }
     } else {
       options.method = httpMethod
