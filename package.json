@@ -9,8 +9,7 @@
     "jest": "jest",
     "test": "npm run lint && npm run jest",
     "test:ci": "npm run lint && npm run jest -- --ci --testResultsProcessor=\"jest-junit\" --runInBand",
-    "tdd": "npm run jest -- --watch",
-    "precommit": "lint-staged"
+    "tdd": "npm run jest -- --watch"
   },
   "repository": {
     "type": "git",
@@ -32,6 +31,7 @@
   },
   "homepage": "https://github.com/adidas-group/mashery-provision#readme",
   "dependencies": {
+    "adidas-mashery-client": "1.0.0-alpha.0",
     "casex": "0.0.3",
     "cli-spinner": "^0.2.6",
     "commander": "2.12.2",
@@ -48,13 +48,18 @@
     "yamljs": "0.3.0"
   },
   "devDependencies": {
-    "husky": "0.14.3",
+    "husky": "^1.0.0-rc.8",
     "jest": "21.2.1",
     "jest-junit": "3.6.0",
     "lint-staged": "7.1.0",
     "nock-vcr-recorder": "0.1.5",
     "prettier-standard": "8.0.0",
     "standard": "11.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npx lint-staged"
+    }
   },
   "lint-staged": {
     "linters": {

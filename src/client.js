@@ -3,7 +3,7 @@
   HOMEDIR/.mashery-toolbelt/credentials.json
 */
 
-const MasheryClient = require('./lib/client')
+const MasheryClient = require('adidas-mashery-client')
 const { readFileSync, writeFileSync } = require('./utils/storage')
 
 const CREDENTIALS_FILE = 'credentials.json'
