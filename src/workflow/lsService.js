@@ -1,7 +1,7 @@
 const { fetchAllServices } = require('../client')
 const spinner = require('../utils/spinner')
 
-function ls (filter) {
+function lsService (filter) {
   spinner.start()
 
   let query = {}
@@ -31,4 +31,4 @@ function ls (filter) {
   })
 }
 
-module.exports = ls
+module.exports = lsService

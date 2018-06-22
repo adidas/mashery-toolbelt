@@ -6,7 +6,8 @@
 const defineProgram = require('./utils/defineProgram')
 const { dir: appDir } = require('./utils/storage')
 const runAuth = require('./workflow/auth')
-const runLs = require('./workflow/ls')
+const lsService = require('./workflow/lsService')
+const runLsPackage = require('./workflow/lsPackage')
 const runBackup = require('./workflow/backup')
 const runRestore = require('./workflow/restore')
 const runPromote = require('./workflow/promote')
@@ -36,7 +37,21 @@ defineProgram(
       .description(
         'List all services. Optionally you can search for specific part of name'
       )
-      .action(search => runLs(search))
+      .action(search => lsService(search))
+
+    program
+      .command('ls-service [search]')
+      .description(
+        'List all services. Optionally you can search for specific part of name'
+      )
+      .action(search => lsService(search))
+
+    program
+      .command('ls-package [search]')
+      .description(
+        'List all packages. Optionally you can search for specific part of name'
+      )
+      .action(search => runLsPackage(search))
 
     program
       .command('backup <serviceId> [backupName]')
