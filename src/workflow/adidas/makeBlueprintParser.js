@@ -1,6 +1,8 @@
 const PropTypes = require('prop-types')
 const eachProps = require('each-props')
 const inquirer = require('inquirer')
+const mergeOptions = require('merge-options')
+
 const deep = require('../../utils/deep')
 const loadDataFile = require('../../utils/loadDataFile')
 
@@ -38,15 +40,22 @@ function waitForUserInputs (blueprint) {
   })
 }
 
-function loadBlueprint (blueprint, blueprintPropTypes) {
-  if (!blueprint) {
+function loadBlueprint (blueprintPath, blueprintPropTypes, values) {
+  if (!blueprintPath) {
     return Promise.resolve(null)
   }
 
-  if (typeof blueprint === 'string') {
-    blueprint = loadDataFile(blueprint)
+  let blueprint
+
+  if (typeof blueprintPath === 'string') {
+    blueprint = loadDataFile(blueprintPath)
+
+    if (values) {
+      blueprint = mergeOptions(blueprint, values)
+    }
   }
 
+  // Hack how to collect prop types validation errors
   const origError = console.error
   const errors = []
 
@@ -74,7 +83,8 @@ function loadBlueprint (blueprint, blueprintPropTypes) {
 }
 
 function makeBlueprintParser (blueprintPropTypes) {
-  return blueprint => loadBlueprint(blueprint, blueprintPropTypes)
+  return (blueprint, values) =>
+    loadBlueprint(blueprint, blueprintPropTypes, values)
 }
 
 module.exports = makeBlueprintParser

@@ -1,0 +1,198 @@
+# API swagager description file. URL or file system path
+# examples:
+#   'https://github.com/adidas/new-product/swagger.yml'
+#   './swagger.yml'
+#   '/home/me/adiads/new-product/swagger.yml' (mostly for debugging only, because it can't be moved or used from repository on other computer)
+#       values has to be specified in this file and cannot be taken from swagger like service.name
+swagger: "<<some path>>"
+
+# Variables are used in values with '${variable}' pattern
+# Variables can be overwritten per environment
+#   For changing environemnt call `mashery-toolbelt service ./blueprint.yaml -e QA`
+variables:
+  Project: Demo
+
+environments:
+  DEV:
+    PublicDomain: dev-de-test.api.3stripes.io
+    SystemDomain: develop.test-data-service.dev.he.k8s.emea.adsint.biz
+  QA:
+    PublicDomain: qa-de-test.api.3stripes.io
+    SystemDomain: qa.test-data-service.dev.he.k8s.emea.adsint.biz
+  PRD:
+    Project: Real
+    PublicDomain: de-test.api.3stripes.io
+    SystemDomain: data-service.he.k8s.emea.adsint.biz
+
+service:
+  # Service name as per naming convention {Environment} variable will be replaced by coresponding envirionment
+  # endpoint name as per naming convention {Environment} & {Project} will replace by values defined above.
+  name: "*:{Environment} ({Project}) * EDP"
+
+  # Provide your Organization name you have acccess. Example GTS/GIS/CPM/CE etc
+  organization: adidas playground
+
+  # to add own error set with similar command like mashery-toolbelt errorset-add <serviceId> <errorSetPath> so no need to run this command saperately.
+  errorSet: <<error set file path>>
+
+  # Other possible service values
+  # description: ...
+  # revisionNumber: ...
+  # robotsPolicy: ...
+  # crossdomainPolicy: ...
+  # qpsLimitOverall: ...
+  # rfc3986Encode: ...
+  # securityProfile: ...
+
+# ----------- Endpoints
+
+# multipleHttpMethodsPerEndpoint true means multiple methods will be clubbed in single endpoint.
+# example:
+#   GET/POST/DELETE will be configured in single endpoint URI Path dev-de-test.api.3stripes.io/demo/Order, if it is false three endpoints will be configured with three different methods. this will be useful when you want GET methods to be part of different lets say read PKG/Plan and GET/POST/DELETE is for read/write.
+multipleHttpMethodsPerEndpoint: true
+
+# Global endpoint variables valid for all the endpoints except for endpoints mentioned at "Individual Endpoint"
+endpoint:
+  # outbound protocal, you can choose 'http' or 'https'
+  outboundTransportProtocol: http
+
+  # Domains can be simple string or array of string or native structure array of objects with key 'address'
+  # Same behaviour for `systemDomain(s)`
+  # examples:
+  #   publicDomain: "dev-de-test.api.3stripes.io"
+  #
+  #   publicDomains:
+  #     - "dev-de-test.api.3stripes.io"
+  #
+  #   publicDomains:
+  #     - address: "dev-de-test.api.3stripes.io"
+  publicDomain: "${PublicDomain}"
+
+  # If you want to add additional URI path before your public endpoint path
+  # Originally: `requestPathAlias`
+  publicPath: "*:/demo*"
+
+  # Same info as for `publicDomain`
+  systemDomains:
+    - "${SystemDomain}"
+
+  # If you want to add additional URI path before your target endpoint path
+  # Originally: `outboundRequestTargetPath`
+  systemPath: "*:/demo*"
+
+  # When not presented value is copied from first value in publicDomains
+  trafficManagerDomain: "dev-de-test.api.3stripes.io"
+
+  # Enter time (in seconds) for which an attempt of initial connection to the endpoint can be made. Only the following values can be entered in the field: 2, 5, 10, 20, 30, 45, and 60.
+  connectionTimeoutForSystemDomainRequest: 5
+
+  # Enter time (in seconds) to wait for a response from the endpoint. Only the following values can be entered in the field: 2, 5, 10, 20, 30, 45, 60, 120, 300, 600, 900, and 1200.
+  connectionTimeoutForSystemDomainResponse: 10
+
+  # Enter the API Key ID. This can either be the name field that designates the key in your API calls or, in the case of a Key Location of Path, a space delimited set of numbers designating the locations in the request path that should be recorded as the API key.
+  apiKeyValueLocationKey: x-api-key
+
+  #Select one or more options where the Traffic Manager must look for a developer's API key. Only Parameters and Request Body can be chosen at the same time.
+  apiKeyValueLocations:
+    - request-header
+
+  # Set how authentication will be handled for the API; this authentication is for the developer making calls against the API.
+  # please choose any one from 'apiKey', 'apiKeyAndSecret_SHA256', 'apiKeyAndSecret_MD5'
+  requestAuthenticationType: apiKeyAndSecret_SHA256
+
+  # Select one or more options where the Traffic Manager must look for a method name. Method location is used in reporting as well as in the method-level controls in your API Plans. Only Parameters and Request Body can be chosen at the same time.
+  # examples:
+  #   methods:
+  #     - "demo"
+  #     - "promo"
+  #
+  #   methods:
+  #     - name: "demo"
+  #     - name: "promo"
+
+  methods:
+    - "demo"
+
+  apiMethodDetectionKey: '0'
+  apiMethodDetectionLocations:
+    - request-path
+
+  # Processing Adapter
+  processor:
+    adapter: com.adidas.mashery.plugins.AddHeaderProcessor
+    preProcessEnabled: true
+    # Enter the data or values that can be used by the Traffic Manager while pre-processing the calls.
+    preInputs: {"x-forwarded-port":"443", "x-forwarded-host":"dev-de-test.api.3stripes.io/demo", "x-forwarded-proto":"https"}
+    postProcessEnabled: false
+    postInputs: {}
+
+  # Enable CORS
+  cors:
+    maxAge: 0
+    cookiesAllowed: false
+    domainsAllowed: ["https://dev.demoroom.adidas.com"]
+    headersAllowed: []
+    headersExposed: []
+    subDomainMatchingAllowed: true
+    allDomainsEnabled: false
+
+  # Enter the HTTP headers that you want to drop from incoming call.
+  headersToExcludeFromIncomingCall:
+    - "x-forwarded-host"
+    - "x-forwarded-proto"
+    - "x-forwarded-port"
+
+  # Select Enabled to remove API key and signature from an endpoint call. This setting is for the calls made to the client API server by Mashery.
+  dropApiKeyFromIncomingCall: true
+
+  # For the connection between the Traffic Manager and the Endpoint system, specify whether or not there is authentication required.
+  systemDomainAuthentication:
+    type: httpBasic
+    username: test1
+    password: testpass
+
+
+# ----------- Individual Endpoints
+
+# Individual Endpoint sepecific fields which are different from global variable mentioned above.
+# All Field values will be same as above but few fields will get overwritten by values mentioned below:
+individualEndpoints:
+
+  # "Account Service" is name of endpoint from swagger file. When not found in swagger it will fail
+  "Account Service":
+    endpointPath: /Account/open
+    systemDomain: "develop.paperdam-metadata-service.dev.he.k8s.emea.adsint.biz"
+    connectionTimeoutForSystemDomainResponse: 300
+    requestAuthenticationType: apiKey
+    methods:
+      - "Account"
+    apiMethodDetectionKey: '0'
+    apiMethodDetectionLocations:
+      - request-path
+
+  # Name can have '*' which will match anything beginning with that text
+  "Order Service*":
+    endpointPath: /Order/list
+    endpointMethod: [<<>>]
+    systemDomain: "develop.paperdam-metadata-service.dev.he.k8s.emea.adsint.biz"
+    connectionTimeoutForSystemDomainResponse: 60
+    methods:
+      - name: "list"
+    apiMethodDetectionKey: '1'
+    apiMethodDetectionLocations:
+      - request-path
+
+# ----------- Individual Endpoints
+# Allow to filter which endpoint will be included or excluded
+# When whitelist is provided only endpoints matching that rules will be in result
+# When blacklist is provided, endpoints matching will be removed from result
+# Rules are considered as "OR" ("has that name" or "has that path and that httpMethod")
+whitelistEndpoints:
+  - name: "Account Service *"
+  - path: "/Account*"
+    httpMethods:
+      - "get"
+      - "post"
+
+blacklistEndpoints:
+  - name: "Order Service"

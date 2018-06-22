@@ -7,7 +7,7 @@ const confirmChanges = require('../utils/confirmChanges')
 
 const loadBlueprint = makeBlueprintParser(packagePropTypes)
 
-function loadPackageBlueprint (blueprintPath) {
+function syncBlueprintPackage (blueprintPath) {
   console.log(`Creating package from blueprint file '${blueprintPath}'`)
   spinner.start()
 
@@ -72,4 +72,4 @@ function createPackage (packageData) {
     })
 }
 
-module.exports = loadPackageBlueprint
+module.exports = syncBlueprintPackage

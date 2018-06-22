@@ -14,7 +14,8 @@ const runSwaggerImport = require('./workflow/swagger/import')
 const runErrorSetAdd = require('./workflow/errorSet/add')
 const runBackupPackage = require('./workflow/backupPackage')
 // const runRestorePackage = require('./workflow/restorePackage')
-const createPackage = require('./workflow/createPackage')
+const syncBlueprintPackage = require('./workflow/syncBlueprintPackage')
+const syncBlueprintService = require('./workflow/syncBlueprintService')
 
 defineProgram(
   {
@@ -152,9 +153,25 @@ defineProgram(
 
     program
       .command('package <blueprint>')
-      .description('Create package from blueprint file')
+      .description('Create or update package from blueprint file')
       .action(blueprintPath => {
-        createPackage(blueprintPath)
+        syncBlueprintPackage(blueprintPath)
+      })
+
+    program
+      .command('service <blueprint>')
+      .description('Create or update service from blueprint file')
+      .option(
+        '-e, --environment <environment>',
+        'Environment to create or update service in'
+      )
+      .option(
+        '-s, --set <blueprintValue>',
+        'Overwrite blueprint value in format of `-s "service.name=*:({Project}) * QA"`.',
+        collect
+      )
+      .action((blueprintPath, options) => {
+        syncBlueprintService(blueprintPath, options)
       })
 
     program

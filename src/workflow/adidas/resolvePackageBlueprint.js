@@ -1,6 +1,5 @@
 const findOne = require('../../mashery/findOne')
 const dumpPackage = require('../../mashery/dumpPackage')
-// const dumpPackage = require('../../mashery/dumpPackage')
 
 /**
  * Resolves blueprint and returns whole structure:

@@ -1,4 +1,5 @@
 const PropTypes = require('prop-types')
+const organizationPropType = require('./propTypes/organization')
 
 const {
   arrayOf,
@@ -18,13 +19,7 @@ const allOrArrayOf = shape => oneOfType([value('*'), arrayOf(shape)])
 
 // Main definition
 module.exports = {
-  organization: oneOfType([
-    string,
-    shape({
-      id: string,
-      name: string
-    })
-  ]).isRequired,
+  organization: organizationPropType.isRequired,
 
   package: shape({
     name: string.isRequired,
