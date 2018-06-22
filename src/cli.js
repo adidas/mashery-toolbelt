@@ -154,8 +154,13 @@ defineProgram(
     program
       .command('package <blueprint>')
       .description('Create or update package from blueprint file')
-      .action(blueprintPath => {
-        syncBlueprintPackage(blueprintPath)
+      .option(
+        '-s, --set <blueprintValue>',
+        'Overwrite blueprint value in format of `-s "package.name=Test"`.',
+        collect
+      )
+      .action((blueprintPath, options) => {
+        syncBlueprintPackage(blueprintPath, options)
       })
 
     program

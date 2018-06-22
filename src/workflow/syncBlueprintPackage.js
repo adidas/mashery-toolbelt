@@ -2,16 +2,20 @@ const client = require('../client')
 const spinner = require('../utils/spinner')
 const makeBlueprintParser = require('./adidas/makeBlueprintParser')
 const packagePropTypes = require('./adidas/utils/packageBlueprintPropTypes')
+const parseBlueprintValues = require('./adidas/utils/packageBlueprintPropTypes')
 const makePackageFromBlueprint = require('./adidas/resolvePackageBlueprint')
+
 const confirmChanges = require('../utils/confirmChanges')
 
 const loadBlueprint = makeBlueprintParser(packagePropTypes)
 
-function syncBlueprintPackage (blueprintPath) {
+function syncBlueprintPackage (blueprintPath, options) {
+  const blueprintValues = parseBlueprintValues(options.set)
+
   console.log(`Creating package from blueprint file '${blueprintPath}'`)
   spinner.start()
 
-  loadBlueprint(blueprintPath)
+  loadBlueprint(blueprintPath, blueprintValues)
     .then(makePackageFromBlueprint)
     .then(packageData => {
       spinner.stop()

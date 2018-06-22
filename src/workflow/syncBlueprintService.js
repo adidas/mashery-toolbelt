@@ -2,12 +2,11 @@ const client = require('../client')
 const spinner = require('../utils/spinner')
 const makeBlueprintParser = require('./adidas/makeBlueprintParser')
 const servicePropTypes = require('./adidas/utils/serviceBlueprintPropTypes')
+const parseBlueprintValues = require('./adidas/utils/packageBlueprintPropTypes')
 // const makeServiceFromBlueprint = require('./adidas/resolveServiceBlueprint')
 // const confirmChanges = require('../utils/confirmChanges')
 
 const loadBlueprint = makeBlueprintParser(servicePropTypes)
-
-const SPLIT_PATH_PATTERN = /(?<!\\)\./
 
 function syncBlueprintService (blueprintPath, options) {
   const environment = options.environment
@@ -78,35 +77,5 @@ function syncBlueprintService (blueprintPath, options) {
 //       console.error(error)
 //     })
 // }
-
-// TODO: extract to module
-function parseBlueprintValues (pairs) {
-  if (pairs) {
-    return pairs.reduce((result, pair) => {
-      const match = pair.match(
-        /^\s*(?<path>[a-zA-Z0-9-_\s\.\\(){}[\]]+?)\s*=\s*(?<value>.*?)\s*$/
-      )
-
-      if (!match) {
-        throw new Error(`Cannot parse --set argument with value "${pair}"`)
-      }
-
-      const pathParts = match.groups.path.split(SPLIT_PATH_PATTERN)
-
-      pathParts.reduce((nestedResult, part, índex) => {
-        if (nestedResult[part]) {
-          throw new Error(`--set argument with value "${pair}" is duplicated`)
-        }
-        nestedResult[part] =
-          pathParts.length - 1 === índex ? match.groups.value : {}
-        return nestedResult[part]
-      }, result)
-
-      return result
-    }, {})
-  }
-
-  return {}
-}
 
 module.exports = syncBlueprintService
