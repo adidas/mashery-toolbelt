@@ -105,7 +105,10 @@ function makeReplacer (patterns, { name, required = true } = {}) {
   const replacers = patternsToReplacers(patterns)
 
   return function (value) {
-    value = value.replace(LEFT_BRACKETS, '(').replace(RIGHT_BRACKETS, ')')
+    if (value && value.length) {
+      value = value.replace(LEFT_BRACKETS, '(').replace(RIGHT_BRACKETS, ')')
+    }
+
     let newValue
 
     replacers.find(({ type, match, replaceWith }) => {
