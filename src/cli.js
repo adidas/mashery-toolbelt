@@ -14,7 +14,7 @@ const runPromote = require('./workflow/promote')
 const runSwaggerImport = require('./workflow/swagger/import')
 const runErrorSetAdd = require('./workflow/errorSet/add')
 const runBackupPackage = require('./workflow/backupPackage')
-// const runRestorePackage = require('./workflow/restorePackage')
+const runRestorePackage = require('./workflow/restorePackage')
 const createPackage = require('./workflow/createPackage')
 
 defineProgram(
@@ -70,10 +70,12 @@ defineProgram(
         runBackupPackage(packageId, backupName)
       )
 
-    // program
-    //   .command('restore-package <packageId> <backupName>')
-    //   .description('Restore given service from existing backup')
-    //   .action((packageId, backupName) => runRestorePackage(packageId, backupName))
+    program
+      .command('restore-package <packageId> <backupName>')
+      .description('Restore given service from existing backup')
+      .action((packageId, backupName) =>
+        runRestorePackage(packageId, backupName)
+      )
 
     // Allow to have multiple option values
     function collect (val, memo) {
