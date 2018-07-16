@@ -1,3 +1,4 @@
+const chalk = require('chalk')
 const client = require('../client')
 const spinner = require('../utils/spinner')
 const makeBlueprintParser = require('./adidas/makeBlueprintParser')
@@ -8,7 +9,9 @@ const confirmChanges = require('../utils/confirmChanges')
 const loadBlueprint = makeBlueprintParser(packagePropTypes)
 
 function loadPackageBlueprint (blueprintPath) {
-  console.log(`Creating package from blueprint file '${blueprintPath}'`)
+  console.log(
+    `Creating or updating package from blueprint file '${blueprintPath}'`
+  )
   spinner.start()
 
   loadBlueprint(blueprintPath)
@@ -28,7 +31,9 @@ function updatePackage (packageData) {
   return confirmChanges({
     before: packageData.persisted,
     after: packageData.package,
-    message: 'Is this valid update of package?',
+    message: `${chalk.yellow(
+      'Updating existing package.'
+    )} Are chages above valid?`,
     action: updatedData => {
       spinner.start()
       return client.updatePackage(packageData.package.id, updatedData)
@@ -52,7 +57,7 @@ function createPackage (packageData) {
   return confirmChanges({
     before: {},
     after: packageData.package,
-    message: 'Is this valid structure of new package?',
+    message: `${chalk.green('Creating new package.')} Is schema above valid?`,
     action: newData => {
       spinner.start()
       return client.createPackage(newData)

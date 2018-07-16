@@ -33,6 +33,7 @@
   "dependencies": {
     "adidas-mashery-client": "1.0.0-alpha.0",
     "casex": "0.0.3",
+    "chalk": "2.4.1",
     "cli-spinner": "^0.2.6",
     "commander": "2.12.2",
     "dotenv": "^4.0.0",
