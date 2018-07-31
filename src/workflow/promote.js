@@ -7,22 +7,25 @@ const spinner = require('../utils/spinner')
 const confirmChanges = require('../utils/confirmChanges')
 
 function createFromPromote (api, newApi) {
-  return confirmChanges({
-    before: api,
-    after: newApi,
-    message: 'Are this valid changes in promoted API?',
-    action: newData => {
-      spinner.start()
-      return createApi(newData)
-    }
-  }).then(newService => {
-    spinner.stop()
-    console.log(
-      `Promoting done. https://adidas.admin.mashery.com/control-center/api-definitions/${
-        newService.id
-      }`
-    )
-  })
+  return confirmChanges
+    .withOverview({
+      before: api,
+      after: newApi,
+      property: 'service.endpoints',
+      message: 'Are this valid changes in promoted API?',
+      action: newData => {
+        spinner.start()
+        return createApi(newData)
+      }
+    })
+    .then(newService => {
+      spinner.stop()
+      console.log(
+        `Promoting done. https://adidas.admin.mashery.com/control-center/api-definitions/${
+          newService.id
+        }`
+      )
+    })
 }
 
 function updateFromPromote (api, updateServiceId) {
@@ -32,9 +35,10 @@ function updateFromPromote (api, updateServiceId) {
     .then(dumpedApi => {
       spinner.stop()
 
-      return confirmChanges({
+      return confirmChanges.withOverview({
         before: dumpedApi,
         after: mergeApi(api, dumpedApi),
+        property: 'service.endpoints',
         message: `Are this valid updates from promoting to service '${updateServiceId}'?`,
         action (updatedData) {
           spinner.start()
