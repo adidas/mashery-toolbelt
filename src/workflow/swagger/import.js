@@ -9,22 +9,25 @@ const mergeApi = require('../../mashery/mergeApi')
 const updateApi = require('../../mashery/updateApi')
 
 function createFromSwagger (api, swagger) {
-  return confirmChanges({
-    before: {},
-    after: api,
-    message: `Are this valid new api from swagger '${swagger}'?`,
-    action (newApi) {
-      spinner.start()
-      return createApi(newApi)
-    }
-  }).then(newService => {
-    spinner.stop()
-    console.log(
-      `Creating api from swagger done. https://adidas.admin.mashery.com/control-center/api-definitions/${
-        newService.id
-      }`
-    )
-  })
+  return confirmChanges
+    .withOverview({
+      before: {},
+      after: api,
+      property: 'service.endpoints',
+      message: `Are this valid new api from swagger '${swagger}'?`,
+      action (newApi) {
+        spinner.start()
+        return createApi(newApi)
+      }
+    })
+    .then(newService => {
+      spinner.stop()
+      console.log(
+        `Creating api from swagger done. https://adidas.admin.mashery.com/control-center/api-definitions/${
+          newService.id
+        }`
+      )
+    })
 }
 
 function updateFromSwagger (api, targetServiceId, swagger) {
@@ -33,9 +36,10 @@ function updateFromSwagger (api, targetServiceId, swagger) {
   return dumpApi(targetServiceId)
     .then(dumpedTargetApi => {
       spinner.stop()
-      return confirmChanges({
+      return confirmChanges.withOverview({
         before: dumpedTargetApi,
         after: mergeApi(api, dumpedTargetApi),
+        property: 'service.endpoints',
         message: `Are this valid updates to service '${targetServiceId}' from swagger '${swagger}'?`,
         action (updatedApi) {
           spinner.start()
@@ -54,7 +58,6 @@ function updateFromSwagger (api, targetServiceId, swagger) {
 }
 
 function importSwaggerFile (swagger, options) {
-  console.log(swagger)
   SwaggerParser.parse(swagger)
     .then(swaggerData => buildApiFromSwagger(swaggerData, options))
     .then(apiFromSwagger => {

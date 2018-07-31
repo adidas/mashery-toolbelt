@@ -1,4 +1,5 @@
 const jsondiffpatch = require('jsondiffpatch')
+const chalk = require('chalk')
 
 const differ = jsondiffpatch.create({
   objectHash: function (obj, index) {
@@ -21,9 +22,106 @@ const differ = jsondiffpatch.create({
   }
 })
 
+function getDeepWithDiff (object, property) {
+  const path = property.split('.')
+
+  return path.reduce((object, property, i) => {
+    const isLast = path.length === i + 1
+
+    if (typeof object === 'object') {
+      let nextProperty = object[property]
+
+      if (isLast) {
+        // If previous value was different than array we have diff
+        // [previous value, new array value]
+        if (Array.isArray(nextProperty) && Array.isArray(nextProperty[1])) {
+          return nextProperty[1]
+        }
+
+        return nextProperty
+      } else {
+        if (Array.isArray(nextProperty)) {
+          return nextProperty[1] || nextProperty[0]
+        }
+
+        return nextProperty
+      }
+    }
+  }, object)
+}
+
+function getDiffSummary (delta, property) {
+  const diff = getDeepWithDiff(delta, property)
+
+  const changes = {
+    created: 0,
+    updated: 0,
+    deleted: 0
+  }
+
+  // If we just created array with values
+  if (Array.isArray(diff)) {
+    changes.created = diff.length
+  } else {
+    Object.entries(diff).forEach(([key, delta]) => {
+      if (key !== '_t') {
+        if (key.startsWith('_')) {
+          if (Array.isArray(delta) && delta.length === 3 && delta[2] === 0) {
+            changes.deleted++
+          }
+        } else {
+          if (Array.isArray(delta)) {
+            if (delta.length === 1) {
+              changes.created++
+            }
+          } else {
+            changes.updated++
+          }
+        }
+      }
+    })
+  }
+
+  return changes
+}
+
 function printDiff (before, after) {
   const delta = differ.diff(before, after)
-  jsondiffpatch.console.log(delta)
+
+  if (delta !== undefined) {
+    return {
+      printOverview (property) {
+        const changes = getDiffSummary(delta, property)
+        const split = property.split('.')
+        const propertyName = split[split.length - 1]
+
+        console.log(`Summary of ${propertyName}:`)
+
+        let createdMessage = `Created: ${changes.created}`
+        if (changes.created) {
+          createdMessage = chalk.green(createdMessage)
+        }
+        console.log(createdMessage)
+
+        let updatedMessage = `Updated: ${changes.updated}`
+        if (changes.updated) {
+          updatedMessage = chalk.yellow(updatedMessage)
+        }
+        console.log(updatedMessage)
+
+        let deletedMessage = `Deleted: ${changes.deleted}`
+        if (changes.deleted) {
+          deletedMessage = chalk.red(deletedMessage)
+        }
+        console.log(deletedMessage)
+
+        console.log()
+      },
+      printDiff () {
+        jsondiffpatch.console.log(delta)
+      }
+    }
+  }
 }
 
 module.exports = printDiff
