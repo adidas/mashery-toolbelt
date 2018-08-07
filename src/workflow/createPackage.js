@@ -28,17 +28,19 @@ function loadPackageBlueprint (blueprintPath) {
 }
 
 function updatePackage (packageData) {
-  return confirmChanges({
-    before: packageData.persisted,
-    after: packageData.package,
-    message: `${chalk.yellow(
-      'Updating existing package.'
-    )} Are chages above valid?`,
-    action: updatedData => {
-      spinner.start()
-      return client.updatePackage(packageData.package.id, updatedData)
-    }
-  })
+  return confirmChanges
+    .withOverview({
+      before: packageData.persisted,
+      after: packageData.package,
+      property: 'package.plans',
+      message: `${chalk.yellow(
+        'Updating existing package.'
+      )} Are chages above valid?`,
+      action: updatedData => {
+        spinner.start()
+        return client.updatePackage(packageData.package.id, updatedData)
+      }
+    })
     .then(updatedPackage => {
       spinner.stop()
       console.log(
@@ -54,15 +56,17 @@ function updatePackage (packageData) {
 }
 
 function createPackage (packageData) {
-  return confirmChanges({
-    before: {},
-    after: packageData.package,
-    message: `${chalk.green('Creating new package.')} Is schema above valid?`,
-    action: newData => {
-      spinner.start()
-      return client.createPackage(newData)
-    }
-  })
+  return confirmChanges
+    .withOverview({
+      before: {},
+      after: packageData.package,
+      property: 'package.plans',
+      message: `${chalk.green('Creating new package.')} Is schema above valid?`,
+      action: newData => {
+        spinner.start()
+        return client.createPackage(newData)
+      }
+    })
     .then(newPackage => {
       spinner.stop()
       console.log(
