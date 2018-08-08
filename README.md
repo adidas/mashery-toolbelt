@@ -229,3 +229,22 @@ $ npm install
 - `npm run lint` - runs linter
 - `npm run lint:fix` - runs linter and fix what can be fixed
 - Before each commit code is automatically fixed with linter and formatted with prettier.
+
+
+## Intended Use Cases
+
+This project is intended for configuration of the Mashery API management accordingly to the adidas guidelines.
+
+adidas is not responsible for the usage of this software for different purposes that the ones described in the use cases.
+
+## License and Software Information
+ 
+© adidas AG
+
+adidas AG publishes this software and accompanied documentation (if any) subject to the terms of the MIT license with the aim of helping the community with our tools and libraries which we think can be also useful for other people. You will find a copy of the MIT license in the root folder of this package. All rights not explicitly granted to you under the MIT license remain the sole and exclusive property of adidas AG.
+ 
+NOTICE: The software has been designed solely for the purpose of configuration of the Mashery API management accordingly to the adidas guidelines. The software is NOT designed, tested or verified for productive use whatsoever, nor or for any use related to high risk environments, such as health care, highly or fully autonomous driving, power plants, or other critical infrastructures or services.
+ 
+If you want to contact adidas regarding the software, you can mail us at _software.engineering@adidas.com_.
+ 
+For further information open the [adidas terms and conditions](https://github.com/adidas/adidas-contribution-guidelines/wiki/Terms-and-conditions) page.
