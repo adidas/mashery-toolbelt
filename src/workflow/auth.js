@@ -58,13 +58,13 @@ function runAuthenticate (answers) {
 
 function auth () {
   if (
-    process.env.MASHERY_USERNAME != undefined &&
-    process.env.MASHERY_PASSWORD != undefined &&
-    process.env.MASHERY_KEY != undefined &&
-    process.env.MASHERY_SECRET != undefined &&
-    process.env.MASHERY_SCOPE != undefined
+    process.env.MASHERY_USERNAME &&
+    process.env.MASHERY_PASSWORD &&
+    process.env.MASHERY_KEY &&
+    process.env.MASHERY_SECRET &&
+    process.env.MASHERY_SCOPE
   ) {
-    var answers = {
+    const answers = {
       username: process.env.MASHERY_USERNAME,
       password: process.env.MASHERY_PASSWORD,
       key: process.env.MASHERY_KEY,
