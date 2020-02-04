@@ -42,10 +42,15 @@ mashery-toolbelt auth
 - Need to run just for first time. Then it can handle refresh tokens itself
   - Rerun only on serious issues
 - optionally can receive the credentials from environment variables instead of the wizard way:
+
   export MASHERY_USERNAME=<username>
+  
   export MASHERY_PASSWORD=<password>
+  
   export MASHERY_KEY=<key>
+  
   export MASHERY_SECRET=<secret>
+  
   export MASHERY_SCOPE=<scope>
 
 
