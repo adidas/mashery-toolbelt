@@ -49,7 +49,31 @@ const questions = [
   }
 ]
 
+function runAuthenticate (answers) {
+  spinner.start()
+  const authRequest = client.authenticate(answers)
+  authRequest.then(spinner.stop, spinner.stop)
+  return authRequest
+}
+
 function auth () {
+  if (
+    process.env.MASHERY_USERNAME != undefined &&
+    process.env.MASHERY_PASSWORD != undefined &&
+    process.env.MASHERY_KEY != undefined &&
+    process.env.MASHERY_SECRET != undefined &&
+    process.env.MASHERY_SCOPE != undefined
+  ) {
+    var answers = {
+      username: process.env.MASHERY_USERNAME,
+      password: process.env.MASHERY_PASSWORD,
+      key: process.env.MASHERY_KEY,
+      secret: process.env.MASHERY_SECRET,
+      scope: process.env.MASHERY_SCOPE
+    }
+    return runAuthenticate(answers)
+  }
+
   return inquirer
     .prompt(questions)
     .then(answers => {
@@ -57,11 +81,7 @@ function auth () {
         answers.password = client.credentials.password
       }
 
-      spinner.start()
-      const authRequest = client.authenticate(answers)
-      authRequest.then(spinner.stop, spinner.stop)
-
-      return authRequest
+      return runAuthenticate(answers)
     })
     .then(() => console.log('Authentication done. Credentials stored'))
     .catch(error => console.error('Authentication failed: ', error))
